@@ -1,0 +1,23 @@
+using System;
+
+namespace ConsoleApp1
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            int ammoShot;
+            ammoShot = 2;
+            int ammoCurrent = 30;
+            float healthBox;
+            healthBox = 10f;
+            float progress = 30.5f;
+            string tableNumber2Text = "здесь могла быть ваша реклама";
+            bool isShot = true;
+            bool _isComming; // по умолчанию false
+            char denial = '!';
+            int countMoney = 10;
+            float timeCurrent = 20f;
+        }
+    }
+}
