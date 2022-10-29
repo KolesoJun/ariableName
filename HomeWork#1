@@ -7,17 +7,18 @@ namespace ConsoleApp1
         static void Main(string[] args)
         {
             int ammoShot;
-            ammoShot = 2;
-            int ammoCurrent = 30;
+            uint countBerries;
+            long lengthFlashlightBeam;
+            ulong lengthTrack = 200;
+            byte memoryOccupied;
+            sbyte pointsScored;
+            short numberOpponents;
+            ushort wordsText;
             float healthBox;
-            healthBox = 10f;
-            float progress = 30.5f;
-            string tableNumber2Text = "здесь могла быть ваша реклама";
+            string tableNumber2Text = "здесь могла быть ваша реклама"; //2 означала номер таблички, например на уровне (табличка-номер2-текс)
+            double pressureTire;
             bool isShot = true;
-            bool _isComming; // по умолчанию false
             char denial = '!';
-            int countMoney = 10;
-            float timeCurrent = 20f;
         }
     }
 }
