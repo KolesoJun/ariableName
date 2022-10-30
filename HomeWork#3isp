@@ -12,7 +12,7 @@ namespace ConsoleApp1
             string signZodiac = Console.ReadLine();
             Console.WriteLine("Ваше место работы?");
             string placeWork = Console.ReadLine();
-            Console.WriteLine($"данные внесены: вас зовут-{name}, вам- {age}, знак зодиака- {signZodiac}, место работы- {placeWork});
+            Console.WriteLine($"данные внесены: вас зовут-{name}, вам- {age}, знак зодиака- {signZodiac}, место работы- {placeWork}");
         }
     }
 }
