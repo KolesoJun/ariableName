@@ -1,0 +1,10 @@
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            string nameUser = "Алексей";
+            int age = 21;
+            string signZodiac = "водолей";
+            string placeWork = "завод";
+        }
+    }
