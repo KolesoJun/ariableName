@@ -1,0 +1,18 @@
+namespace ConsoleApp1
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.WriteLine("Здраствуйте, укажите свое имя...");
+            string name = Console.ReadLine();
+            Console.WriteLine("Скажите, сколько вам лет?");
+            int age = int.Parse(Console.ReadLine());
+            Console.WriteLine("Скажите, кто вы по гороскопу?");
+            string signZodiac = Console.ReadLine();
+            Console.WriteLine("Ваше место работы?");
+            string placeWork = Console.ReadLine();
+            Console.WriteLine("данные внесены: вас зовут- " + name + "," + " " + "вам- " + age + "," + " " + "знак зодиака- " + signZodiac+ ","+ " "+ "место работы- "+ placeWork);
+        }
+    }
+}
