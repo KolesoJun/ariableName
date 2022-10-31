@@ -4,7 +4,7 @@ namespace ConsoleApp1
     {
         static void Main(string[] args)
         {
-            float countSlot;//кол-во слотов/стэков
+            int countSlot;//кол-во слотов/стэков
             int imageRemains;
             Console.WriteLine("сколько должно быть картинок в слоте?");
             int imageInSlot = Convert.ToInt32(Console.ReadLine());
