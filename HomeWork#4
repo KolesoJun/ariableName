@@ -1,0 +1,33 @@
+namespace ConsoleApp1
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            int image = 1; //пусть в качестве картинки будет выступать цифра 1
+            int imageFix = 0; // не придумал лучше, чем просто счетчик, потому как необходимо считать, сколько картинок уже нарисовано
+            float countSlot;//кол-во слотов/стэков
+            Console.WriteLine("сколько должно быть картинок в слоте?");
+            int imageInSlot = Convert.ToInt32(Console.ReadLine());
+            Console.WriteLine("сколько должно быть всего картинок?");
+            int imageAll = Convert.ToInt32(Console.ReadLine());
+            countSlot = imageAll / imageInSlot;
+            if (imageAll % imageInSlot !=0)// выясняем, сколько будет строк (+1 идет, тк в любом нецелочисленном случае будет на одну строку больше)
+            {
+                countSlot++;
+            }
+            for (int i = 1; i <= countSlot; i++)
+            {
+                for (int x = 1; x <= imageInSlot; x++)
+                {
+                    if (imageFix<imageAll)
+                    {
+                        imageFix++;
+                        Console.Write(image);
+                    }
+                }
+                Console.WriteLine();// отсечка на стэк
+            }
+        }
+    }
+}
