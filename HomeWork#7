@@ -4,14 +4,15 @@ namespace ConsoleApp1
     {
         static void Main(string[] args)
         {
-            int chas;
-            int min;
+            int hours;
+            int minutes;
+            int minutsOnHour = 60;
             int timeReception = 10;
             Console.WriteLine("сколько бабок в очереди?");
             int countObstacls = Convert.ToInt32(Console.ReadLine());
-            chas = timeReception * countObstacls / 60;
-            min = timeReception * countObstacls % 60;
-            Console.WriteLine($"вам придется ждать:{chas}ч {min}мин.");
+            hours = timeReception * countObstacls / minutsOnHour;
+            minutes = timeReception * countObstacls % minutsOnHour;
+            Console.WriteLine($"вам придется ждать:{hours}ч {minutes}мин.");
         }
     }
 }
