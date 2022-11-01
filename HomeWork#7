@@ -1,0 +1,17 @@
+namespace ConsoleApp1
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            int chas;
+            int min;
+            int timeReception = 10;
+            Console.WriteLine("сколько бабок в очереди?");
+            int countObstacls = Convert.ToInt32(Console.ReadLine());
+            chas = timeReception * countObstacls / 60;
+            min = timeReception * countObstacls % 60;
+            Console.WriteLine($"вам придется ждать:{chas}ч {min}мин.");
+        }
+    }
+}
