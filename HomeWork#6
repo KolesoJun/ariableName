@@ -1,0 +1,16 @@
+namespace ConsoleApp1
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            int playerCountCristals = 0;
+            Console.WriteLine("сколько у игрока золота?");
+            int playerCountGolds = Convert.ToInt32(Console.ReadLine());
+            int priceCristal = 5;
+            playerCountCristals = playerCountGolds / priceCristal;
+            playerCountGolds = playerCountGolds - (priceCristal * playerCountCristals);
+            Console.WriteLine($"вы можете купить столько кристалов {playerCountCristals} и у вас останется {playerCountGolds} золота");
+        }
+    }
+}
