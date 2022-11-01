@@ -1,0 +1,18 @@
+namespace ConsoleApp1
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.WriteLine("введите первую переменную");
+            var firstVariable = Console.ReadLine();
+            Console.WriteLine("введите вторую переменную");
+            var secondVariable = Console.ReadLine();
+            Console.WriteLine($"первая переменная- {firstVariable}, вторая переменная- {secondVariable}");
+            var adapter = firstVariable;
+            firstVariable = secondVariable;
+            secondVariable = adapter;
+            Console.WriteLine($"первая переменная- {firstVariable}, вторая переменная- {secondVariable}");
+        }
+    }
+}
