@@ -2,6 +2,7 @@ class Program
     {
         static void Main(string[] args)
         {
+        //и повтор кода можно было заменить методом
             string wordStop = "exit";
             string stringResponse;
             int borderCycle;
