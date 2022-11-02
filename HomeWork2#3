@@ -11,8 +11,8 @@ static void Main(string[] args)
 
             /*while (variable < borderCycle)
             {
-                variable += 7;
                 Console.WriteLine(variable);
+                variable += 7;
             }*/
         } 
     }
