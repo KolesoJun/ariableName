@@ -1,0 +1,113 @@
+class Program
+    {
+        static void Main(string[] args)
+        {
+            string wordStop = "exit";
+            string stringResponse;
+            int borderCycle;
+            int numberMultipleOne = 0;
+            int numberMultipleTwo = 0;
+            int numberMultipleThird = 0;
+
+            Console.WriteLine("приветствую, эта программа определяет числа в диапазоне (указываете вы), которые должны соответствовать вашим требованиям. начнем?");
+            Console.WriteLine("когда число будет найдено, вы сможете остановить цикл (введите exit) или продолжить.");
+            Console.WriteLine("введите у, чтобы начать. любую другую клавишу, чтобы выйти");
+            stringResponse = Console.ReadLine();
+            
+            if (stringResponse == "y")
+            {
+                Console.WriteLine("определите, до какого числа (от 0) будет идти выборка");
+                borderCycle = Convert.ToInt32(Console.ReadLine());
+                Console.WriteLine("скольким будет кратно искомое число? Укажите количество делителей (1, 2 или 3). Для того, чтобы вывести числа с 0 по ваш диапазон, нажмите любую клавишу");
+                stringResponse = Console.ReadLine();
+                
+                switch (stringResponse)
+                {
+                    case "1":
+                        Console.WriteLine("какому числу оно должно быть кратно?");
+                        numberMultipleOne = Convert.ToInt32(Console.ReadLine());
+                        break;
+
+                    case "2":
+                        Console.WriteLine("каким двум числам оно должно быть кратно?");
+                        numberMultipleOne = Convert.ToInt32(Console.ReadLine());
+                        numberMultipleTwo = Convert.ToInt32(Console.ReadLine());
+                        break;
+
+                    case "3":
+                        Console.WriteLine("каким трем числам оно должно быть кратно?");
+                        numberMultipleOne = Convert.ToInt32(Console.ReadLine());
+                        numberMultipleTwo = Convert.ToInt32(Console.ReadLine());
+                        numberMultipleThird = Convert.ToInt32(Console.ReadLine());
+                        break;
+
+                    default:
+                        Console.WriteLine("вам будут выведены все числа с 0 по то число, которое вы указали диапазоном");
+                        break;
+                }
+
+                for (int i = 0; i < borderCycle; i++)
+                {
+                    if (numberMultipleOne != 0 && numberMultipleTwo ==0 && numberMultipleThird==0)
+                    {
+                        if (i % numberMultipleOne == 0)
+                        {
+                            Console.WriteLine($"возможно, вы искали:{i}");
+                            Console.WriteLine("продолжить или завершить? нажмите любую клавишу, чтобы продолжить");
+                            stringResponse = Console.ReadLine();
+                            if (stringResponse == wordStop)
+                            {
+                                break;
+                            }
+                            else
+                            {
+                                continue;
+                            }
+                        }
+                    }
+                    else if (numberMultipleOne != 0 && numberMultipleTwo != 0 && numberMultipleThird == 0)
+                    {
+                        if (i % numberMultipleOne == 0 && i % numberMultipleTwo == 0)
+                        {
+                            Console.WriteLine($"возможно, вы искали:{i}");
+                            Console.WriteLine("продолжить или завершить? нажмите любую клавишу, чтобы продолжить");
+                            stringResponse = Console.ReadLine();
+                            if (stringResponse == wordStop)
+                            {
+                                break;
+                            }
+                            else
+                            {
+                                continue;
+                            }
+                        }
+                    }
+                    else if (numberMultipleOne != 0 && numberMultipleTwo != 0 && numberMultipleThird != 0)
+                    {
+                        if (i % numberMultipleOne == 0 && i % numberMultipleTwo == 0 && i % numberMultipleThird ==0)
+                        {
+                            Console.WriteLine($"возможно, вы искали:{i}");
+                            Console.WriteLine("продолжить или завершить? нажмите любую клавишу, чтобы продолжить");
+                            stringResponse = Console.ReadLine();
+                            if (stringResponse == wordStop)
+                            {
+                                break;
+                            }
+                            else
+                            {
+                                continue;
+                            }
+                        }
+                    }
+                    else if (numberMultipleOne == 0 && numberMultipleTwo == 0 && numberMultipleThird == 0)
+                    {
+                        Console.WriteLine(i);
+                        Console.WriteLine("надеюсь, вы довольны своим результатом");
+                        break;
+                    }
+                }
+                Console.WriteLine("это были все представленные числа");
+            }
+            Console.WriteLine("спасибо, что воспользовались данно программой");
+        }
+    }
