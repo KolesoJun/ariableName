@@ -1,18 +1,11 @@
 static void Main(string[] args)
         {
-            //конкретики в задании нет, поэтому можно сделать так, как удобно (старт с 5, а не с 0)
+            int step = 7;
             int borderCycle = 100;
-            //int variable = 5;
+            int variableStart = 5;
 
-            for (int i = 5; i < borderCycle; i+=7) // простое перечисление цифр от 5 до 96 (поскольку, есть последовательность(каждое число больше другого на 7), можно использовать как for, так и while)
+            for (; variableStart < borderCycle; variableStart += step) // простое перечисление цифр от 5 до 96 (поскольку, есть последовательность(каждое число больше другого на 7), можно использовать как for, так и while)
             {
-                Console.WriteLine(i);
+                Console.WriteLine(variableStart);
             }
-
-            /*while (variable < borderCycle)
-            {
-                Console.WriteLine(variable);
-                variable += 7;
-            }*/
         } 
-    }
