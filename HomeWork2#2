@@ -4,20 +4,20 @@
             string comandStop = "exit";
             string loopOutput = "I work";
             string userInput;
-
             Console.WriteLine("введите start");
             userInput = Console.ReadLine();
 
             if (userInput == comandStart)
             {
                 Console.WriteLine("цикл запущен");
-
-                while (userInput != comandStop)
+               
+               while (userInput != comandStop)
                 {
                     Console.WriteLine(loopOutput);
                     userInput = Console.ReadLine();
                 }
-
             }
-            
         } 
+Классы, конструкторы, методы, циклы, условия отделяются от остального кода пустой строкой с двух сторон. Перед } и после { пустые строки не нужны - не понимаю этот момент. 
+когда нужно выделять пустыми строками перечисленные моменты, а когда нет? нужно ли отделать для читаемости кода переменные и поля? и если метод, цикл или другая важная часть кода последняя, 
+нужно ли ее отделять от завершающей скобы основного метода/класса еще одной пустой строкой?
