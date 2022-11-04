@@ -1,0 +1,23 @@
+        static void Main(string[] args)
+        {
+            string comandStart = "start";
+            string comandStop = "exit";
+            string loopOutput = "I work";
+            string userInput;
+
+            Console.WriteLine("введите start");
+            userInput = Console.ReadLine();
+
+            if (userInput == comandStart)
+            {
+                Console.WriteLine("цикл запущен");
+
+                while (userInput != comandStop)
+                {
+                    Console.WriteLine(loopOutput);
+                    userInput = Console.ReadLine();
+                }
+
+            }
+            
+        } 
