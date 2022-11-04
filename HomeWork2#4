@@ -1,14 +1,18 @@
 static void Main(string[] args)
         {
             Random random = new Random();
+            int numberInitial = 0;
+            int numberFinit = 101;
             int numberLimit;
             int numbersSum = 0;
-            numberLimit = random.Next(0, 101);
+            int dividerFirst = 3;
+            int dividerSecond = 5;
+            numberLimit = random.Next(numberInitial, numberFinit);
             Console.WriteLine("лимит: " + numberLimit);
 
             for (int i = 0; i < numberLimit; i++)
             {
-                if (i % 3 ==0 || i % 5 == 0)
+                if (i % dividerFirst == 0 || i % dividerSecond == 0)
                 {
                     Console.WriteLine("число = " + i);
                     numbersSum += i;
