@@ -1,0 +1,25 @@
+static void Main(string[] args)
+        {
+            string inputUserName;
+            string inputUserSing;
+            int symbolsAngular = 2;
+            Console.WriteLine("введите свое имя");
+            inputUserName = Console.ReadLine();
+            Console.WriteLine("введите символ обводки");
+            inputUserSing = Console.ReadLine();
+
+            Console.WriteLine("");
+
+            for (int i = 0; i < (inputUserName.Length+ symbolsAngular); i++)
+            {
+                Console.Write(inputUserSing);
+            }
+
+            Console.WriteLine("");
+            Console.WriteLine(inputUserSing+ inputUserName + inputUserSing);
+
+            for (int i = 0; i < (inputUserName.Length + symbolsAngular); i++)
+            {
+                Console.Write(inputUserSing);
+            }
+        }
