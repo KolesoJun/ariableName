@@ -1,0 +1,23 @@
+static void Main(string[] args)
+        {
+            string inputUser;
+            string password = "чд имба";
+            int countAttempts = 3;
+            Console.WriteLine("введите пароль:");
+
+            while (countAttempts > 0)
+            {
+                inputUser = Console.ReadLine();
+
+                if (inputUser == password)
+                {
+                    Console.WriteLine("титаны сильнее");
+                    break;
+                }
+                else
+                {
+                    countAttempts--;
+                    Console.WriteLine($"у вас осталось {countAttempts} попыток");
+                }
+            }
+        }
