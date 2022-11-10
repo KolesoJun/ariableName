@@ -1,152 +1,178 @@
 static void Main(string[] args)
         {
-            string inputUserValue;
-            float moneyUserRub = 0;
-            float moneyBuyRub =0;
-            int convertRubToUSD = 68;
-            int convertRubToEU = 73;
-            float moneyUserEU =0;
-            float moneyBuyEU =0;
-            float convertEUToUSD = 1.8f;
-            float convertEUToRub = 69.8f;
-            float moneyUserUSD=0;
-            float moneyBuyUSD =0;
-            float convertUSDToEU = 0.75f;
-            float convertUSDToRub = 65f;
-            string inputUserBuy = null;
-            string inputUserSale = null;
-            Console.WriteLine("это конвертер валюты. для корректной работы ответь на несколько вопросов. вы всегда сможете выйти из приложения, введя exit");
-            Console.WriteLine("сколько у вас рублей?");
-            inputUserValue = Console.ReadLine();
-            
-            if (inputUserValue == "exit")
-            {
-                System.Diagnostics.Process.GetCurrentProcess().Kill();
-            }
-            else
-            {
-                moneyUserRub = Convert.ToSingle(inputUserValue);
-                inputUserValue = null;
-            }
-            
-            Console.WriteLine("сколько у вас долларов?");
-            inputUserValue = Console.ReadLine();
+            string inputStartBalance = null;
+            float rubBalance = 0;
+            float currencyAmount = 0;
+            int convertRubToUsd = 68;
+            int convertRubToEur = 73;
+            float euBalance = 0;
+            float convertEurToUsd = 1.8f;
+            float convertEurToRub = 69.8f;
+            float usdBalance = 0;
+            float convertUsdToEur = 0.75f;
+            float convertUsdToRub = 65f;
+            string inputUser = null;
+            bool isOpen = true;
+            const string CommandExit = "exit";
+            Console.WriteLine("это конвертер валюты. для выхода введите exit");
 
-            if (inputUserValue == "exit")
+            for (int i = 0; i < 3; i++)
             {
-                System.Diagnostics.Process.GetCurrentProcess().Kill();
-            }
-            else
-            {
-                moneyUserUSD = Convert.ToSingle(inputUserValue);
-                inputUserValue = null;
+
+                    switch (i)//я долго искал вариант, как сделать красиво, но из-за исключения инт и стринг не смог сделать лучше
+                    {
+                        case 0:
+                            Console.WriteLine("сколько у вас рублей");
+                            inputStartBalance = Console.ReadLine();
+                        
+                        if (inputStartBalance != CommandExit)
+                        {
+                            rubBalance = int.Parse(inputStartBalance);
+                        }
+                        else
+                        {
+                            isOpen = false;
+                            i = 3;
+                        }
+                            break;
+                        case 1:
+                            Console.WriteLine("сколько у вас долларов");
+                            inputStartBalance = Console.ReadLine();
+                       
+                        if (inputStartBalance != CommandExit)
+                        {
+                            usdBalance = Convert.ToSingle(inputStartBalance);
+                        }
+                        else
+                        {
+                            isOpen = false;
+                            i = 3;
+                        }
+                        break;
+                        case 2:
+                            Console.WriteLine("сколько у вас евро");
+                            inputStartBalance = Console.ReadLine();
+                        if (inputStartBalance != CommandExit)
+                        {
+                            euBalance = Convert.ToSingle(inputStartBalance);
+                        }
+                        else
+                        {
+                            isOpen = false;
+                            i = 3;
+                        }
+                        break;
+                    }
             }
             
-            Console.WriteLine("сколько у вас евро?");
-            inputUserValue = Console.ReadLine();
+            Console.WriteLine($"ваш баланс равен: {rubBalance}рублей, {usdBalance} долларов, {euBalance} евро.");
 
-            if (inputUserValue == "exit")
+            while (isOpen)
             {
-                System.Diagnostics.Process.GetCurrentProcess().Kill();
-            }
-            else
-            {
-                moneyUserEU = Convert.ToSingle(inputUserValue);
-                inputUserValue = null;
-            }
-            
-            Console.WriteLine($"ваш баланс равен: {moneyUserRub}рублей, {moneyUserUSD} долларов, {moneyUserEU} евро.");
+                Console.WriteLine("1 - евро за доллары; 2 - рубли за доллары; 3 - доллары за рубли; 4 - доллары за евро; 5 - рубли за евро; 6 - евро за рубли; 7 - выйти");
+                inputUser = Console.ReadLine();
 
-            while (moneyUserRub != 0 || moneyUserUSD != 0 || moneyUserEU !=0)
-            {
-                Console.WriteLine("нажмите 1, чтобы купить доллар; 2, чтобы купить евро; 3, чтобы купить вечно деревянные. Чтобы выйти, введите: exit");
-                inputUserBuy = Console.ReadLine();
-
-                switch (inputUserBuy)
+                switch (inputUser)
                 {
                     case "1":
-                        Console.WriteLine("сколько вы хотите купить долларов?");
-                        moneyBuyUSD = Convert.ToInt32(Console.ReadLine());
+                        Console.WriteLine("сколько вы хотите получить евро за доллары?");
+                        currencyAmount = Convert.ToInt32(Console.ReadLine());
+                        
+                        if (usdBalance - convertUsdToEur / currencyAmount > 0)
+                        {
+                            usdBalance -= convertUsdToEur / currencyAmount;
+                            euBalance += Convert.ToSingle(currencyAmount);
+                        }
+                        else
+                        {
+                            Console.WriteLine("у вас не достаточно денег");
+                        }
                         break;
                     case "2":
-                        Console.WriteLine("сколько вы хотите купить евро?");
-                        moneyBuyEU = Convert.ToInt32(Console.ReadLine());
+                        Console.WriteLine("сколько вы хотите получить рублей за доллары?");
+                        currencyAmount = Convert.ToInt32(Console.ReadLine());
+                        
+                        if (usdBalance - currencyAmount / convertUsdToRub>0)
+                        {
+                            usdBalance -= currencyAmount / convertUsdToRub;
+                            rubBalance += Convert.ToSingle(currencyAmount);
+                        }
+                        else
+                        {
+                            Console.WriteLine("у вас не достаточно денег");
+                        }
                         break;
                     case "3":
-                        Console.WriteLine("сколько вы хотите купить рублей?");
-                        moneyBuyRub = Convert.ToInt32(Console.ReadLine());
+                        Console.WriteLine("сколько вы хотите получить долларов за рубли?");
+                        currencyAmount = Convert.ToInt32(Console.ReadLine());
+                       
+                        if (rubBalance - convertRubToUsd * currencyAmount>0)
+                        {
+                            rubBalance -= convertRubToUsd * currencyAmount;
+                            usdBalance += Convert.ToSingle(currencyAmount);
+                        }
+                        else
+                        {
+                            Console.WriteLine("у вас не достаточно денег");
+                        }
                         break;
-                    case "exit":
+                    case "4":
+                        Console.WriteLine("сколько вы хотите получить долларов за евро?");
+                        currencyAmount = Convert.ToInt32(Console.ReadLine());
+                        
+                        if (euBalance - convertEurToUsd / currencyAmount>0)
+                        {
+                            euBalance -= convertEurToUsd / currencyAmount;
+                            usdBalance += Convert.ToSingle(currencyAmount);
+                        }
+                        else
+                        {
+                            Console.WriteLine("у вас не достаточно денег");
+                        }
+                        break;
+                    case "5":
+                        Console.WriteLine("сколько вы хотите получить рублей за евро?");
+                        currencyAmount = Convert.ToInt32(Console.ReadLine());
+                        
+                        if (euBalance - currencyAmount / convertEurToRub>0)
+                        {
+                            euBalance -= currencyAmount / convertEurToRub;
+                            rubBalance += Convert.ToSingle(currencyAmount);
+                        }
+                        else
+                        {
+                            Console.WriteLine("у вас не достаточно денег");
+                        }
+                        break;
+                    case "6":
+                        Console.WriteLine("сколько вы хотите получить евро за рубли?");
+                        currencyAmount = Convert.ToInt32(Console.ReadLine());
+                        
+                        if (rubBalance - convertRubToEur * currencyAmount>0)
+                        {
+                            rubBalance -= convertRubToEur * currencyAmount;
+                            euBalance += Convert.ToSingle(currencyAmount);
+                        }
+                        else
+                        {
+                            Console.WriteLine("у вас не достаточно денег");
+                        }
+                        break;
+                    case "7":
                         Console.WriteLine("завершение программы...");
-                        System.Diagnostics.Process.GetCurrentProcess().Kill();
+                        isOpen = false;
+                        break;
+                    case CommandExit:
+                        Console.WriteLine("завершение программы...");
+                        isOpen = false;
                         break;
                     default:
-                        inputUserBuy = null;
+                        inputUser = null;
                         Console.WriteLine("вы ошиблись");
                         break;
                 }
 
-                if (inputUserBuy != null)
-                {
-                    Console.WriteLine("за какую валюту вы хотите купить? 1 - доллары; 2 - евро; 3 - рубли");
-                    inputUserSale = Console.ReadLine();
-
-                    if (inputUserBuy != inputUserSale)
-                    {
-                        switch (inputUserSale)
-                        {
-                            case "1":
-                                if (inputUserBuy == "2")
-                                {
-                                    moneyUserEU += Convert.ToSingle(moneyBuyEU);
-                                    moneyUserUSD -= convertUSDToEU * moneyBuyEU;
-                                }
-                                else if (inputUserBuy == "3")
-                                {
-                                    moneyUserRub += Convert.ToSingle(moneyBuyRub);
-                                    moneyUserUSD -= moneyBuyRub / convertUSDToRub;
-                                }
-                                break;
-                            case "2":
-                                if (inputUserBuy == "1")
-                                {
-                                    moneyUserUSD += Convert.ToSingle(moneyBuyUSD);
-                                    moneyUserEU -= convertEUToUSD * moneyBuyUSD;
-                                }
-                                else if (inputUserBuy == "3")
-                                {
-                                    moneyUserRub += Convert.ToSingle(moneyBuyRub);
-                                    moneyUserEU -= moneyBuyRub / convertEUToRub;
-                                }
-                                break;
-                            case "3":
-                                if (inputUserBuy == "1")
-                                {
-                                    moneyUserUSD += Convert.ToSingle(moneyBuyUSD);
-                                    moneyUserRub -= convertRubToUSD * moneyBuyUSD;
-                                }
-                                else if (inputUserBuy == "2")
-                                {
-                                    moneyUserEU += Convert.ToSingle(moneyBuyEU);
-                                    moneyUserRub -= convertRubToEU * moneyBuyEU;
-                                }
-                                break;
-                            case "exit":
-                                Console.WriteLine("завершение программы...");
-                                System.Diagnostics.Process.GetCurrentProcess().Kill();
-                                break;
-                            default:
-                                Console.WriteLine("неправильный ввод");
-                                break;
-                        }
-                    }
-
-                    if (inputUserBuy == inputUserSale)
-                    {
-                        Console.WriteLine("вы что-то напутали");
-                    }
-                }
-
-                Console.WriteLine($"у вас теперь: {moneyUserUSD}долларов, {moneyUserEU} евро, {moneyUserRub} рублей.");
+                Console.WriteLine($"у вас теперь: {usdBalance}долларов, {euBalance} евро, {rubBalance} рублей.");
             }
         }
+     }
