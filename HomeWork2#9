@@ -1,0 +1,26 @@
+static void Main(string[] args)
+        {
+            int min = 1;
+            int max = 28;
+            int minThreeDigit = 100;
+            int maxThreeDigit = 999;
+            int sumThreeDigit =0;
+
+            Random random = new Random();
+            int n = random.Next(min, max);
+            Console.WriteLine("N =" + n);
+
+            while (minThreeDigit <= maxThreeDigit)
+            {
+
+                if (minThreeDigit == Math.Pow(n,2))
+                {
+                    Console.WriteLine(minThreeDigit);
+                    sumThreeDigit++;
+                }
+                
+                minThreeDigit++;
+            }
+
+            Console.WriteLine("количество таких чисел=" + sumThreeDigit);
+        }
