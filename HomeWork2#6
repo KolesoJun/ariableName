@@ -1,47 +1,49 @@
-int numberFirst;
-            int numberSecond;
-            int result =0;
-            string inputUser = null;
-            bool isOpen = true;
-            bool isWorks = true;
-            const string SaveInFirstNum = "1";
-            const string SaveInSecondNum = "2";
+const string SaveInFirst = "1";
+            const string SaveInSecond = "2";
             const string CommandExit = "5";
             const string CommandDivision = "4";
             const string CommandMultiplication = "3";
             const string CommandAddition = "2";
             const string CommandSubtraction = "1";
 
-            while (isWorks)
+            int firstNumber;
+            int secondNumber;
+            int result = 0;
+            string inputUser = null;
+            bool isOpen = true;
+            bool isWorks = true;
+            
+
+            while (isWorks)// если пользователь захочет завершить программу на этапе ввода чисел
             {
                 Console.WriteLine("это простой калькулятор");
                 Console.WriteLine("введите числа");
                 Console.Write("первое число: ");
-                numberFirst = Convert.ToInt32(Console.ReadLine());
+                firstNumber = Convert.ToInt32(Console.ReadLine());
                 Console.Write("второе число: ");
-                numberSecond = Convert.ToInt32(Console.ReadLine());
+                secondNumber = Convert.ToInt32(Console.ReadLine());
                 isOpen = true;
 
-                while (isOpen)
+                while (isOpen)//если пользователь захочет завершить программу на этапе выполнения операций
                 {
-                    Console.WriteLine("число первое:"+ numberFirst);
-                    Console.WriteLine("число второе:"+ numberSecond);
+                    Console.WriteLine("число первое:" + firstNumber);
+                    Console.WriteLine("число второе:" + secondNumber);
                     Console.WriteLine("1 - вычесть первое из второго; 2 - сложить; 3 - умножить; 4 - разделить первое на второе; 5 - выйти;");
                     inputUser = Console.ReadLine();
 
                     switch (inputUser)
                     {
                         case CommandSubtraction:
-                            result = numberSecond - numberFirst;
+                            result = secondNumber - firstNumber;
                             break;
                         case CommandAddition:
-                            result = numberFirst + numberSecond;
+                            result = firstNumber + secondNumber;
                             break;
                         case CommandMultiplication:
-                            result = numberFirst * numberSecond;
+                            result = firstNumber * secondNumber;
                             break;
                         case CommandDivision:
-                            result = numberFirst / numberSecond;
+                            result = firstNumber / secondNumber;
                             break;
                         case CommandExit:
                             Console.WriteLine("завершение программы...");
@@ -55,17 +57,17 @@ int numberFirst;
 
                     if (inputUser != CommandExit)
                     {
-                        Console.WriteLine("результат вычислений:"+result);
+                        Console.WriteLine("результат вычислений:" + result);
                         Console.WriteLine("сохранить результат? 1 - в первое число; 2 - во второе число; 5 - сбросить");
                         inputUser = Console.ReadLine();
 
                         switch (inputUser)
                         {
-                            case SaveInFirstNum:
-                                numberFirst = result;
+                            case SaveInFirst:
+                                firstNumber = result;
                                 break;
-                            case SaveInSecondNum:
-                                numberSecond = result;
+                            case SaveInSecond:
+                                secondNumber = result;
                                 break;
                             case CommandExit:
                                 result = 0;
@@ -78,11 +80,11 @@ int numberFirst;
                         break;
                     }
                 }
-               
+
                 Console.WriteLine("желаете выйти? нажмите любую клавишу, чтобы продолжить. 5 - выйти");
                 inputUser = Console.ReadLine();
-               
-               if (inputUser == CommandExit)
+
+                if (inputUser == CommandExit)
                 {
                     break;
                     isWorks = false;
@@ -92,5 +94,5 @@ int numberFirst;
                 {
                     isWorks = true;
                 }
-            }  
+            }
         }
