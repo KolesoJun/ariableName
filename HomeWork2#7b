@@ -1,0 +1,39 @@
+static void Main(string[] args)
+        {
+            string name;
+            char symbol ='\0';
+            string middleLine;
+            bool lineFullness = true;
+            char frame;
+
+            Console.WriteLine("введите имя");
+            name = Console.ReadLine();
+            Console.WriteLine("введите символ");
+            frame = Convert.ToChar(Console.ReadLine());
+            symbol = frame;
+
+            middleLine = symbol + name + symbol;
+
+            for (int i = 0; i <= middleLine.Length; i++)
+            {
+                frame += symbol;
+
+                if (lineFullness && i < middleLine.Length)
+                {
+                    Console.Write(frame);
+                }
+
+                if (lineFullness && i == middleLine.Length)
+                {
+                    Console.WriteLine();
+                    Console.WriteLine(middleLine);
+                    i = 0;
+                    lineFullness = false;
+                }
+
+                if (!lineFullness && i < middleLine.Length)
+                {
+                    Console.Write(frame);
+                }
+            }
+        }
