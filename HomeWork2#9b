@@ -1,0 +1,27 @@
+static void Main(string[] args)
+        {
+            int minMultiple = 1;
+            int maxMultiple = 28;
+            int result = 0;
+            int min = 100;
+            int max = 999;
+            int sum = 0;
+
+            Random random = new Random();
+            int number = random.Next(minMultiple, maxMultiple);
+            Console.WriteLine("N =" + number);
+
+            while (result<max)
+            {
+                result += number;
+
+                if (result >= min)
+                {
+                    Console.WriteLine(result);
+                    sum++;
+                }
+
+            }
+
+            Console.WriteLine("количество таких чисел=" + sum);
+        }
