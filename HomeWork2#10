@@ -1,4 +1,4 @@
- static void Main(string[] args)
+static void Main(string[] args)
         {
             int min = 1;
             int max = 101;
@@ -11,13 +11,14 @@
             numberDefined = random.Next(min, max);
             Console.WriteLine("N =" + numberDefined);
 
-            for (; numberDefined > result; )
+            while (numberDefined > result)
             {
                 result *= number;
                 degree++;
+               
                 if (numberDefined < result)
                 {
-                    Console.WriteLine("необходимая степень:"+ degree);
+                    Console.WriteLine("необходимая степень:" + degree);
                 }
             }
 
