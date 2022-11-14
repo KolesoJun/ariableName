@@ -2,22 +2,24 @@
         {
             int min = 1;
             int max = 101;
+            int numberDefined;
             int number = 2;
-            double result = 0;
+            double result=1;
+            int degree=0;
 
             Random random = new Random();
-            int n = random.Next(min, max);
-            Console.WriteLine("N =" + n);
+            numberDefined = random.Next(min, max);
+            Console.WriteLine("N =" + numberDefined);
 
-            for (int i = 0; n > result; i++)
+            for (; numberDefined > result; )
             {
-               result = Math.Pow(number, i);
-
-                if (n < result)
+                result *= number;
+                degree++;
+                if (numberDefined < result)
                 {
-                    Console.WriteLine("необходимая степень:"+i);
+                    Console.WriteLine("необходимая степень:"+ degree);
                 }
             }
 
-            Console.WriteLine(n+"<"+result);
+            Console.WriteLine(numberDefined + "<"+result);
         }
