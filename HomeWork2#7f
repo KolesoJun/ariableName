@@ -1,0 +1,46 @@
+namespace ConsoleApp1
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            string name;
+            char symbol;
+            string middleLine;
+            bool isCheck = true;
+
+            Console.WriteLine("введите имя");
+            name = Console.ReadLine();
+            Console.WriteLine("введите символ");
+            symbol = Convert.ToChar(Console.ReadLine());
+            middleLine = symbol + name + symbol;
+            string frame = Convert.ToString(symbol);
+
+
+
+            for (;frame.Length <= middleLine.Length; frame += symbol)
+            {
+                
+                if (isCheck && frame.Length <= middleLine.Length)
+                {
+                    Console.Write(symbol);
+                }
+
+                if (isCheck && frame.Length >= middleLine.Length)
+                {
+                    Console.WriteLine();
+                    Console.WriteLine(middleLine);
+                    frame = null;
+                    frame = Convert.ToString(symbol);
+                    isCheck = false;
+                }
+
+                if (!isCheck && frame.Length <= middleLine.Length)
+                {
+                    Console.Write(symbol);
+                }
+
+            }
+        }
+    }
+}
