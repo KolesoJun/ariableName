@@ -1,0 +1,89 @@
+namespace ConsoleApp1
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            const string SaveInFirst = "First";
+            const string SaveInSecond = "Second";
+            const string CommandExit = "Exit";
+            const string CommandDivision = "Division";
+            const string CommandMultiplication = "Multiplication";
+            const string CommandAddition = "Addition";
+            const string CommandSubtraction = "Subtraction";
+            const string CommandReset = "Reset";
+
+            int firstNumber;
+            int secondNumber;
+            int result = 0;
+            string inputUser = null;
+            bool isOpen = true;
+
+                Console.WriteLine("это простой калькулятор");
+                Console.WriteLine("введите числа");
+                Console.Write("первое число: ");
+                firstNumber = Convert.ToInt32(Console.ReadLine());
+                Console.Write("второе число: ");
+                secondNumber = Convert.ToInt32(Console.ReadLine());
+                isOpen = true;
+
+                while (isOpen)
+                {
+                    Console.WriteLine("число первое:" + firstNumber);
+                    Console.WriteLine("число второе:" + secondNumber);
+                    Console.WriteLine("Subtraction - разница чисел; Addition - сумма чисел; Multiplication - произведение; Division - частное; Reset - ввести новые числа Exit - Выход.");
+                    inputUser = Console.ReadLine();
+
+                    switch (inputUser)
+                    {
+                        case CommandSubtraction:
+                            result = secondNumber - firstNumber;
+                            break;
+                        case CommandAddition:
+                            result = firstNumber + secondNumber;
+                            break;
+                        case CommandMultiplication:
+                            result = firstNumber * secondNumber;
+                            break;
+                        case CommandDivision:
+                            result = firstNumber / secondNumber;
+                            break;
+                        case CommandExit:
+                            Console.WriteLine("завершение программы...");
+                            isOpen = false;
+                            break;
+                    case CommandReset:
+                        default:
+                            inputUser = null;
+                            Console.WriteLine("вы ошиблись");
+                            break;
+                    }
+
+                    if (inputUser != CommandExit)
+                    {
+                        Console.WriteLine("результат вычислений:" + result);
+                        Console.WriteLine("сохранить результат? First - в первое число; Second - во второе число; Reset - сбросить");
+                        inputUser = Console.ReadLine();
+
+                        switch (inputUser)
+                        {
+                            case SaveInFirst:
+                                firstNumber = result;
+                                break;
+                            case SaveInSecond:
+                                secondNumber = result;
+                                break;
+                            case CommandReset:
+                                result = 0;
+                                isOpen = false;
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+        }
+    }
+}
