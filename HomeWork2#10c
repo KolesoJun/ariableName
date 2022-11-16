@@ -1,0 +1,27 @@
+namespace ConsoleApp1
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            int min = 1;
+            int max = 101;
+            int numberDefined;
+            int number = 2;
+            double result = 1;
+            int degree = 0;
+
+            Random random = new Random();
+            numberDefined = random.Next(min, max);
+            Console.WriteLine("N =" + numberDefined);
+
+            while (numberDefined > result)
+            {
+                result *= number;
+                degree++;
+            }
+            
+            Console.WriteLine($"необходимая степень:{degree}, {numberDefined}<{result}");
+        }
+    }
+}
