@@ -1,0 +1,29 @@
+namespace ConsoleApp1
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            int minMultiple = 1;
+            int maxMultiple = 28;
+            int min = 100;
+            int max = 1000;
+            int sum = 0;
+            Random random = new Random();
+            int number = random.Next(minMultiple, maxMultiple);
+            Console.WriteLine("N =" + number);
+
+            for (int i = 0; i < max; i += number)
+            {
+                if (i >= min)
+                {
+                    Console.WriteLine(i);
+                    sum++;
+                }
+
+            }
+
+            Console.WriteLine("количество таких чисел=" + sum);
+        }
+    }
+}
