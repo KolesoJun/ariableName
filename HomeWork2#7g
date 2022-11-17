@@ -1,0 +1,30 @@
+class Program
+    {
+        static void Main(string[] args)
+        {
+            string name;
+            char symbol;
+            int countSymbol = 0;
+            int column = 3;
+            string middleLine;
+
+            Console.WriteLine("введите имя");
+            name = Console.ReadLine();
+            Console.WriteLine("введите символ");
+            symbol = Convert.ToChar(Console.ReadLine());
+            middleLine = symbol + name + symbol;
+            countSymbol = middleLine.Length * column;
+
+            for (int i = 1; i <= countSymbol; i++)
+            {
+                Console.Write(symbol);
+
+                if (i== middleLine.Length)
+                {
+                    Console.WriteLine();
+                    Console.WriteLine(middleLine);
+                    i += middleLine.Length;
+                }
+            }
+        }
+    }
