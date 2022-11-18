@@ -1,0 +1,25 @@
+namespace ConsoleApp1
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            string name;
+            char symbol;
+            string middleLine;
+            string shortLine = null;
+
+            Console.WriteLine("введите имя");
+            name = Console.ReadLine();
+            Console.WriteLine("введите символ");
+            symbol = Convert.ToChar(Console.ReadLine());
+            middleLine = symbol + name + symbol;
+
+            for (int i = 1; i <= middleLine.Length; i++)
+            {
+                shortLine += symbol;
+            }
+            Console.WriteLine($"{shortLine}\n{middleLine}\n{shortLine}");
+        }
+    }
+}
