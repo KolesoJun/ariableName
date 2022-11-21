@@ -14,28 +14,34 @@ namespace ConsoleApp1
 
             inputText = Console.ReadLine();
             
-
             for (int i = 0; i < inputText.Length; i++)
             {
-                if (inputText[i] == climpOpen)
+                if (inputText[0] == climpOpen && inputText[inputText.Length -1] != climpOpen)
                 {
-                    countOpen++;
+                       if (inputText[i] == climpOpen)
+                       {
+                        countOpen++;
+                       }
+                       else if (inputText[i] == climpClose)
+                       {
+                        countClose++;
+                       }
                 }
-                else if (inputText[i] == climpClose)
+                else
                 {
-                    countClose++;
+                    break;
                 }
-            }
 
-            if (countOpen == countClose)
-            {
-                depth = countOpen;
-                isCorrect = true;
-            }
-            else
-            {
-                isCorrect = false;
-                depth = 0;
+                if (countOpen == countClose)
+                {
+                    depth = countOpen;
+                    isCorrect = true;
+                }
+                else
+                {
+                    isCorrect = false;
+                    depth = 0;
+                }
             }
 
             Console.WriteLine($"строка корректна - {isCorrect}, глубина = {depth}");
