@@ -1,0 +1,55 @@
+namespace ConsoleApp1
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            char climpOpen = '(';
+            int countOpen = 0;
+            char climpClose = ')';
+            int countClose = 0;
+            string inputText;
+            bool isCorrect = false;
+            int depth = 0;
+            int countBaskets = 0;
+            
+            inputText = Console.ReadLine();
+
+            if (inputText[0] == climpOpen && inputText[inputText.Length - 1] != climpOpen)
+            {
+                isCorrect = true;
+            }
+
+            foreach (var symbol in inputText)
+            {
+                if (symbol == climpOpen)
+                {
+                    countOpen++;
+                    countBaskets++;
+                }
+                else if (symbol == climpClose)
+                {
+                    countClose++;
+                    countBaskets--;
+                }
+
+                if (countBaskets < 0)
+                {
+                    isCorrect = false;
+                    break;
+                }
+            }
+
+                if (countOpen == countClose && isCorrect)
+                {
+                    depth = countOpen;
+                }
+                else
+                {
+                    depth = 0;
+                }
+            
+            Console.WriteLine($"строка корректна - {isCorrect}, глубина = {depth}");
+        }
+    }
+}
