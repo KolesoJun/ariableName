@@ -1,0 +1,57 @@
+namespace ConsoleApp1
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            char climpOpen = '(';
+            char climpClose = ')';
+            string inputText;
+            int depth = 0;
+            int countBaskets = 0;
+
+            Console.WriteLine("введите скобки и я посчитаю глубину и корректность");
+            inputText = Console.ReadLine();
+
+            for (int i = 0; i < inputText.Length; i++)
+            {
+                if (inputText[i] == climpOpen)
+                {
+                    countBaskets++;
+
+                    if (depth < countBaskets)
+                    {
+                        depth = countBaskets;
+                    }
+
+                }
+                else if (inputText[i] == climpClose)
+                {
+                    countBaskets--;
+
+                    if (countBaskets < 0)
+                    {
+                        depth = 0;
+                        break;
+                    }
+                }
+            }
+
+            if (countBaskets !=0)
+            {
+                depth = 0;
+            }
+
+            if (depth > 0)
+            {
+                Console.Write("строка корректна, ");
+            }
+            else
+            {
+                Console.Write("строка не корректна, ");
+            }
+
+            Console.WriteLine("глубина = "+ depth);
+        }
+    }
+}
