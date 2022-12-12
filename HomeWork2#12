@@ -1,0 +1,303 @@
+namespace ConsoleApp1
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            //general
+            int min = 0;
+            int max = 101;
+
+            //user
+            Random randomDamage = new Random();
+            Console.WriteLine("введите свои параметры здоровья и брони");
+            int healthUser = Convert.ToInt32(Console.ReadLine());
+            int armorUser = Convert.ToInt32(Console.ReadLine());
+            int healthUserCurrent = healthUser;
+            int armorUserCurrent = armorUser;
+            int damageUser = randomDamage.Next(min + 15, max - 60);
+            int localDamage = 0;
+            int damageUserBack = damageUser / 2;
+            int focus = 0;
+            int fireBollDamage = 10;
+            bool isRage = false;
+            const string Blocking = "Blocking";
+            const string Attack = "Attack";
+            const string FireBoll = "FireBoll";
+            const string DoubleAttack = "DoubleAttack";
+            const string Rage = "Rage";
+            const string HealthUp = "HealthUp";
+            string input;
+            //страховка против самых умных
+            if ((healthUser%armorUser == 0 && healthUser != armorUser) || armorUser> healthUser)
+            {
+                healthUserCurrent = healthUser / 5;
+                armorUserCurrent = 5;
+            }
+
+            //boss
+            Random randomHealth = new Random();
+            Random randomArmor = new Random();
+            Random randomDamge = new Random();
+            int healthBoss = randomHealth.Next((healthUser-10), (healthUser+50));
+            int healthBossCurrent = healthBoss;
+            int armorBoss = randomArmor.Next((damageUser - 15), (damageUser -5));
+            int armorBossCurrent = armorBoss;
+            int damageBoss = randomDamge.Next((min +18), (max - 63));
+            int damageBossBack = damageBoss / 2;
+            int countAura = 0;
+            int countGhost = 0;
+            int bolt = 100;
+            int strenght = 0;
+            bool ghost = false;
+            bool aura = false;
+
+            //вывод инфы
+            Console.WriteLine($"ваши параметры: здоровье - {healthUser}, броня - {armorUser}, урон - {damageUser}");
+            Console.WriteLine($"параметры вашего противника: здоровье - {healthBoss}, броня - {armorBoss}, урон - {damageBoss}");
+
+
+            for (int round = 0; healthUser > 0 || healthBoss > 0; round++)
+            {
+                Console.WriteLine($"ваши действия: {Blocking}, {Attack}, {FireBoll}, {HealthUp}");
+
+                if ( healthUser  % healthUserCurrent == 0 && healthUser != healthUserCurrent)
+                {
+                    isRage = true;
+                }
+                else
+                {
+                    isRage = false;
+                    localDamage = damageUser;
+                }
+
+                Console.WriteLine($"Round: {round}");
+                Console.WriteLine("ход игрока");
+                if (healthUserCurrent>0)
+                {
+                    input = Console.ReadLine();
+
+                    switch (input)
+                    {
+                        case Blocking:
+                            if ((armorUser - armorUserCurrent) > 5)
+                            {
+                                armorUserCurrent += 5;
+                            }
+                            else
+                            {
+                                armorUserCurrent = armorUser;
+                            }
+
+                            break;
+
+                        case Attack:
+
+                            if (ghost)
+                            {
+                                Console.WriteLine("призрак жив, а враг в тени. ваши действия?");
+                                Console.WriteLine("1 - удрить призрака; 2 - попробовать ударить врага");
+
+                                switch (input)
+                                {
+                                    case "1":
+                                        ghost = false;
+                                        countGhost = 0;
+                                        focus++;
+                                        break;
+                                    case "2":
+                                        if (damageUser % 2 == 0 && (damageUser - armorUserCurrent) >= 30)
+                                        {
+                                            healthBossCurrent -= (damageUser - armorBossCurrent);
+                                            focus += 2;
+                                            armorBossCurrent -= 2;
+                                        }
+                                        break;
+                                }
+                            }
+                            else
+                            {
+                                healthBossCurrent -= (damageUser - armorBossCurrent);
+                                armorBossCurrent--;
+                                focus++;
+                                healthUserCurrent -= (damageBossBack - armorUserCurrent);
+                            }
+
+                            int doubleHit = 0;
+                            Random randomDoubleAttack = new Random();
+                            doubleHit = randomDoubleAttack.Next(min, max);
+
+                            if (doubleHit % 3 == 0 && doubleHit % 5 == 0)
+                            {
+                                Console.WriteLine(DoubleAttack);
+                                healthBoss -= (damageUser - armorBoss);
+                                focus++;
+                            }
+
+                            break;
+
+                        case FireBoll:
+
+                            if (focus > 0)
+                            {
+                                healthBossCurrent -= focus * fireBollDamage;
+                                focus = 0;
+                            }
+
+                            break;
+
+                        case HealthUp:
+
+                            if ((healthUser - healthUserCurrent) > 25)
+                            {
+                                healthUserCurrent += 25;
+                            }
+                            else
+                            {
+                                healthUserCurrent = healthUser;
+                            }
+
+                            break;
+                    }
+                }
+
+                Random randomBoss = new Random();
+                int action = randomBoss.Next(1,5);
+                Console.WriteLine($"параметры вашего противника: здоровье - {healthBossCurrent}, броня - {armorBossCurrent}, урон - {damageBoss}");
+                Console.WriteLine("ход противника");
+                int localhealth = healthUser;
+                int localArmor = armorUser;
+                localDamage = damageUser;
+
+                if (healthBossCurrent > 0)
+                {
+                    switch (action)
+                    {
+                        case 1:
+                            Console.WriteLine("призван призрак");
+
+                            if (ghost)
+                            {
+                                Console.WriteLine("призрак взорван!");
+                                healthUserCurrent -= (damageBossBack * countGhost - armorUserCurrent);
+                            }
+                            else
+                            {
+                                ghost = true;
+                            }
+
+                            if (countGhost == 10)
+                            {
+                                Console.WriteLine("молния!");
+                                healthUserCurrent -= bolt;
+                                countGhost = 0;
+                                ghost = false;
+                            }
+
+                            break;
+                        case 2:
+                            Console.WriteLine("атака!");
+
+                            if (ghost)
+                            {
+                                Console.WriteLine("надо было думать раньше! Двойной удар!");
+                                healthUserCurrent -= (damageBoss - armorUserCurrent) * 2;
+                                ghost = false;
+                            }
+                            else
+                            {
+                                healthUserCurrent -= (damageBoss - armorUserCurrent);
+                                healthBossCurrent -= (damageUserBack - armorBossCurrent);
+                            }
+
+                            break;
+                        case 3:
+                            Console.WriteLine("я становлюсь сильнее!!!");
+                            strenght++;
+
+                            if ((healthBoss - healthBossCurrent) > 5)
+                            {
+                                healthBossCurrent += 5;
+                            }
+                            else
+                            {
+                                healthBossCurrent = healthBoss;
+                            }
+
+                            if ((armorBoss - armorBossCurrent) > 2)
+                            {
+                                armorBossCurrent += 2;
+                            }
+                            else
+                            {
+                                armorBossCurrent = armorBoss;
+                            }
+
+
+                            if (strenght > 5)
+                            {
+                                Console.WriteLine("мой клинок стал острее!");
+                                damageBoss += strenght;
+                                strenght = 0;
+                            }
+
+                            break;
+                        case 4:
+                            Console.WriteLine($"астральная яма!");
+                            aura = true;
+
+                            if (aura && countAura < 3)
+                            {
+                                healthUser = localhealth;
+                                armorUser = localArmor;
+                                aura = false;
+                                countAura = 0;
+                            }
+
+                            break;
+                    }
+                }
+
+                Console.WriteLine();
+
+                if (healthBossCurrent <= 0)
+                {
+                    Console.WriteLine("вы победили!");
+                    break;
+                }
+                else if (healthUserCurrent <= 0)
+                {
+                    Console.WriteLine("вы проиграли");
+                    break;
+                }
+
+                if (ghost)
+                {
+                    Console.WriteLine("призрак все еще жив и становится опаснее! вы теряете броню и фокус!");
+                    armorUserCurrent -= 2;
+                    focus -= 2;
+                    countGhost++;
+                }
+
+                if (aura)
+                {
+                    Console.WriteLine("аура активна! вы теряете максимальные показатели!");
+                    countAura++;
+                    healthUser -= 5;
+                    armorUser -= 5;
+                    damageUser -= 3;
+                }
+
+                if (isRage)
+                {
+                    Console.WriteLine(Rage);
+                    localDamage += 10;
+                }
+
+                Console.WriteLine("конец раунда");
+                Console.WriteLine($"ваши параметры: здоровье - {healthUserCurrent}, броня - {armorUserCurrent}, урон - {damageUser}");
+                Console.WriteLine($"параметры вашего противника: здоровье - {healthBossCurrent}, броня - {armorBossCurrent}, урон - {damageBoss}");
+            }
+        }
+    }
+}
