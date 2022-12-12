@@ -29,7 +29,7 @@ namespace ConsoleApp1
             const string HealthUp = "HealthUp";
             string input;
             //страховка против самых умных
-            if ((healthUser%armorUser == 0 && healthUser != armorUser) || armorUser> healthUser)
+            if (armorUser> healthUser)
             {
                 healthUserCurrent = healthUser / 5;
                 armorUserCurrent = 5;
@@ -41,10 +41,10 @@ namespace ConsoleApp1
             Random randomDamge = new Random();
             int healthBoss = randomHealth.Next((healthUser-10), (healthUser+50));
             int healthBossCurrent = healthBoss;
-            int armorBoss = randomArmor.Next((damageUser - 15), (damageUser -5));
-            int armorBossCurrent = armorBoss;
-            int damageBoss = randomDamge.Next((min +18), (max - 63));
+            int damageBoss = randomDamge.Next((min + 18), (max - 63));
             int damageBossBack = damageBoss / 2;
+            int armorBoss = randomArmor.Next((damageBossBack + 5), (damageBossBack +15));
+            int armorBossCurrent = armorBoss;
             int countAura = 0;
             int countGhost = 0;
             int bolt = 100;
@@ -57,7 +57,7 @@ namespace ConsoleApp1
             Console.WriteLine($"параметры вашего противника: здоровье - {healthBoss}, броня - {armorBoss}, урон - {damageBoss}");
 
 
-            for (int round = 0; healthUser > 0 || healthBoss > 0; round++)
+            for (int round = 1; healthUser > 0 || healthBoss > 0; round++)
             {
                 Console.WriteLine($"ваши действия: {Blocking}, {Attack}, {FireBoll}, {HealthUp}");
 
@@ -69,6 +69,12 @@ namespace ConsoleApp1
                 {
                     isRage = false;
                     localDamage = damageUser;
+                }
+
+                if (isRage)
+                {
+                    Console.WriteLine(Rage);
+                    localDamage += 10;
                 }
 
                 Console.WriteLine($"Round: {round}");
@@ -108,19 +114,45 @@ namespace ConsoleApp1
                                     case "2":
                                         if (damageUser % 2 == 0 && (damageUser - armorUserCurrent) >= 30)
                                         {
-                                            healthBossCurrent -= (damageUser - armorBossCurrent);
-                                            focus += 2;
-                                            armorBossCurrent -= 2;
+                                            if ((damageUser - armorBossCurrent)>0)
+                                            {
+                                                healthBossCurrent -= (damageUser - armorBossCurrent);
+                                                focus += 2;
+                                                armorBossCurrent -= 2;
+                                            }
+                                            else
+                                            {
+                                                healthBossCurrent -= (-1*(damageUser - armorBossCurrent));
+                                                focus += 2;
+                                                armorBossCurrent -= 2;
+                                            }
+                                            
                                         }
                                         break;
                                 }
                             }
                             else
                             {
-                                healthBossCurrent -= (damageUser - armorBossCurrent);
-                                armorBossCurrent--;
-                                focus++;
-                                healthUserCurrent -= (damageBossBack - armorUserCurrent);
+                                if ((damageUser - armorBossCurrent)>0)
+                                {
+                                    healthBossCurrent -= (damageUser - armorBossCurrent);
+                                    armorBossCurrent--;
+                                    focus++;
+                                }
+                                else
+                                {
+                                    healthBossCurrent -= (-1*(damageUser - armorBossCurrent));
+                                    armorBossCurrent--;
+                                    focus++;
+                                }
+                                if ((damageBossBack - armorUserCurrent)>0)
+                                {
+                                    healthUserCurrent -= (damageBossBack - armorUserCurrent);
+                                }
+                                else
+                                {
+                                    healthUserCurrent -= (-1*(damageBossBack - armorUserCurrent));
+                                }
                             }
 
                             int doubleHit = 0;
@@ -130,7 +162,7 @@ namespace ConsoleApp1
                             if (doubleHit % 3 == 0 && doubleHit % 5 == 0)
                             {
                                 Console.WriteLine(DoubleAttack);
-                                healthBoss -= (damageUser - armorBoss);
+                                healthBossCurrent -= (damageUser - armorBossCurrent);
                                 focus++;
                             }
 
@@ -201,13 +233,36 @@ namespace ConsoleApp1
                             if (ghost)
                             {
                                 Console.WriteLine("надо было думать раньше! Двойной удар!");
-                                healthUserCurrent -= (damageBoss - armorUserCurrent) * 2;
-                                ghost = false;
+                                if ((damageBoss - armorUserCurrent)>0)
+                                {
+                                    healthUserCurrent -= (damageBoss - armorUserCurrent) * 2;
+                                    ghost = false;
+                                }
+                                else
+                                {
+                                    healthUserCurrent -= (damageBoss - armorUserCurrent) * -2;
+                                    ghost = false;
+                                }
+                                
                             }
                             else
                             {
-                                healthUserCurrent -= (damageBoss - armorUserCurrent);
-                                healthBossCurrent -= (damageUserBack - armorBossCurrent);
+                                if ((damageBoss - armorUserCurrent)>0)
+                                {
+                                    healthUserCurrent -= (damageBoss - armorUserCurrent);
+                                }
+                                else
+                                {
+                                    healthUserCurrent -= (-1*(damageBoss - armorUserCurrent));
+                                }
+                                if ((damageUserBack - armorBossCurrent)>0)
+                                {
+                                    healthBossCurrent -= (damageUserBack - armorBossCurrent);
+                                }
+                                else
+                                {
+                                    healthBossCurrent -= (-1*(damageUserBack - armorBossCurrent));
+                                }
                             }
 
                             break;
@@ -283,15 +338,11 @@ namespace ConsoleApp1
                 {
                     Console.WriteLine("аура активна! вы теряете максимальные показатели!");
                     countAura++;
+                    healthUserCurrent -= 5;
                     healthUser -= 5;
+                    armorUserCurrent -= 5;
                     armorUser -= 5;
                     damageUser -= 3;
-                }
-
-                if (isRage)
-                {
-                    Console.WriteLine(Rage);
-                    localDamage += 10;
                 }
 
                 Console.WriteLine("конец раунда");
