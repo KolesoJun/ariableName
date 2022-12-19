@@ -1,0 +1,123 @@
+namespace ConsoleApp1
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            const string Rashamon = "Rashamon";
+            const string Invis = "Invis";
+            const string Bolt = "Bolt";
+            const string Attack = "Attack";
+            const string Huganzakura = "Huganzakura";
+
+            int damageUser = 20;
+            int healthUser = 100;
+            int bolt = 5;
+            int countBolt = 0;
+            int damageBoss = 40;
+            int healthBoss = 200;
+            int healthBonusBoss = 10;
+            int skillRashamon = 10;
+            int skillInvis = 25;
+            bool isInvis = false;
+            int skillHuganzakura = 10;
+            bool isGhost = false;
+            bool isFight = true;
+            string input;
+
+            while (isFight)
+            {
+                Console.WriteLine("добро пожаловать на арену");
+                Console.WriteLine($"ваши действия просты: " +
+                    $"\n{Rashamon} - призывает теневого духа для нанесения атаки ({skillRashamon}хп)," +
+                    $"\n{Invis} - позволяет скрыться в разломе и восстановить {skillInvis} хп (1 раунд). Урон босса по вам не проходит, но он восстанавливает немного здоровья," +
+                    $"\n{Bolt} - удвр молнии (сильнее с каждой обычной атакой)," +
+                    $"\n{Attack} - обычная атака, но босс на нее отвечает (сделал бы впополам, но это будет маг число, поэтому страдайте)," +
+                    $"\n{Huganzakura} - неизвестно, но работает только с {Rashamon}");
+
+                if (healthUser > 0)
+                {
+                    Console.WriteLine("\n ваш ход:");
+                    input = Console.ReadLine();
+                    isInvis = false;
+
+                    switch (input)
+                    {
+                        case Attack:
+                            Console.WriteLine("вы атакуете и накапливаете силу");
+                            healthBoss -= damageUser;
+                            countBolt++;
+
+                            if (healthBoss > 0)
+                            {
+                                Console.WriteLine("вы получаете ответ");
+                                healthUser -= damageBoss;
+                            }
+                            break;
+                        case Rashamon:
+                            Console.WriteLine("теневой дух призван");
+                            isGhost = true;
+                            break;
+                        case Huganzakura:
+                            if (isGhost)
+                            {
+                                Console.WriteLine("неведомое нечто призвано");
+                                healthBoss -= skillHuganzakura;
+                            }
+                            else
+                            {
+                                Console.WriteLine("вы не можете использовать эту способность. враг пользуется вашей слабостью");
+                                healthUser -= damageBoss;
+                            }
+                            break;
+                        case Invis:
+                            Console.WriteLine("инвиз активен до следующего раунда");
+                            isInvis = true;
+                            healthUser += skillInvis;
+                            break;
+                        case Bolt:
+                            Console.WriteLine("удар молнии");
+                            healthBoss -= bolt*countBolt;
+                            break;
+                    }
+                }
+                else
+                {
+                    isFight = false;
+                }
+
+                if (healthBoss > 0)
+                {
+                    if (isInvis)
+                    {
+                        Console.WriteLine("рррр");
+                        healthBoss += healthBonusBoss;
+                    }
+                    else 
+                    {
+                        Console.WriteLine("вас атакуют");
+                        healthUser -= damageBoss;
+                    }
+                }
+                else
+                {
+                    isFight = false;
+                }
+
+                if (isGhost)
+                {
+                    healthBoss -= skillRashamon;
+                }
+            }
+
+            if (healthUser < 0)
+            {
+                Console.WriteLine("вы проиграли");
+            }
+            else
+            {
+                Console.WriteLine("вы победили");
+            }
+        }
+    }
+}
