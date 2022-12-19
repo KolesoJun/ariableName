@@ -12,6 +12,8 @@ namespace ConsoleApp1
             Random random = new Random();
             int min = 1;
             int max = 10;
+            int numberString = 1;
+            int numberColumn = 0;
             int sum = 0;
             int composition = 1;
             int[,] array = new int[horiontal, vertical];
@@ -25,12 +27,12 @@ namespace ConsoleApp1
                     
                     if (i==1)
                     {
-                        sum += array[1, j];
+                        sum += array[numberString, j];
                     }
 
                 }
                 
-                composition *= array[i,0];
+                composition *= array[i,numberColumn];
                 Console.WriteLine();
             }
            
