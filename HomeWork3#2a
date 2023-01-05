@@ -1,0 +1,59 @@
+using System;
+
+namespace ConsoleApp1
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            int numberMax = 0;
+            int substitution = 0;
+            int colomn = 0;
+            int strings = 0;
+            Console.WriteLine("введите габариты массива");
+            Console.Write("минимальное число: ");
+            int minRandom = Convert.ToInt32(Console.ReadLine());
+            Console.Write("максимальное число: ");
+            int maxRandom = Convert.ToInt32(Console.ReadLine());
+            Random random = new Random();
+            int[,] array = new int[10, 10];
+
+            for (; strings < array.GetLength(0); strings++)
+            {
+                for (; colomn < array.GetLength(1); colomn++)
+                {
+                    array[strings, colomn] = random.Next(minRandom, maxRandom);
+                    Console.Write(array[strings, colomn] + " ");
+
+                    if (numberMax <= array[strings, colomn])
+                    {
+                        numberMax = array[strings, colomn];
+                    }
+                }
+
+                Console.WriteLine();
+                colomn = 0;
+            }
+
+            Console.WriteLine("наибольшее число = " + numberMax);
+            strings = 0;
+
+            for (; strings < array.GetLength(0); strings++)
+            {
+                for (; colomn < array.GetLength(1); colomn++)
+                {
+                    if (array[strings, colomn] == numberMax)
+                    {
+                        array[strings, colomn] = substitution;
+                    }
+
+                    Console.Write(array[strings, colomn] + " ");
+                }
+
+                Console.WriteLine();
+                colomn = 0;
+            }
+
+        }  
+    }
+}
