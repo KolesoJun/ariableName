@@ -1,0 +1,63 @@
+namespace ConsoleApp1
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.WriteLine("введите габариты массива");
+            Console.Write("количество строк: ");
+            int horiontal = Convert.ToInt32(Console.ReadLine());
+            Console.Write("количество столбцов: ");
+            int vertical = Convert.ToInt32(Console.ReadLine());
+            Random random = new Random();
+            int min = 1;
+            int max = 10;
+            int numberString = 1;
+            int numberColumn = 0;
+            int sum = 0;
+            int composition = 1;
+            int[,] array = new int[horiontal, vertical];
+            int colomn = 0;
+            int strings = 0;
+            bool isComplite = true;
+
+            while (isComplite)
+            {
+                if (strings < horiontal)
+                {
+                    array[strings, colomn] = random.Next(min, max);
+                    Console.Write(array[strings, colomn] + " "); 
+                    strings++;
+                }
+                else if (colomn < vertical)
+                {
+                    Console.WriteLine();
+                    colomn++;
+                    strings = 0;
+                }
+
+                if (strings == horiontal && colomn == (vertical-1))//костыль, не знаю, как решить
+                {
+                    isComplite = false;
+                }
+            }
+
+            strings = 0;// нужен для обнуления параметра строки
+            Console.WriteLine();
+
+            while (numberColumn < vertical)
+            {
+                composition *= array[strings, numberColumn];
+                numberColumn++;
+            }
+
+            while (strings < horiontal)
+            {
+                sum += array[strings, numberString];
+                strings++;
+            }
+
+            Console.WriteLine($"сумма = {sum}, произведение = {composition}");
+        }  
+    }
+}
