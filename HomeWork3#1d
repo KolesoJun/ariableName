@@ -1,0 +1,47 @@
+using System;
+
+namespace ConsoleApp1
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            int minRandom = 1;
+            int maxRandom = 10;
+            int numberString = 1;
+            int numberColumn = 0;
+            int sum = 0;
+            int composition = 1;
+            Console.WriteLine("введите габариты массива");
+            Console.Write("количество строк: ");
+            int countOfLines = Convert.ToInt32(Console.ReadLine());
+            Console.Write("количество столбцов: ");
+            int countOfPillars = Convert.ToInt32(Console.ReadLine());
+            Random random = new Random();
+            int[,] array = new int[countOfLines, countOfPillars];
+
+            for (int i =0; i < array.GetLength(0); i++)
+            {
+                for (int j =0; j < array.GetLength(1); j++)
+                {
+                    array[i, j] = random.Next(minRandom, maxRandom);
+                    Console.Write(array[i, j] + " ");
+                }
+
+                Console.WriteLine();
+            }
+
+            for (int i = 0; i < array.GetLength(0); i++)
+            {
+                composition *= array[i, numberColumn];
+            }
+
+            for (int i = 0; i < array.GetLength(1); i++)
+            {
+                sum += array[numberString, i];
+            }
+
+            Console.WriteLine($"сумма = {sum}, произведение = {composition}");
+        }
+    }
+}
