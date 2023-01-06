@@ -1,0 +1,69 @@
+namespace ConsoleApp1
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.WriteLine("введите значения массива");
+            Console.Write("минимальное число: ");
+            int minRandom = Convert.ToInt32(Console.ReadLine());
+            Console.Write("максимальное число: ");
+            int maxRandom = Convert.ToInt32(Console.ReadLine());
+            Console.Write("количество элементов: ");
+            int numberArrayMax = Convert.ToInt32(Console.ReadLine());
+            int numberMax = 0;
+            int numberLeft = 0;
+            int numberRight = 0;
+            int[] array = new int[numberArrayMax];
+            
+            Random random = new Random();
+
+            for (int i = 0; i < array.Length; i++)
+            {
+                array[i] = random.Next(minRandom, maxRandom);
+                Console.Write(array[i] + " ");
+            }
+
+            Console.WriteLine();
+
+            for (int i = 0; i < array.Length; i++)
+            {
+                if (i + 1 < numberArrayMax)//страховка на выход за пределы массива вправо
+                {
+                    numberRight = array[i + 1];
+                }
+                else
+                {
+                    numberRight = array[i];
+                }
+
+                if (i - 1 < 0)// страховка на выход за пределы массива влево
+                {
+                    numberLeft = array[i];
+                }
+                else
+                {
+                    numberLeft = array[i - 1];
+                }
+
+                if (array[i] > numberRight && array[i] > numberLeft)
+                {
+                    numberMax = array[i];
+                    Console.WriteLine($"локальный максимум - {numberMax}");
+                }
+
+                if (i == numberArrayMax && array[numberArrayMax] > numberLeft)// проверка крайнего правого числа
+                {
+                    numberMax = array[i];
+                    Console.WriteLine($"локальный максимум - {numberMax}");
+                }
+
+                if (i == 0 && array[i] > numberRight)//проверка крайнего левого числа
+                {
+                    numberMax = array[i];
+                    Console.WriteLine($"локальный максимум - {numberMax}");
+                }
+            }
+        }  
+    }
+}
