@@ -1,0 +1,50 @@
+using System;
+
+
+namespace ConsoleApp1
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Random random = new Random();
+            int numberMax = int.MinValue;
+            int numberArrayMax = 30;
+            int[] array = new int[numberArrayMax];
+            Console.WriteLine("введите значения массива");
+            Console.Write("минимальное число: ");
+            int minRandom = Convert.ToInt32(Console.ReadLine());
+            Console.Write("максимальное число: ");
+            int maxRandom = Convert.ToInt32(Console.ReadLine());
+            
+            for (int i = 0; i < array.Length; i++)
+            {
+                array[i] = random.Next(minRandom, maxRandom);
+                Console.Write(array[i] + " ");
+            }
+
+            Console.WriteLine();
+
+            if (array[0] > array[1])
+            {
+                numberMax = array[0];
+                Console.WriteLine($"локальный максимум - {numberMax}");
+            }
+
+            for (int i = 1; i < array.Length - 1; i++)
+            {
+                if (array[i] > array[i + 1] && array[i] > array[i - 1])
+                {
+                    numberMax = array[i];
+                    Console.WriteLine($"локальный максимум - {numberMax}");
+                }
+            }
+
+            if ((array.Length - 1) > (array.Length - 2))
+            {
+                numberMax = array[numberArrayMax - 1];
+                Console.WriteLine($"локальный максимум - {numberMax}");
+            }
+        }
+    }
+}
