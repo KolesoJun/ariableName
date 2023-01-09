@@ -1,0 +1,55 @@
+using System;
+
+
+namespace ConsoleApp1
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            const string Sum = "сумма";
+            const string Exit = "выход";
+
+            int sum = 0;
+            bool isWork = true;
+            int[] array = new int[0];
+            Console.WriteLine("введите: любое число, - сумму всех чисел, - выход ");
+
+            while (isWork)
+            {
+                string input = Console.ReadLine();
+
+                switch (input)
+                {
+                    case Sum:
+                        for (int i = 0; i < array.Length; i++)
+                        {
+                            sum += array[i];
+                        }
+
+                        Console.WriteLine($"{Sum} = {sum}");
+                        break;
+
+                    case Exit:
+                        isWork = false;
+                        break;
+
+                    default:
+                        sum = 0;
+                            int[] arrayExpansion = new int[array.Length + 1];
+                            int localNumber = Convert.ToInt32(input);
+
+                            for (int i = 0; i < array.Length; i++)
+                            {
+                                arrayExpansion[i] = array[i];
+                            }
+
+                            arrayExpansion[arrayExpansion.Length - 1] = localNumber;
+                            array = arrayExpansion;
+                        
+                        break;
+                }
+            }
+        }
+    }
+}
