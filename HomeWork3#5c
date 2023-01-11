@@ -1,0 +1,47 @@
+using System;
+
+namespace ConsoleApp1
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            int countNumbers = 30;
+            int[] array = new int[countNumbers];
+            int minRandom = 1;
+            int maxRandom = 10;
+            int numberRepeat = minRandom;
+            int number = int.MinValue;
+            int countRepeat = 1;
+            int countRepeatMax = 0;
+            Random random = new Random();
+
+            for (int i = 0; i < array.Length; i++)
+            {
+                array[i] = random.Next(minRandom, maxRandom);
+                Console.Write(array[i] + " ");
+            }
+
+            for (int i = 0; i < array.Length-1; i++)
+            {
+                if (array[i] != array[i+1])
+                {
+                    if (countRepeatMax < countRepeat)
+                    {
+                        numberRepeat = array[i];
+                        countRepeatMax = countRepeat;
+                    }
+
+                    number = array[i];
+                    countRepeat = 1;
+                }
+                else
+                {
+                    countRepeat++;
+                }
+            }
+
+            Console.WriteLine($"число - {numberRepeat}, кол-во повторений - {countRepeatMax}");
+        }
+    }
+}
