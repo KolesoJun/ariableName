@@ -1,0 +1,90 @@
+using System;
+
+namespace ConsoleApp1
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            int countNumbers = 30;
+            int[] array = new int[countNumbers];
+            int minRandom = 1;
+            int maxRandom = 10;
+            int numberRepeat = minRandom;
+            int countRepeat = 0;
+            int countRepeatMax = 0;
+            int number = array[0];
+            bool isMoreRepeat = false;
+            Random random = new Random();
+
+            for (int i = 0; i < array.Length; i++)
+            {
+                array[i] = random.Next(minRandom, maxRandom);
+                Console.Write(array[i] + " ");
+            }
+
+            for (int i = 0; i < array.Length; i++)
+            {
+                if (array[i] == number)
+                {
+                    countRepeat++;
+                }
+
+                if (countRepeatMax == countRepeat)
+                {
+                    isMoreRepeat = true;
+                }
+                else
+                {
+                    isMoreRepeat = false;
+                }
+
+                if (countRepeat > countRepeatMax)
+                {
+                    countRepeatMax = countRepeat;
+                    numberRepeat = number;
+                }
+
+                if (array[i] != number)
+                {
+                    countRepeat = 1;
+                    number = array[i];
+                }
+            }
+
+            countRepeat = 0;
+
+            if (isMoreRepeat)
+            {
+                for (int i = 0; i < array.Length; i++)
+                {
+                    if (array[i] == number)
+                    {
+                        countRepeat++;
+
+                        if (countRepeat == countRepeatMax)
+                        {
+                            numberRepeat = number;
+                            Console.WriteLine($"\n\n{numberRepeat} - number;\n{countRepeatMax} - count");
+                        }
+                    }
+                    else
+                    {
+                        countRepeat = 1;
+                        number = array[i];
+                    }
+                }
+            }
+
+            if (countRepeatMax == 1)
+            {
+                Console.WriteLine("\n\nчисел нет");
+            }
+            else if(!isMoreRepeat)
+            {
+                Console.WriteLine($"\n\n{numberRepeat} - number;\n{countRepeatMax} - count");
+            }
+
+        }
+    }
+}
