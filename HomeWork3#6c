@@ -1,0 +1,47 @@
+using System;
+
+namespace ConsoleApp1
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            int countArray = 10;
+            int[] array = new int[countArray];
+            int minRandom = 0;
+            int maxRandom = 10;
+            Random random = new Random();
+
+            Console.WriteLine("изначальная версия массива");
+
+            for (int i = 0; i < array.Length; i++)
+            {
+                array[i] = random.Next(minRandom, maxRandom);
+                Console.Write(array[i] + ", ");
+            }
+
+            Console.WriteLine();
+            Console.WriteLine("отсортированная версия массива");
+
+            while (countArray > 0)
+            {
+                for (int i = 1; i < array.Length; i++)
+                {
+                    if (array[i - 1] > array[i])
+                    {
+                        int count = array[i];
+                        array[i] = array[i - 1];
+                        array[i - 1] = count;
+                    }
+                }
+
+                countArray--;
+            }
+
+            foreach (int number in array)
+            {
+                Console.Write(number + ", ");
+            }
+        }
+    }
+}
