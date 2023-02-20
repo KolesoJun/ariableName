@@ -1,0 +1,52 @@
+using System;
+
+namespace ConsoleApp1
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            int value = 3, maxValue = 10, posX = 0, posY = 1;
+
+            while (true)
+            {
+                DrawBar(value, maxValue, posX, posY);
+                Console.SetCursorPosition(0, 3);
+                Console.WriteLine("измените число");
+                value += Convert.ToInt32(Console.ReadLine());
+                Console.ReadKey();
+                Console.Clear();
+            }
+        }
+
+        static void DrawBar(int value, int maxValue, int posX, int posY)
+        {
+            ConsoleColor defaulColorBack = Console.BackgroundColor;
+            ConsoleColor defaulColorSymbol = Console.ForegroundColor;
+            string bar = "";
+            int locValue = 0;
+            Console.SetCursorPosition(posX, posY);
+            Console.Write('[');
+            Console.BackgroundColor = ConsoleColor.White;
+
+            for (int i = 0; i < maxValue; i++)
+            {
+                if (value > locValue)
+                {
+                    Console.ForegroundColor = ConsoleColor.Black;
+                    bar += '+';
+                    locValue++;
+                }
+                else
+                {
+                    bar += '_';
+                }
+            }
+
+            Console.Write(bar);
+            Console.ForegroundColor = defaulColorSymbol;
+            Console.BackgroundColor = defaulColorBack;
+            Console.Write(']');
+        }
+    }
+}
