@@ -1,0 +1,170 @@
+using System;
+
+namespace ConsoleApp1
+{
+    class Program
+    {
+        const int AddDos = 1;
+        const int WriteAll = 2;
+        const int Delete = 3;
+        const int Search = 4;
+        const int Exit = 5;
+        
+        string[] name = new string[] { "Колесников Данил Сергеевич", "Обмочиев Александр Николаевич", "Долгова Ирина Александровна", "Сережникова Галина Назаровна", "Завалюшин Виктор Васильевич" };
+        string[] post = new string[] { "терапевт", "ВОП", "мед. сестра", "фельдшер", "водитель" };
+        string inputString;
+        bool isWork = true;
+        char dash = '-';
+
+        static void Main(string[] args)
+        {
+            Program program = new Program();
+
+            while (program.isWork)
+            {
+                Console.WriteLine($"введи команду: \n{AddDos} - добавить досье;\n{WriteAll} - вывести все данные;\n{Delete} - удалить досье;\n{Search} - поиск по базе; \n{Exit} - выход");
+                int inputMenu = Convert.ToInt32(Console.ReadLine());
+
+                switch (inputMenu)
+                {
+                    case AddDos:
+                        program.AddDossier();
+                        break;
+                    case WriteAll:
+                        program.OutputDossiers();
+                        break;
+                    case Delete:
+                        program.DeleteDossier();
+                        break;
+                    case Search:
+                        program.SearchDossier();
+                        break;
+                    case Exit:
+                        program.ExitProgram();
+                        break;
+                    default:
+                        Console.WriteLine("неверная команда. попробуй еще");
+                        break;
+                }
+            }
+        }
+        void AddDossier()
+        {
+            Console.Clear();
+            string[] tempName = new string[name.Length + 1];
+            string[] tempPost = new string[post.Length + 1];
+
+            for (int i = 0; i < name.Length; i++)
+            {
+                tempName[i] = name[i];
+                tempPost[i] = post[i];
+            }
+
+            Console.WriteLine("введите ФИО");
+            tempName[tempName.Length - 1] = Console.ReadLine();
+            Console.WriteLine("введите должность");
+            tempPost[tempPost.Length - 1] = Console.ReadLine();
+            name = tempName;
+            post = tempPost;
+            Console.WriteLine("успешно");
+        }
+        void OutputDossiers()
+        {
+            Console.Clear();
+
+            for (int i = 0; i < name.Length; i++)
+            {
+                Console.WriteLine(i+1 + name[i] + dash+ post[i]);
+            }
+        }
+        void DeleteDossier()
+        {
+            Console.Clear();
+            string[] tempName = new string[name.Length - 1];
+            string[] tempPost = new string[post.Length - 1];
+            bool isCorrect = false;
+            string substitution = "0";
+            Console.WriteLine("введите ФИО");
+            string input = Console.ReadLine();
+
+            foreach (string correctName in name)
+            {
+                if (input.ToLower() == correctName.ToLower())
+                {
+                    isCorrect = true;
+                    break;
+                }
+                else
+                {
+                    isCorrect = false;
+                }
+            }
+
+            if (isCorrect)
+            {
+                for (int i = 0; i < name.Length - 1; i++)
+                {
+                    if (name[i].ToLower() == input.ToLower())
+                    {
+                        name[i] = substitution;
+                        post[i] = substitution;
+                    }
+
+                    if (name[i] == substitution)
+                    {
+                        name[i] = name[i + 1];
+                        name[i + 1] = substitution;
+                        post[i] = post[i + 1];
+                        post[i + 1] = substitution;
+                    }
+
+                    tempName[i] = name[i];
+                    tempPost[i] = post[i];
+                }
+
+                name = tempName;
+                post = tempPost;
+                Console.WriteLine("успешно");
+            }
+            else
+            {
+                Console.WriteLine("такого досье нет в списке");
+            }
+        }
+        void SearchDossier()
+        {
+            Console.Clear();
+            Console.WriteLine("введите фамилию");
+            inputString = Console.ReadLine().ToLower();
+            char[] surname;
+            bool isCorrect = false;
+
+            for (int i = 0; i < name.Length; i++)
+            {
+                surname = name[i].ToCharArray();
+
+                for (int x = 0; x < inputString.Length; x++)
+                {
+                    if (inputString[x] == char.ToLower(surname[x]))
+                    {
+                        isCorrect = true;
+                    }
+                    else
+                    {
+                        isCorrect = false;
+                        break;
+                    }
+                }
+
+                if (isCorrect)
+                {
+                    Console.WriteLine(name[i] + dash + post[i]);
+                }
+            }
+        }
+        void ExitProgram()
+        {
+            isWork = false;
+        }
+    }
+}
