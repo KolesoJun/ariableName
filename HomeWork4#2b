@@ -1,0 +1,74 @@
+using System;
+
+namespace ConsoleApp1
+{
+    class Program
+    {
+        const int HealthPercentMax = 100;
+        static void Main(string[] args)
+        {
+            const int Exit = 101;
+            bool isWork = true;
+            int posX, 
+                posY;
+            ConsoleColor colorBack = ConsoleColor.Red;
+            ConsoleColor colorFront = ConsoleColor.Green;
+
+            Console.WriteLine("введите максимальный показатель заполнения");
+            int maxHealth = Convert.ToInt32(Console.ReadLine());
+            Console.WriteLine("введите позицию бара по х");
+            posX = Convert.ToInt32(Console.ReadLine());
+            Console.WriteLine("введите позицию бара по у");
+            posY = Convert.ToInt32(Console.ReadLine());
+
+            while (isWork)
+            {
+                Console.Clear();
+                Console.WriteLine("введите желаемый процент заполнения, или 101, чтобы выйти");
+                int healthPercent = Convert.ToInt32(Console.ReadLine());
+
+                if (healthPercent == Exit)
+                {
+                    isWork = false;
+                }
+                else
+                {
+                    DrawBar(ref healthPercent, ref maxHealth, ref posX, ref posY, colorBack, colorFront);
+                }
+
+                Console.ReadKey();
+            }
+        }
+        static void DrawBar(ref int healthPercent, ref int maxHealth, ref int posX, ref int posY, ConsoleColor colorBack, ConsoleColor colorFront)
+        {
+            ConsoleColor defaulColorBack = Console.BackgroundColor;
+            int health = MathPercent(ref maxHealth, ref healthPercent);
+            int locValue = 0;
+            
+            Console.SetCursorPosition(posX, posY);
+            Console.Write('[');
+
+            for (int i = 0; i < maxHealth; i++)
+            {
+                if (health > locValue)
+                {
+                    Console.BackgroundColor = colorFront;
+                    Console.Write('#');
+                    locValue++;
+                }
+                else
+                {
+                    Console.BackgroundColor = colorBack;
+                    Console.Write('_');
+                }
+            }
+
+            Console.BackgroundColor = defaulColorBack;
+            Console.Write(']');
+        }
+        static int MathPercent (ref int maxHealth, ref int healthPercent)
+        {
+           return healthPercent * maxHealth / HealthPercentMax;
+        }
+    }
+}
