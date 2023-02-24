@@ -1,0 +1,191 @@
+using System;
+
+namespace ConsoleApp1
+{
+    class Program
+    {
+        const char Forward = 'w';
+        const char Right = 'd';
+        const char Left = 'a';
+        const char Back = 's';
+        const char Exit = 'x';
+
+        char symbolWall = '#';
+        char symbolVoid = ' ';
+        char symbolBomb = '+';
+        char player = '@';
+        char symbolExit = '}';
+
+        int numberConditionRandomObstacle = 5;
+        int numberConditionRandomBonus = 9;
+        int minCountObstacle = 1;
+        int maxCountObstacle = 11;
+        int playerStartPosX = 2;
+        int playerStartPosY = 2;
+        int playerPosX;
+        int playerPosY;
+        int step = 0;
+
+        bool isWork = true;
+
+        Random randomCountObstacle = new();
+
+        static void Main(string[] args)
+        {
+            Program program = new();
+            Console.WriteLine("вы играете за @. ваша задача дойти до выхода - } быстрейшим способом. # - препятствия. + - бомбы");
+            Console.WriteLine($"для передвижения использу:\n{Forward} - вперед,\n{Right} - назад,\n{Left} - вправо,\n{Back} - влево,\n{Exit} - выйти");
+            Console.WriteLine("введите размер карты по Х и У");
+            int sizeX = Convert.ToInt32(Console.ReadLine());
+            int sizeY = Convert.ToInt32(Console.ReadLine());
+            Console.Clear();
+            program.playerPosX = program.playerStartPosX;
+            program.playerPosY = program.playerStartPosY;
+            char[,] map = program.BuildingMap(sizeX, sizeY);
+
+            map[program.playerStartPosX, program.playerStartPosY] = program.player;
+            program.PaintMap(map);
+
+            while (program.isWork || !program.PortalExit())
+            {
+                char inputPlayer = Convert.ToChar(Console.Read());
+                program.InputPlayer(map, inputPlayer);
+                
+                if (program.PortalExit())
+                {
+                    Console.WriteLine("ты победил!");
+                }
+                Console.Clear();
+                program.PaintMap(map);
+                Console.SetCursorPosition(0, sizeY + 10);
+                Console.WriteLine("ваши шаги:" + program.step);
+            }
+        }
+
+        char[,] BuildingMap(int sizeX, int sizeY)
+        {
+            char[,] map = new char[sizeX, sizeY];
+            map[randomCountObstacle.Next(minCountObstacle, maxCountObstacle), randomCountObstacle.Next(minCountObstacle, maxCountObstacle)] = symbolExit;
+
+            for (int i = 0; i < map.GetLength(0); i++)
+            {
+                for (int y = 0; y < map.GetLength(1); y++)
+                {
+                    if (i==0 || i == map.GetLength(0)-1 || y==0||y == map.GetLength(1)-1 || (randomCountObstacle.Next(minCountObstacle, maxCountObstacle) % numberConditionRandomObstacle == 1 && map[i, y] != symbolWall && map[i, y] != symbolExit))
+                    {
+                        map[i, y] = symbolWall;
+                    }
+                    else if (randomCountObstacle.Next(minCountObstacle, maxCountObstacle) % numberConditionRandomBonus == 1 && map[i, y] != symbolWall && map[i, y] != symbolExit)
+                    {
+                        map[i, y] = symbolBomb;
+                    }
+                    else if (map[i, y] != symbolExit)
+                    {
+                        map[i, y] = symbolVoid;
+                    }
+                }
+            }
+
+            return map;
+        }
+
+        void PaintMap(char[,] map)
+        {
+            for (int i = 0; i < map.GetLength(0); i++)
+            {
+                for (int y = 0; y < map.GetLength(1); y++)
+                {
+                    Console.Write(map[i, y]);
+
+                    if (map[i,y] == player)
+                    {
+                        playerPosX = i;
+                        playerPosY = y;
+                    }
+                }
+                Console.WriteLine();
+            }
+        }
+
+        void InputPlayer(char[,] map, char inputPlayer)
+        {
+            map[playerPosX, playerPosY] = symbolVoid;
+
+            if (inputPlayer == Forward && map[playerPosX - 1, playerPosY] != symbolWall)
+            {
+                if (map[playerPosX - 1, playerPosY] == symbolBomb)
+                {
+                    isWork = false;
+                }
+                else if(map[playerPosX - 1, playerPosY] == symbolExit)
+                {
+                    PortalExit();
+                }
+                else
+                {
+                    map[playerPosX - 1, playerPosY] = player;
+                }
+            }
+            else if (inputPlayer == Back && map[playerPosX + 1, playerPosY] != symbolWall)
+            {
+                if (map[playerPosX + 1, playerPosY] == symbolBomb)
+                {
+                    isWork = false;
+                }
+                else if (map[playerPosX + 1, playerPosY] == symbolExit)
+                {
+                    PortalExit();
+                }
+                else
+                {
+                    map[playerPosX + 1, playerPosY] = player;
+                }
+            }
+            else if (inputPlayer == Left && map[playerPosX, playerPosY - 1] != symbolWall)
+            {
+                if (map[playerPosX, playerPosY - 1] == symbolBomb)
+                {
+                    isWork = false;
+                }
+                else if (map[playerPosX, playerPosY - 1] == symbolExit)
+                {
+                    PortalExit();
+                }
+                else
+                {
+                    map[playerPosX, playerPosY - 1] = player;
+                }
+            }
+            else if (inputPlayer == Right && map[playerPosX, playerPosY + 1] != symbolWall)
+            {
+                if (map[playerPosX, playerPosY + 1] == symbolBomb)
+                {
+                    isWork = false;
+                }
+                else if (map[playerPosX, playerPosY + 1] == symbolExit)
+                {
+                    PortalExit();
+                }
+                else
+                {
+                    map[playerPosX, playerPosY + 1] = player;
+                }
+            }
+            else if(inputPlayer == Exit)
+            {
+                isWork = false;
+            }
+            else
+            { 
+                map[playerPosX, playerPosY] = player;
+            }
+
+            step++;
+        }
+
+        bool PortalExit()
+        {
+            return true;
+        }
+    }
+}
