@@ -1,0 +1,219 @@
+using System;
+
+namespace ConsoleApp1
+{
+    class Program
+    {
+        const char Forward = 'w';
+        const char Back = 's';
+        const char Right = 'd';
+        const char Left = 'a';
+        const char Exit = 'x';
+
+        const char symbolWall = '#';
+        const char symbolVoid = ' ';
+        const char symbolBomb = '+';
+        const char player = '@';
+        const char symbolExit = '}';
+        const char symbolBox = '%';
+        const int multipleToObstacl = 5;
+        const int multipleToBombs = 9;
+        const int multipleToBox = 3;
+        const int playerStartPosX = 2;
+        const int playerStartPosY = 2;
+
+        bool isWork = true;
+
+        static void Main(string[] args)
+        {
+            Program program = new();
+            Random random = new();
+            Console.CursorVisible = false;
+            Console.WriteLine("вы играете за @. ваша задача дойти до выхода - }. \n % - коробка, которую можно двигать:\n за ней не должно быть другой коробки или части стены\n коробкой можно накрыть бомбу.\n + - бомбы");
+            Console.WriteLine("введите размер карты по Х и У");
+            int sizeX = Convert.ToInt32(Console.ReadLine());
+            int sizeY = Convert.ToInt32(Console.ReadLine());
+
+            int minRand = 1;
+            int maxRand = 0;
+
+            if (sizeX >= sizeY)
+            {
+                maxRand = sizeX;
+            }
+            else
+            {
+                maxRand = sizeY;
+            }
+
+            char[,] map = BuildingMap(sizeX, sizeY, random, minRand, maxRand);
+            Console.Clear();
+
+            while (program.isWork)
+            {
+                program.PaintMap(ref map);
+                Console.Clear();
+            }
+        }
+
+        static char[,] BuildingMap(int sizeX, int sizeY, Random random, int minR, int maxR)
+        {
+            char[,] map = new char[sizeX, sizeY];
+            
+            for (int i = 0; i < map.GetLength(0); i++)
+            {
+                for (int y = 0; y < map.GetLength(1); y++)
+                {
+                    if (i==0 || i == map.GetLength(0)-1 || y==0||y == map.GetLength(1)-1 || (random.Next(minR, maxR) % multipleToObstacl == 1 && map[i, y] != symbolWall))
+                    {
+                        map[i, y] = symbolWall;
+                    }
+                    else if (random.Next(minR, maxR) % multipleToBox == 1 && map[i, y] != symbolWall)
+                    {
+                        map[i, y] = symbolBox;
+                    }
+                    else if (random.Next(minR, maxR) % multipleToBombs == 1 && map[i, y] != symbolWall)
+                    {
+                        map[i, y] = symbolBomb;
+                    }
+                    else
+                    {
+                        map[i, y] = symbolVoid;
+                    }
+                }
+            }
+
+            map[playerStartPosX, playerStartPosY] = player;
+            map[random.Next(minR+1, maxR-1), random.Next(minR+1, maxR-1)] = symbolExit;
+
+            return map;
+        }
+
+        void PaintMap(ref char[,] map)
+        {
+            int posX = 0;
+            int posY = 0;
+
+
+            for (int i = 0; i < map.GetLength(0); i++)
+            {
+                for (int y = 0; y < map.GetLength(1); y++)
+                {
+                    Console.Write(map[i, y]);
+
+                    if (map[i,y] == player)
+                    {
+                        posX = i;
+                        posY = y;
+                    }
+                }
+                Console.WriteLine();
+            }
+
+            InputPlayer(ref map,ref posX,ref posY);
+        }
+
+        void InputPlayer(ref char[,] map,ref int posX,ref int posY)
+        {
+            int directionX = posX;
+            int directionY = posY;
+            int posBoxX = 0,
+                posBoxY = 0;
+            bool isMove = false;
+            //ConsoleKeyInfo key = Console.ReadKey();
+            char input = Convert.ToChar(Console.ReadLine());
+
+            if (input == Forward)
+            {
+                directionX -= 1;
+                posBoxX = -1;
+            }
+            else if(input == Back)
+            {
+                directionX += 1;
+                posBoxX = 1;
+            }
+            else if (input == Right)
+            {
+                directionY += 1;
+                posBoxY = 1;
+            }
+            else if (input == Left)
+            {
+                directionY -= 1;
+                posBoxY = -1;
+            }
+            else if (input == Exit)
+            {
+                isWork = false;
+            }
+
+            //switch (key.Key)
+            //{
+            //    case ConsoleKey.UpArrow:
+            //        directionX -= 1;
+            //        break;
+            //    case ConsoleKey.DownArrow:
+            //        directionX += 1;
+            //        break;
+            //    case ConsoleKey.RightArrow:
+            //        directionY -= 1;
+            //        break;
+            //    case ConsoleKey.LeftArrow:
+            //        directionY += 1;
+            //        break;
+            //    default:
+            //        break;
+            //}
+
+            if (map[directionX, directionY] != symbolWall)
+            {
+                if (map[directionX, directionY] == symbolBomb)
+                {
+                    map[posX, posY] = symbolVoid;
+                    isWork = false;
+                }
+
+                if (map[directionX, directionY] == symbolExit)
+                {
+                    Console.WriteLine("You Win");
+                    Console.ReadKey();
+                    isWork = false;
+                }
+
+                isMove = true;
+            }
+
+            if (map[directionX, directionY] == symbolBox)
+            {
+                if (map[directionX + posBoxX, directionY + posBoxY] == symbolBox || map[directionX + posBoxX, directionY + posBoxY] == symbolWall)
+                {
+                    isMove = false;
+                }
+                else
+                {
+                    map[directionX, directionY] = symbolVoid;
+
+                    if (posBoxX != 0)
+                    {
+                        map[directionX + posBoxX, directionY] = symbolBox;
+                    }
+                    else if (posBoxY != 0)
+                    {
+                        map[directionX, directionY + posBoxY] = symbolBox;
+                    }
+
+                    isMove = true;
+                }
+            }
+
+            if (isMove)
+            {
+                map[posX, posY] = symbolVoid;
+                posX = directionX;
+                posY = directionY;
+                map[posX, posY] = player;
+            }
+        }
+    }
+}
