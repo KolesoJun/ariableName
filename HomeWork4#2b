@@ -9,17 +9,15 @@ namespace ConsoleApp1
         {
             const int Exit = 101;
             bool isWork = true;
-            int posX, 
-                posY;
             ConsoleColor colorBack = ConsoleColor.Red;
             ConsoleColor colorFront = ConsoleColor.Green;
 
             Console.WriteLine("введите максимальный показатель заполнения");
             int maxHealth = Convert.ToInt32(Console.ReadLine());
             Console.WriteLine("введите позицию бара по х");
-            posX = Convert.ToInt32(Console.ReadLine());
+            int posX = Convert.ToInt32(Console.ReadLine());
             Console.WriteLine("введите позицию бара по у");
-            posY = Convert.ToInt32(Console.ReadLine());
+            int posY = Convert.ToInt32(Console.ReadLine());
 
             while (isWork)
             {
