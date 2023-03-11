@@ -12,21 +12,21 @@ namespace ConsoleApp1
             const int CommandSearch = 4;
             const int CommandExit = 5;
 
-            string[] name = new string[] 
-            { 
-                "Колесников Д.С.", 
-                "Обмочиев А.Н.", 
-                "Долгова И.А.", 
-                "Сережникова Г.Н.", 
-                "Завалюшин В.В." 
+            string[] name = new string[]
+            {
+                "Колесников Д.С.",
+                "Обмочиев А.Н.",
+                "Долгова И.А.",
+                "Сережникова Г.Н.",
+                "Завалюшин В.В."
             };
-            string[] post = new string[] 
-            {   
-                "терапевт", 
-                "ВОП", 
-                "мед. сестра", 
-                "фельдшер", 
-                "водитель" 
+            string[] post = new string[]
+            {
+                "терапевт",
+                "ВОП",
+                "мед. сестра",
+                "фельдшер",
+                "водитель"
             };
 
             bool isWorking = true;
@@ -69,7 +69,7 @@ namespace ConsoleApp1
         static void AddDossier(ref string[] name, ref string[] post)
         {
             Console.Clear();
-            ArrayExpand(name, post);
+            ArrayExpand(ref name,ref post);
             Console.WriteLine("введите ФИО");
             name[name.Length - 1] = Console.ReadLine();
             Console.WriteLine("введите должность");
@@ -77,7 +77,7 @@ namespace ConsoleApp1
             Console.WriteLine("успешно");
         }
 
-        static void OutputDossiers( string[] name, char symbol, string[] post)
+        static void OutputDossiers(string[] name, char symbol, string[] post)
         {
             Console.Clear();
 
@@ -107,7 +107,7 @@ namespace ConsoleApp1
 
             if (isCorrect)
             {
-                for (int i = inputIndex; i < name.Length-1; i++)
+                for (int i = inputIndex; i < name.Length - 1; i++)
                 {
                     name[i] = name[i + 1];
                     name[i + 1] = substitution;
@@ -115,7 +115,7 @@ namespace ConsoleApp1
                     post[i + 1] = substitution;
                 }
 
-                ArrayReduce(name, post);
+                ArrayReduce(ref name,ref post);
                 Console.WriteLine("успешно");
             }
         }
@@ -145,12 +145,12 @@ namespace ConsoleApp1
             }
         }
 
-        static void ArrayExpand(string[] name, string[] post)
+        static void ArrayExpand(ref string[] name,ref string[] post)
         {
             string[] tempName = new string[name.Length + 1];
             string[] tempPost = new string[post.Length + 1];
 
-            for (int i = 0; i < tempName.Length; i++)
+            for (int i = 0; i < name.Length; i++)
             {
                 tempName[i] = name[i];
                 tempPost[i] = post[i];
@@ -160,7 +160,7 @@ namespace ConsoleApp1
             post = tempPost;
         }
 
-        static void ArrayReduce(string[] name, string[] post)
+        static void ArrayReduce(ref string[] name,ref string[] post)
         {
             string[] tempName = new string[name.Length - 1];
             string[] tempPost = new string[post.Length - 1];
