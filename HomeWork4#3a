@@ -1,0 +1,36 @@
+using System;
+
+namespace ConsoleApp1
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.WriteLine("ваше число:" + GetValue());
+        }
+
+        static int GetValue()
+        {
+            bool isWorking = true;
+            int value = 0;
+            Console.WriteLine("введите число");
+            
+            while (isWorking)
+            {
+                string input = Console.ReadLine();
+                bool isCorrect = int.TryParse(input, out value);
+
+                if (isCorrect)
+                {
+                    isWorking = false;
+                }
+                else
+                {
+                    Console.WriteLine("некорректный ввод. возвращен 0.\nпопробуй еще");
+                }
+            }
+
+            return value;
+        }
+    }
+}
