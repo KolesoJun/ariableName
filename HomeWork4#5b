@@ -1,0 +1,39 @@
+using System;
+
+namespace ConsoleApp1
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            string[] elementsRandom = { "5", "uyfu", "35/0", "tr-65", "___", "qwer" };
+            OutputArray(elementsRandom);
+            Shuffle(elementsRandom);
+            OutputArray(elementsRandom);
+        }
+
+        static void Shuffle(string[] array)
+        {
+            Random random = new Random();
+            int randomMinValue = 0;
+            int randomMaxValue = array.Length;
+
+            for (int i = 0; i < array.Length; i++)
+            {
+                int randomIndex = random.Next(randomMinValue, randomMaxValue);
+                string localValue = array[i];
+                array[i] = array[randomIndex];
+                array[randomIndex] = localValue;
+            }
+        }
+
+        static void OutputArray(string[] array)
+        {
+            for (int i = 0; i < array.Length; i++)
+            {
+                Console.Write(array[i]);
+            }
+            Console.WriteLine();
+        }
+    }
+}
