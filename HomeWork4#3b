@@ -13,16 +13,15 @@ namespace ConsoleApp1
         static int GetValue()
         {
             bool isWorking = true;
-            int value =0;
+            int value = 0;
             Console.WriteLine("введите число");
 
             while (isWorking)
             {
                 string input = Console.ReadLine();
-                
-                if (int.TryParse(input, out _))
+
+                if (int.TryParse(input, out value))
                 {
-                    value = Convert.ToInt32(input);
                     isWorking = false;
                 }
                 else
