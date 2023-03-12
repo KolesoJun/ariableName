@@ -1,0 +1,177 @@
+using System;
+
+namespace ConsoleApp1
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            const int CommandAddDos = 1;
+            const int CommandWriteAll = 2;
+            const int CommandDelete = 3;
+            const int CommandSearch = 4;
+            const int CommandExit = 5;
+
+            string[] names = new string[]
+            {
+                "Колесников Д.С.",
+                "Обмочиев А.Н.",
+                "Долгова И.А.",
+                "Сережникова Г.Н.",
+                "Завалюшин В.В."
+            };
+            string[] posts = new string[]
+            {
+                "терапевт",
+                "ВОП",
+                "мед. сестра",
+                "фельдшер",
+                "водитель"
+            };
+
+            bool isWorking = true;
+            char dash = '-';
+
+            while (isWorking)
+            {
+                Console.WriteLine($"введи команду: \n{CommandAddDos} - добавить досье;\n{CommandWriteAll} - вывести все данные;\n{CommandDelete} - удалить досье;\n{CommandSearch} - поиск по базе; \n{CommandExit} - выход");
+                int inputMenu = Convert.ToInt32(Console.ReadLine());
+
+                switch (inputMenu)
+                {
+                    case CommandAddDos:
+                        AddDossier(ref names, ref posts);
+                        break;
+
+                    case CommandWriteAll:
+                        OutputDossiers(names, dash, posts);
+                        break;
+
+                    case CommandDelete:
+                        DeleteDossier(ref names, ref posts);
+                        break;
+
+                    case CommandSearch:
+                        FindDossier(names, posts, dash);
+                        break;
+
+                    case CommandExit:
+                        isWorking = false;
+                        break;
+
+                    default:
+                        Console.WriteLine("неверная команда. попробуй еще");
+                        break;
+                }
+            }
+        }
+
+        static void AddDossier(ref string[] name, ref string[] post)
+        {
+            Console.Clear();
+            Console.WriteLine("введите ФИО");
+            name = ArrayExpand(name);
+            name[name.Length - 1] = Console.ReadLine();
+            Console.WriteLine("введите должность");
+            post = ArrayExpand(post);
+            post[post.Length - 1] = Console.ReadLine();
+            Console.WriteLine("успешно");
+        }
+
+        static void OutputDossiers(string[] name, char symbol, string[] post)
+        {
+            Console.Clear();
+
+            for (int i = 0; i < name.Length; i++)
+            {
+                Console.WriteLine(i + 1 + name[i] + symbol + post[i]);
+            }
+        }
+
+        static void DeleteDossier(ref string[] name, ref string[] post)
+        {
+            Console.Clear();
+            bool isCorrect;
+            string substitution = "0";
+            Console.WriteLine("введите номер досье, которое нужно удалить");
+            int inputIndex = Convert.ToInt32(Console.ReadLine());
+
+            if (inputIndex >= name.Length || inputIndex < 0)
+            {
+                Console.WriteLine("неверный ввод");
+                isCorrect = false;
+            }
+            else
+            {
+                isCorrect = true;
+            }
+
+            if (isCorrect)
+            {
+                for (int i = inputIndex; i < name.Length - 1; i++)
+                {
+                    name[i] = name[i + 1];
+                    name[i + 1] = substitution;
+                    post[i] = post[i + 1];
+                    post[i + 1] = substitution;
+                }
+
+                name = ArrayReduce(name);
+                post = ArrayReduce(post);
+                Console.WriteLine("успешно");
+            }
+        }
+
+        static void FindDossier(string[] name, string[] post, char dash)
+        {
+            Console.Clear();
+            Console.WriteLine("введите фамилию");
+            string inputString = Console.ReadLine().ToLower();
+            string[] surname;
+            char whitespace = ' ';
+            bool isCorrect = false;
+
+            for (int i = 0; i < name.Length; i++)
+            {
+                surname = name[i].Split(whitespace);
+
+                if (surname[0].ToLower() == inputString.ToLower())
+                {
+                    isCorrect = true;
+                }
+
+                if (isCorrect)
+                {
+                    Console.WriteLine(name[i] + dash + post[i]);
+                    break;
+                }
+            }
+        }
+
+        static string[] ArrayExpand(string[] array)
+        {
+            string[] tempArray = new string[array.Length + 1];
+
+            for (int i = 0; i < array.Length; i++)
+            {
+                tempArray[i] = array[i];
+            }
+
+            array = tempArray;
+            return array;
+        }
+
+        static string[] ArrayReduce(string[] array)
+        {
+            string[] tempArray = new string[array.Length - 1];
+
+            for (int i = 0; i < tempArray.Length; i++)
+            {
+                tempArray[i] = array[i];
+            }
+
+            array = tempArray;
+            return array;
+        }
+    }
+}
