@@ -6,10 +6,10 @@ namespace ConsoleApp1
     {
         static void Main(string[] args)
         {
-            string[] elementsRandom = { "5", "uyfu", "35/0", "tr-65", "___", "qwer" };
-            OutputArray(elementsRandom);
-            Shuffle(elementsRandom);
-            OutputArray(elementsRandom);
+            string[] randomElements = { "5", "uyfu", "35/0", "tr-65", "___", "qwer" };
+            OutputArray(randomElements);
+            Shuffle(randomElements);
+            OutputArray(randomElements);
         }
 
         static void Shuffle(string[] array)
@@ -33,6 +33,7 @@ namespace ConsoleApp1
             {
                 Console.Write(array[i]);
             }
+
             Console.WriteLine();
         }
     }
