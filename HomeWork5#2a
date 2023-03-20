@@ -1,0 +1,64 @@
+using System;
+using System.Collections.Generic;
+
+namespace ConsoleApp1
+{
+    class Program
+    {
+        static void Main()
+        {
+            int countBuyers = DefinitionCountBuyers();
+            Queue<int> queue = AddInQueue(countBuyers);
+            int profit = 0;
+            int positionCursorY = 0;
+            int positionCursorX = 11;
+            Console.WriteLine("Галя-я! Открой кассу!");
+
+            while (countBuyers>0)
+            {
+                OutputQueueInformation(queue);
+                Console.SetCursorPosition(positionCursorY, positionCursorX);
+                Console.WriteLine($"прибыль магазина = {profit}");
+                countBuyers--;
+                profit += queue.Dequeue();
+                Console.ReadKey();
+                Console.Clear();
+            }
+        }
+
+        static int DefinitionCountBuyers()
+        {
+            int value = DefinitionRandomNumber();
+            return value;
+        }
+
+        static Queue<int> AddInQueue(int countBuyers)
+        {
+            Queue<int> queue = new Queue<int>();
+
+            for (int i = 0; i < countBuyers; i++)
+            {
+                queue.Enqueue(DefinitionRandomNumber());
+            }
+            
+            return queue;
+        }
+
+        static int DefinitionRandomNumber()
+        {
+            Random random = new Random();
+            int minRandom = 1;
+            int maxRandom = 10;
+            int value = random.Next(minRandom, maxRandom);
+            return value;
+        }
+
+        static void OutputQueueInformation(Queue<int> queue)
+        {
+            foreach (var item in queue)
+            {
+                Console.WriteLine(item);
+            }
+        }
+    }
+}
