@@ -1,0 +1,37 @@
+using System;
+using System.Collections.Generic;
+
+namespace ConsoleApp1
+{
+    class Program
+    {
+        static void Main()
+        {
+            Dictionary<string, string> dictionary = CreateDictionary();
+            Console.WriteLine("введите название игры:");
+            string inputUser = Console.ReadLine();
+
+            if (dictionary.ContainsKey(inputUser))
+            {
+                Console.WriteLine($"жанр - {dictionary[inputUser]}");
+            }
+            else
+            {
+                Console.WriteLine("такой игры нет в словаре");
+            }
+        }
+
+        static Dictionary<string, string> CreateDictionary()
+        {
+            Dictionary<string, string> dictionary = new Dictionary<string, string>()
+            {
+                ["Корни"] = "Баталии",
+                ["Война кольца"] = "Дуэль",
+                ["Битоку"] = "Аниме евро",
+                ["Серп"] = "дизельпанк евро"
+            };
+
+            return dictionary;
+        }
+    }
+}
