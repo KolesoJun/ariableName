@@ -1,0 +1,97 @@
+using System;
+using System.Collections.Generic;
+
+namespace ConsoleApp1
+{
+    class Program
+    {
+        static void Main()
+        {
+            const string AddDossier = "add";
+            const string OutputDossiers = "output";
+            const string RemoveDossier = "delete";
+            const string Exit = "exit";
+
+            Dictionary<string, string> dossiers = new Dictionary<string, string>()
+            {
+                ["Григорян Т.А."] = "реаниматолог",
+                ["Алферова А.В."] = "косметолог",
+                ["Будков А.А."] = "невролог",
+                ["Халецкий Д.С."] = "механик"
+            };
+            bool isWorking = true;
+
+            Console.WriteLine($"перед вами досье.\nчтобы добавить новое, используйте команду - {AddDossier}." +
+                $"\n{ RemoveDossier}, чтобы удалить досье"+
+                $"\n{ OutputDossiers}, чтобы вывести все данные" +
+                $"\n{Exit}, чтобы выйти." +
+                $"\nнажмите любую клавишу, чтобы продолжить");
+            Console.ReadKey();
+            Console.Clear();
+
+            while (isWorking)
+            {
+                Console.WriteLine("введите команду");
+                string inputPlayer = Console.ReadLine();
+
+                switch (inputPlayer)
+                {
+                    case AddDossier:
+                        dossiers = AddInDictionary(dossiers);
+                        break;
+
+                    case OutputDossiers:
+                        OutputDictionary(dossiers);
+                        break;
+
+                    case RemoveDossier:
+                        dossiers = RemoveInDictionary(dossiers);
+                        break;
+
+                    case Exit:
+                        isWorking = false;
+                        break;
+
+                    default:
+                        Console.WriteLine("такой команды нет");
+                        break;
+                }
+            }
+        }
+
+        static Dictionary<string, string> AddInDictionary(Dictionary<string, string> dossiers)
+        {
+            Console.WriteLine("введите ФИО");
+            string inputName = Console.ReadLine();
+            Console.WriteLine("введите должность");
+            string inputPost = Console.ReadLine();
+            dossiers.Add(inputName, inputPost);
+            return dossiers;
+        }
+
+        static Dictionary<string, string> RemoveInDictionary(Dictionary<string, string> dossiers)
+        {
+            Console.WriteLine("введите ФИО");
+            string inputName = Console.ReadLine();
+
+            if (dossiers.ContainsKey(inputName))
+            {
+                dossiers.Remove(inputName);
+            }
+            else
+            {
+                Console.WriteLine("такого ФИО нет");
+            }
+            
+            return dossiers;
+        }
+
+        static void OutputDictionary(Dictionary<string, string> dossiers)
+        {
+            foreach (var elementDossiers in dossiers)
+            {
+                Console.WriteLine($"{elementDossiers.Key} - {elementDossiers.Value}");
+            }
+        }
+    }
+}
