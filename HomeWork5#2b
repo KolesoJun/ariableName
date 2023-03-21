@@ -1,0 +1,69 @@
+using System;
+using System.Collections.Generic;
+
+namespace ConsoleApp1
+{
+    class Program
+    {
+        static void Main()
+        {
+            int countBuyers = DefinitionCountBuyers();
+            Queue<int> queue = CreateQueue(countBuyers);
+            int profit = 0;
+            int positionCursorY = 0;
+            int positionCursorX = 12;
+            int defaultPositionCursorY = 0;
+            int defaultPositionCursorX = 1;
+
+            Console.WriteLine("Галя-я! Открой кассу!");
+
+            while (countBuyers > 0)
+            {
+                Console.SetCursorPosition(positionCursorY, positionCursorX);
+                Console.WriteLine($"прибыль магазина = {profit}");
+                Console.SetCursorPosition(defaultPositionCursorY, defaultPositionCursorX);
+                OutputQueueInformation(queue);
+                Console.WriteLine($"следующий в очереди: {queue.Peek()}");
+                profit += queue.Dequeue();
+                countBuyers--;
+                Console.ReadKey();
+                Console.Clear();
+            }
+        }
+
+        static int DefinitionCountBuyers()
+        {
+            int value = DefinitionRandomNumber();
+            return value;
+        }
+
+        static Queue<int> CreateQueue(int countBuyers)
+        {
+            Queue<int> queue = new Queue<int>();
+
+            for (int i = 0; i < countBuyers; i++)
+            {
+                queue.Enqueue(DefinitionRandomNumber());
+            }
+
+            return queue;
+        }
+
+        static int DefinitionRandomNumber()
+        {
+            Random random = new Random();
+            int minRandom = 1;
+            int maxRandom = 10;
+            int value = random.Next(minRandom, maxRandom);
+            return value;
+        }
+
+        static void OutputQueueInformation(Queue<int> queue)
+        {
+            foreach (var item in queue)
+            {
+                Console.WriteLine(item);
+            }
+        }
+    }
+}
