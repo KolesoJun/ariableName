@@ -1,0 +1,68 @@
+using System;
+using System.Collections.Generic;
+
+namespace ConsoleApp1
+{
+    class Program
+    {
+        static void Main()
+        {
+            const string Sum = "sum";
+            const string Exit = "exit";
+
+            List<int> numbers = new List<int>();
+            bool isWorking = true;
+
+            Console.WriteLine($"вносите числа в лист.\nчтобы сложить все числа, используйте команду - {Sum}." +
+                $"\n{Exit}, чтобы выйти.\nнажмите любую клавишу, чтобы продолжить");
+            Console.ReadKey();
+            Console.Clear();
+
+            while (isWorking)
+            {
+                Console.WriteLine("введите число");
+                string inputPlayer = Console.ReadLine();
+
+                switch (inputPlayer)
+                {
+                    case Sum:
+                        int sum = CalculateNumbersOfList(numbers);
+                        Console.WriteLine($"сумма чисел - {sum}");
+                        break;
+
+                    case Exit:
+                        isWorking = false;
+                        break;
+
+                    default:
+                        CompletionList(inputPlayer, ref numbers);
+                        break;
+                }
+            }
+        }
+
+        static void CompletionList(string inputPlayer,ref List<int> numbers)
+        {
+            if (int.TryParse(inputPlayer, out int value))
+            {
+                numbers.Add(value);
+            }
+            else
+            {
+                Console.WriteLine("вы ввели не число");
+            }
+        }
+
+        static int CalculateNumbersOfList(List<int> numbers)
+        {
+            int sum = 0;
+
+            for (int i = 0; i < numbers.Count; i++)
+            {
+                sum += numbers[i];
+            }
+
+            return sum;
+        }
+    }
+}
