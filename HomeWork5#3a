@@ -26,8 +26,7 @@ namespace ConsoleApp1
                 switch (inputPlayer)
                 {
                     case CommandSum:
-                        int sum = CalculateNumbersOfList(numbers);
-                        Console.WriteLine($"сумма чисел - {sum}");
+                        CalculateNumbersOfList(numbers);
                         break;
 
                     case CommandExit:
@@ -35,13 +34,13 @@ namespace ConsoleApp1
                         break;
 
                     default:
-                        CompletionList(inputPlayer, ref numbers);
+                        CompletionList(inputPlayer, numbers);
                         break;
                 }
             }
         }
 
-        static void CompletionList(string inputPlayer, ref List<int> numbers)
+        static void CompletionList(string inputPlayer, List<int> numbers)
         {
             if (int.TryParse(inputPlayer, out int value))
             {
@@ -53,7 +52,7 @@ namespace ConsoleApp1
             }
         }
 
-        static int CalculateNumbersOfList(List<int> numbers)
+        static void CalculateNumbersOfList(List<int> numbers)
         {
             int sum = 0;
 
@@ -62,7 +61,7 @@ namespace ConsoleApp1
                 sum += numbers[i];
             }
 
-            return sum;
+            Console.WriteLine($"сумма чисел - {sum}");
         }
     }
 }
