@@ -7,14 +7,14 @@ namespace ConsoleApp1
     {
         static void Main()
         {
-            const string Sum = "sum";
-            const string Exit = "exit";
+            const string CommandSum = "sum";
+            const string CommandExit = "exit";
 
             List<int> numbers = new List<int>();
             bool isWorking = true;
 
-            Console.WriteLine($"вносите числа в лист.\nчтобы сложить все числа, используйте команду - {Sum}." +
-                $"\n{Exit}, чтобы выйти.\nнажмите любую клавишу, чтобы продолжить");
+            Console.WriteLine($"вносите числа в лист.\nчтобы сложить все числа, используйте команду - {CommandSum}." +
+                $"\n{CommandExit}, чтобы выйти.\nнажмите любую клавишу, чтобы продолжить");
             Console.ReadKey();
             Console.Clear();
 
@@ -25,12 +25,12 @@ namespace ConsoleApp1
 
                 switch (inputPlayer)
                 {
-                    case Sum:
+                    case CommandSum:
                         int sum = CalculateNumbersOfList(numbers);
                         Console.WriteLine($"сумма чисел - {sum}");
                         break;
 
-                    case Exit:
+                    case CommandExit:
                         isWorking = false;
                         break;
 
@@ -41,7 +41,7 @@ namespace ConsoleApp1
             }
         }
 
-        static void CompletionList(string inputPlayer,ref List<int> numbers)
+        static void CompletionList(string inputPlayer, ref List<int> numbers)
         {
             if (int.TryParse(inputPlayer, out int value))
             {
