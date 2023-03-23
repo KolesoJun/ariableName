@@ -1,0 +1,61 @@
+using System;
+using System.Collections.Generic;
+
+namespace ConsoleApp1
+{
+    class Program
+    {
+        static void Main()
+        {
+            int[] arrayFirst = GetArray();
+            int[] arraySecond = GetArray();
+            List<int> commonStorage = new List<int>();
+            InstalList(commonStorage, arrayFirst, arraySecond);
+            Console.Write("лист - ");
+
+            for (int i = 0; i < commonStorage.Count; i++)
+            {
+                Console.Write(commonStorage[i]);
+            }
+        }
+
+        static int SpecifyRandomNumbers()
+        {
+            Random random = new Random();
+            int minRandomValue = 1;
+            int maxRandomValue = 10;
+            int value = random.Next(minRandomValue, maxRandomValue);
+            return value;
+        }
+
+        static int[] GetArray()
+        {
+            int[] tempArray = new int[SpecifyRandomNumbers()];
+            Console.Write("массив - ");
+
+            for (int i = 0; i < tempArray.Length; i++)
+            {
+                tempArray[i] = SpecifyRandomNumbers();
+                Console.Write(tempArray[i]);
+            }
+
+            Console.WriteLine();
+            return tempArray;
+        }
+
+        static void InstalList(List<int> list, int[] arrayFirst, int[] arraySecond)
+        {
+            List<int> tempList = new List<int>();
+            tempList.AddRange(arrayFirst);
+            tempList.AddRange(arraySecond);
+
+            for (int t = 0; t < tempList.Count - 1; t++)
+            {
+                if (!list.Contains(tempList[t]))
+                {
+                    list.Add(tempList[t]);
+                }
+            }
+        }
+    }
+}
