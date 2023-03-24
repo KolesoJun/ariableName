@@ -1,0 +1,35 @@
+using System;
+
+namespace ConsoleApp1
+{
+    class Program
+    {
+        static void Main()
+        {
+            Player player = new Player();
+            player.OutputStatsInformation();
+        }
+    }
+
+    class Player
+    {
+        public string Name;
+        public string NameCombatClass;
+        public int Health;
+        public int Experience;
+
+        public Player(string name = "Bob", string nameCombatClass = "warrior", int health = 100, int experience = 10)
+        {
+            Name = name;
+            NameCombatClass = nameCombatClass;
+            Health = health;
+            Experience = experience;
+        }
+
+        public void OutputStatsInformation()
+        {
+            Console.WriteLine($"ваше имя - {Name},\nбоевой класс - {NameCombatClass}," +
+                $"\nуровень здоровья - {Health},\nнакопленный опыт - {Experience}");
+        }
+    }
+}
