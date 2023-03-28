@@ -1,0 +1,57 @@
+using System;
+
+namespace ConsoleApp1
+{
+    class Program
+    {
+        static void Main()
+        {
+            RenderMeshPlayer render = new RenderMeshPlayer();
+
+            render.DrawPlayer();
+        }
+    }
+
+    class Player
+    {
+        private int _positionX = 3;
+        public int PositionX 
+        {
+            get 
+            {
+                return _positionX;
+            }
+            private set 
+            {
+                _positionX = value;
+            }
+        }
+
+        private int _positionY= 4;
+        public int PositionY
+        {
+            get
+            {
+                return _positionY;
+            }
+            private set
+            {
+                _positionY = value;
+            }
+        }
+
+        private char _meshPlayer = '@';
+        public char MeshPlayer { get { return _meshPlayer; } }
+    }
+
+    class RenderMeshPlayer
+    {
+        Player player = new Player();
+
+        public void DrawPlayer()
+        {
+            Console.SetCursorPosition(player.PositionX, player.PositionY);
+            Console.Write(player.MeshPlayer);
+        }
+    }
+}
