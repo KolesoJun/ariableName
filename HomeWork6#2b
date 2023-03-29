@@ -1,0 +1,50 @@
+using System;
+
+namespace ConsoleApp1
+{
+    class Program
+    {
+        static void Main()
+        {
+            Player player = new Player();
+            RenderMeshPlayer render = new RenderMeshPlayer(player);
+            render.DrawPlayer(player);
+        }
+    }
+
+    class Player
+    {
+         char _meshPlayer = '@';
+
+        public char MeshPlayer => _meshPlayer;
+        public int PositionX => RandomPositionPlayer();
+        public int PositionY => RandomPositionPlayer();
+
+        private int RandomPositionPlayer()
+        {
+            Random random = new Random();
+            int valueRandomMin = 0;
+            int valueRandomMax = 10;
+            int randomValue = random.Next(valueRandomMin, valueRandomMax);
+            return randomValue;
+        }
+    }
+
+    class RenderMeshPlayer
+    {
+        private int _positionPlayerX;
+        private int _positionPlayerY;
+
+        public RenderMeshPlayer(Player player)
+        {
+            _positionPlayerX = player.PositionX;
+            _positionPlayerY = player.PositionY;
+        }
+
+        public void DrawPlayer(Player player)
+        {
+            Console.SetCursorPosition(_positionPlayerX, _positionPlayerY);
+            Console.WriteLine(player.MeshPlayer);
+        }
+    }
+}
