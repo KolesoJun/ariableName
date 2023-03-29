@@ -14,7 +14,12 @@ namespace ConsoleApp1
 
     class Player
     {
-         char _meshPlayer = '@';
+         char _meshPlayer;
+
+        public Player(char mesh = '@')
+        {
+            _meshPlayer = mesh;
+        }
 
         public char MeshPlayer => _meshPlayer;
         public int PositionX => RandomPositionPlayer();
