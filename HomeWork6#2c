@@ -1,0 +1,41 @@
+using System;
+
+namespace ConsoleApp1
+{
+    class Program
+    {
+        static void Main()
+        {
+            int positionX = 3;
+            int positionY = 5;
+            Player player = new Player(positionX, positionY);
+            RenderMeshPlayer render = new RenderMeshPlayer();
+            render.DrawPlayer(player);
+        }
+    }
+
+    class Player
+    {
+        private char _meshPlayer;
+
+        public Player(int positionX, int positionY, char mesh = '@')
+        {
+            PositionX = positionX;
+            PositionY = positionY;
+            _meshPlayer = mesh;
+        }
+
+        public char MeshPlayer => _meshPlayer;
+        public int PositionY { get; private set; }
+        public int PositionX { get; private set; }
+    }
+
+    class RenderMeshPlayer
+    {
+        public void DrawPlayer(Player player)
+        {
+            Console.SetCursorPosition(player.PositionX, player.PositionY);
+            Console.WriteLine(player.MeshPlayer);
+        }
+    }
+}
