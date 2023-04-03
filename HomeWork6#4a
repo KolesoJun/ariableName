@@ -14,7 +14,6 @@ namespace ConsoleApp1
             Deck deck = new Deck();
             Player player = new Player();
             bool isWorking = true;
-            
             deck.CreateBaseDeck();
             deck.MixingDeck();
 
@@ -41,6 +40,7 @@ namespace ConsoleApp1
                         Console.WriteLine("ошибка ввода");
                         break;
                 }
+
                 Console.ReadKey();
                 Console.Clear();
             }
@@ -140,7 +140,6 @@ namespace ConsoleApp1
         private int _cursorPositionX = 0;
         private int _cursorPositionY = 10;
         private int _scoreWinner = 21;
-
         public int ScorePlayer { get; private set; }
 
         public void PullCard(Stack<Card> cards)
@@ -184,7 +183,6 @@ namespace ConsoleApp1
             Random random = new Random();
             int randomValueMin = _scoreWinner / 2;
             int randomValueMax = _scoreWinner;
-
             return random.Next(randomValueMin, randomValueMax);
         }
     }
