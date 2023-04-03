@@ -1,0 +1,184 @@
+using System;
+using System.Collections.Generic;
+
+namespace ConsoleApp1
+{
+    class Program
+    {
+        const string CommandAddPlayer = "1";
+        const string CommandBanPlayer = "2";
+        const string CommandUnbanPlayer = "3";
+        const string CommandRemovePlayer = "4";
+        const string CommandOutputPlayers = "5";
+        const string CommandExit = "6";
+
+        static void Main()
+        {
+            Database dataBase = new Database();
+            dataBase.InitialStartPlayers();
+            bool isWorking = true;
+
+            while (isWorking)
+            {
+                ShowInformation();
+                string inputPlayer = Console.ReadLine();
+
+                switch (inputPlayer)
+                {
+                    case CommandAddPlayer:
+                        dataBase.AddPlayer();
+                        break;
+
+                    case CommandBanPlayer:
+                        dataBase.SetupBanOnPlayer();
+                        break;
+
+                    case CommandUnbanPlayer:
+                        dataBase.SetupUnbanOnPlayer();
+                        break;
+
+                    case CommandRemovePlayer:
+                        dataBase.RemovePlayer();
+                        break;
+
+                    case CommandOutputPlayers:
+                        dataBase.OutputPlayers();
+                        break;
+
+                    case CommandExit:
+                        isWorking = false;
+                        break;
+
+                    default:
+                        Console.WriteLine("ошибка ввода");
+                        break;
+                }
+
+                Console.ReadLine();
+                Console.Clear();
+            }
+        }
+
+        static void ShowInformation()
+        {
+            Console.WriteLine($"база данных игроков:" +
+                $"\n{CommandAddPlayer} - добавить игрока;" +
+                $"\n{CommandBanPlayer} - накинуть бан;" +
+                $"\n{CommandUnbanPlayer} - разбанить;" +
+                $"\n{CommandRemovePlayer} - удалить;" +
+                $"\n{CommandOutputPlayers} - вывести всех на экран" +
+                $"\n{CommandExit} - выйти");
+        }
+    }
+
+    class Player
+    {
+        public Player(int number, string name, int level = 1)
+        {
+            Number = number;
+            Name = name;
+            Level = level;
+        }
+
+        public int Number { get; private set; }
+        public string Name { get; private set; }
+        public int Level { get; private set; }
+        public bool IsBanned { get; private set; }
+
+        public bool BanThisPlayer(bool ban = true)
+        {
+            IsBanned = ban;
+            return IsBanned;
+        }
+
+        public void UnbanThisPlayer()
+        {
+            IsBanned = false;
+        }
+    }
+
+    class Database
+    {
+        Random _random = new Random();
+        List<Player> _listPlayers = new List<Player>();
+
+        private int _minRandom = 0;
+        private int _maxRandom = 10;
+        private int _numberPlayersCurrent = 1;
+        private string[] _nicks = { "bob", "tod", "chop", "titan", "qwer", "jobs", "young", "__iii__", "hugo", "tronm" };
+
+        public void InitialStartPlayers()
+        {
+            int randomCountStartPlayer = _random.Next(_minRandom, _maxRandom);
+
+            for (int i = 0; i < randomCountStartPlayer; i++)
+            {
+                int randomStartLevelPlayer = _random.Next(_minRandom, _maxRandom);
+                _listPlayers.Add(new Player(_numberPlayersCurrent++, GetRandomNick(), randomStartLevelPlayer));
+            }
+        }
+
+        public void AddPlayer()
+        {
+            Console.WriteLine("введите ник");
+            string nickPlayer = Console.ReadLine();
+
+            if (nickPlayer != null)
+            {
+                _listPlayers.Add(new Player(_numberPlayersCurrent++, nickPlayer));
+            }
+            else
+            {
+                _listPlayers.Add(new Player(_numberPlayersCurrent++, GetRandomNick()));
+            }
+        }
+
+        public void RemovePlayer()
+        {
+            Console.WriteLine("чтобы удалить игрока, введите его номер");
+            _listPlayers.Remove(GetNeededPlayer());
+        }
+        public void OutputPlayers()
+        {
+            for (int i = 0; i < _listPlayers.Count; i++)
+            {
+                Console.WriteLine($"номер - {_listPlayers[i].Number}, ник - {_listPlayers[i].Name}, уровень - {_listPlayers[i].Level}, наличие бана - {_listPlayers[i].IsBanned}");
+            }
+        }
+
+        public void SetupBanOnPlayer()
+        {
+            Console.WriteLine("введите номер игрока");
+            GetNeededPlayer().BanThisPlayer();
+        }
+
+        public void SetupUnbanOnPlayer()
+        {
+            Console.WriteLine("введите номер игрока");
+            GetNeededPlayer().UnbanThisPlayer();
+        }
+
+        private string GetRandomNick()
+        {
+            string randomNick = _nicks[_random.Next(_minRandom, _maxRandom)];
+            return randomNick;
+        }
+
+        private Player GetNeededPlayer()
+        {
+            if (int.TryParse(Console.ReadLine(), out int value))
+            {
+                for (int i = 0; i < _listPlayers.Count; i++)
+                {
+                    if (value == _listPlayers[i].Number)
+                    {
+                        return _listPlayers[i];
+                    }
+                }
+            }
+
+            Console.WriteLine("ошибка");
+            return null;
+        }
+    }
+}
