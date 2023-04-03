@@ -1,0 +1,191 @@
+using System;
+using System.Collections.Generic;
+
+namespace ConsoleApp1
+{
+    class Program
+    {
+        const string CommandAdd = "1";
+        const string CommandStop = "2";
+        const string CommandExit = "3";
+
+        static void Main()
+        {
+            Deck deck = new Deck();
+            Player player = new Player();
+            bool isWorking = true;
+            
+            deck.CreateBaseDeck();
+            deck.MixingDeck();
+
+            while (isWorking)
+            {
+                Console.WriteLine($"{CommandAdd} - добавить карту,{CommandStop} - стоп;{CommandExit} - выйти");
+                string inputPlayer = Console.ReadLine();
+                
+                switch (inputPlayer)
+                {
+                    case CommandAdd:
+                        player.PullCard(deck.GetMixingDeck());
+                        break;
+
+                    case CommandStop:
+                        isWorking = player.StopParty();
+                        break;
+
+                    case CommandExit:
+                        isWorking = false;
+                        break;
+
+                    default:
+                        Console.WriteLine("ошибка ввода");
+                        break;
+                }
+                Console.ReadKey();
+                Console.Clear();
+            }
+        }
+    }
+
+    class Card
+    {
+        public Card(string name, int value)
+        {
+            NameCard = name;
+            ValueCard = value;
+        }
+
+        public string NameCard { get; private set; }
+        public int ValueCard { get; private set; }
+    }
+
+    class Deck
+    {
+        private Stack<Card> _deckMixing = new Stack<Card>();
+        private List<Card> _deckBase = new List<Card>();
+        private string[] _suit = { "pike_", "cross_", "hearts_", "tambourine_" };
+        private string[] _value = { "6", "7", "8", "9", "10", "J", "Q", "K", "A" };
+
+        public Stack<Card> GetMixingDeck()
+        {
+            return _deckMixing;
+        }
+
+        public void CreateBaseDeck()
+        {
+            const string Jack = "J";
+            const string Queen = "Q";
+            const string King = "K";
+            const string Ace = "A";
+            int number = 0;
+            int countSuit = 4;
+
+            for (int i = 0; i < countSuit; i++)
+            {
+                for (int y = 0; y < _value.Length; y++)
+                {
+                    string tempCard = _suit[i] + _value[y];
+                    
+                    if (int.TryParse(_value[y], out int value))
+                    {
+                        number = value;
+                    }
+                    else 
+                        switch (_value[y])
+                        {
+                            case Jack:
+                                number = 8;
+                                break;
+
+                            case Queen:
+                                number = 9;
+                                break;
+
+                            case King:
+                                number = 10;
+                                break;
+
+                            case Ace:
+                                number = 11;
+                                break;
+                        }
+
+                    _deckBase.Add(new Card(tempCard, number));
+                }
+            }
+        }
+
+        public void MixingDeck()
+        {
+            Random random = new Random();
+            int indexRandomMin = 0;
+            int indexRandomMax = _deckBase.Count;
+            int countChecks = 50;
+
+            for (int i = 0; i < countChecks; i++)
+            {
+                int value = random.Next(indexRandomMin, indexRandomMax);
+                
+                if (!_deckMixing.Contains(_deckBase[value]))
+                {
+                    _deckMixing.Push(_deckBase[value]);
+                }
+            }
+        }
+    }
+
+    class Player
+    {
+        private List<Card> _deckPersonal = new List<Card>();
+        private int _cursorPositionX = 0;
+        private int _cursorPositionY = 10;
+        private int _scoreWinner = 21;
+
+        public int ScorePlayer { get; private set; }
+
+        public void PullCard(Stack<Card> cards)
+        {
+            Console.SetCursorPosition(_cursorPositionX, _cursorPositionY);
+            Console.WriteLine($"ваша карта: {cards.Peek().NameCard}");
+            _deckPersonal.Add(cards.Peek());
+            ScorePlayer += cards.Pop().ValueCard;
+            Console.WriteLine($"ваш счет: {ScorePlayer}");
+        }
+
+        public bool StopParty()
+        {
+            Console.WriteLine($"ваш счет: {ScorePlayer}");
+            Console.WriteLine("ваши карты");
+            ShowPersonalDeck();
+
+            if (ScorePlayer <= _scoreWinner && ScorePlayer >= ScorePersonalMin())
+            {
+                Console.WriteLine($"противник набрал: {ScorePersonalMin()}");
+                Console.WriteLine("вы победили");
+            }
+            else
+            {
+                Console.WriteLine("вы проиграли");
+            }
+
+            return false;
+        }
+
+        private void ShowPersonalDeck()
+        {
+            for (int i = 0; i < _deckPersonal.Count; i++)
+            {
+                Console.WriteLine(_deckPersonal[i].NameCard);
+            }
+        }
+
+        private int ScorePersonalMin()
+        {
+            Random random = new Random();
+            int randomValueMin = _scoreWinner / 2;
+            int randomValueMax = _scoreWinner;
+
+            return random.Next(randomValueMin, randomValueMax);
+        }
+    }
+}
