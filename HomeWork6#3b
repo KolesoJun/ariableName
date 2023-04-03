@@ -85,13 +85,12 @@ namespace ConsoleApp1
         public int Level { get; private set; }
         public bool IsBanned { get; private set; }
 
-        public bool BanThisPlayer(bool ban = true)
+        public void SetupBan()
         {
-            IsBanned = ban;
-            return IsBanned;
+            IsBanned = true;
         }
 
-        public void UnbanThisPlayer()
+        public void SetupUnban()
         {
             IsBanned = false;
         }
@@ -99,9 +98,8 @@ namespace ConsoleApp1
 
     class Database
     {
-        Random _random = new Random();
-        List<Player> _listPlayers = new List<Player>();
-
+        private Random _random = new Random();
+        private List<Player> _listPlayers = new List<Player>();
         private int _minRandom = 0;
         private int _maxRandom = 10;
         private int _numberPlayersCurrent = 1;
@@ -138,6 +136,7 @@ namespace ConsoleApp1
             Console.WriteLine("чтобы удалить игрока, введите его номер");
             _listPlayers.Remove(GetNeededPlayer());
         }
+
         public void OutputPlayers()
         {
             for (int i = 0; i < _listPlayers.Count; i++)
@@ -149,13 +148,13 @@ namespace ConsoleApp1
         public void SetupBanOnPlayer()
         {
             Console.WriteLine("введите номер игрока");
-            GetNeededPlayer().BanThisPlayer();
+            GetNeededPlayer().SetupBan();
         }
 
         public void SetupUnbanOnPlayer()
         {
             Console.WriteLine("введите номер игрока");
-            GetNeededPlayer().UnbanThisPlayer();
+            GetNeededPlayer().SetupUnban();
         }
 
         private string GetRandomNick()
