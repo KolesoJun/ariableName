@@ -14,18 +14,18 @@ namespace ConsoleApp1
             Deck deck = new Deck();
             Player player = new Player();
             bool isWorking = true;
-            deck.CreateBaseDeck();
-            deck.MixingDeck();
+            deck.CreateBaseCards();
+            deck.MixingCards();
 
             while (isWorking)
             {
                 Console.WriteLine($"{CommandAdd} - добавить карту,{CommandStop} - стоп;{CommandExit} - выйти");
                 string inputPlayer = Console.ReadLine();
-                
+
                 switch (inputPlayer)
                 {
                     case CommandAdd:
-                        player.PullCard(deck.GetMixingDeck());
+                        player.PullCard(deck.GetMixingCards());
                         break;
 
                     case CommandStop:
@@ -51,27 +51,27 @@ namespace ConsoleApp1
     {
         public Card(string name, int value)
         {
-            NameCard = name;
-            ValueCard = value;
+            Name = name;
+            Value = value;
         }
 
-        public string NameCard { get; private set; }
-        public int ValueCard { get; private set; }
+        public string Name { get; private set; }
+        public int Value { get; private set; }
     }
 
     class Deck
     {
-        private Stack<Card> _deckMixing = new Stack<Card>();
-        private List<Card> _deckBase = new List<Card>();
+        private Stack<Card> _cardsMixing = new Stack<Card>();
+        private List<Card> _cardsBase = new List<Card>();
         private string[] _suit = { "pike_", "cross_", "hearts_", "tambourine_" };
         private string[] _value = { "6", "7", "8", "9", "10", "J", "Q", "K", "A" };
 
-        public Stack<Card> GetMixingDeck()
+        public Stack<Card> GetMixingCards()
         {
-            return _deckMixing;
+            return _cardsMixing;
         }
 
-        public void CreateBaseDeck()
+        public void CreateBaseCards()
         {
             const string Jack = "J";
             const string Queen = "Q";
@@ -85,12 +85,12 @@ namespace ConsoleApp1
                 for (int y = 0; y < _value.Length; y++)
                 {
                     string tempCard = _suit[i] + _value[y];
-                    
+
                     if (int.TryParse(_value[y], out int value))
                     {
                         number = value;
                     }
-                    else 
+                    else
                         switch (_value[y])
                         {
                             case Jack:
@@ -110,25 +110,25 @@ namespace ConsoleApp1
                                 break;
                         }
 
-                    _deckBase.Add(new Card(tempCard, number));
+                    _cardsBase.Add(new Card(tempCard, number));
                 }
             }
         }
 
-        public void MixingDeck()
+        public void MixingCards()
         {
             Random random = new Random();
             int indexRandomMin = 0;
-            int indexRandomMax = _deckBase.Count;
+            int indexRandomMax = _cardsBase.Count;
             int countChecks = 50;
 
             for (int i = 0; i < countChecks; i++)
             {
                 int value = random.Next(indexRandomMin, indexRandomMax);
-                
-                if (!_deckMixing.Contains(_deckBase[value]))
+
+                if (!_cardsMixing.Contains(_cardsBase[value]))
                 {
-                    _deckMixing.Push(_deckBase[value]);
+                    _cardsMixing.Push(_cardsBase[value]);
                 }
             }
         }
@@ -140,24 +140,24 @@ namespace ConsoleApp1
         private int _cursorPositionX = 0;
         private int _cursorPositionY = 10;
         private int _scoreWinner = 21;
-        public int ScorePlayer { get; private set; }
+        public int Score { get; private set; }
 
         public void PullCard(Stack<Card> cards)
         {
             Console.SetCursorPosition(_cursorPositionX, _cursorPositionY);
-            Console.WriteLine($"ваша карта: {cards.Peek().NameCard}");
+            Console.WriteLine($"ваша карта: {cards.Peek().Name}");
             _deckPersonal.Add(cards.Peek());
-            ScorePlayer += cards.Pop().ValueCard;
-            Console.WriteLine($"ваш счет: {ScorePlayer}");
+            Score += cards.Pop().Value;
+            Console.WriteLine($"ваш счет: {Score}");
         }
 
         public bool StopParty()
         {
-            Console.WriteLine($"ваш счет: {ScorePlayer}");
+            Console.WriteLine($"ваш счет: {Score}");
             Console.WriteLine("ваши карты");
             ShowPersonalDeck();
 
-            if (ScorePlayer <= _scoreWinner && ScorePlayer >= ScorePersonalMin())
+            if (Score <= _scoreWinner && Score >= ScorePersonalMin())
             {
                 Console.WriteLine($"противник набрал: {ScorePersonalMin()}");
                 Console.WriteLine("вы победили");
@@ -174,7 +174,7 @@ namespace ConsoleApp1
         {
             for (int i = 0; i < _deckPersonal.Count; i++)
             {
-                Console.WriteLine(_deckPersonal[i].NameCard);
+                Console.WriteLine(_deckPersonal[i].Name);
             }
         }
 
