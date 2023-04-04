@@ -103,8 +103,7 @@ namespace ConsoleApp1
         private int _minRandom = 0;
         private int _maxRandom = 10;
         private int _numberPlayersCurrent = 1;
-        private string[] _nicks = { "bob", "tod", "chop", "titan", "qwer", "jobs", "young", "__iii__", "hugo", "tronm" };
-
+        
         public void InitialStartPlayers()
         {
             int randomCountStartPlayer = _random.Next(_minRandom, _maxRandom);
@@ -134,7 +133,12 @@ namespace ConsoleApp1
         public void RemovePlayer()
         {
             Console.WriteLine("чтобы удалить игрока, введите его номер");
-            _listPlayers.Remove(GetNeededPlayer());
+            string input = Console.ReadLine();
+
+            if (GetNeededPlayer(input) != null)
+            {
+                _listPlayers.Remove(GetNeededPlayer(input));
+            }
         }
 
         public void OutputPlayers()
@@ -148,24 +152,35 @@ namespace ConsoleApp1
         public void SetupBanOnPlayer()
         {
             Console.WriteLine("введите номер игрока");
-            GetNeededPlayer().SetupBan();
+            string input = Console.ReadLine();
+
+            if (GetNeededPlayer(input) != null)
+            {
+                GetNeededPlayer(input).SetupBan();
+            }
         }
 
         public void SetupUnbanOnPlayer()
         {
             Console.WriteLine("введите номер игрока");
-            GetNeededPlayer().SetupUnban();
+            string input = Console.ReadLine();
+            
+            if (GetNeededPlayer(input) != null)
+            {
+                GetNeededPlayer(input).SetupUnban();
+            }
         }
 
         private string GetRandomNick()
         {
-            string randomNick = _nicks[_random.Next(_minRandom, _maxRandom)];
+            string[] nicks = { "bob", "tod", "chop", "titan", "qwer", "jobs", "young", "__iii__", "hugo", "tronm" };
+            string randomNick = nicks[_random.Next(nicks.Length)];
             return randomNick;
         }
 
-        private Player GetNeededPlayer()
+        private Player GetNeededPlayer(string input)
         {
-            if (int.TryParse(Console.ReadLine(), out int value))
+            if (int.TryParse(input, out int value))
             {
                 for (int i = 0; i < _listPlayers.Count; i++)
                 {
