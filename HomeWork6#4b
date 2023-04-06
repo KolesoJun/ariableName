@@ -1,0 +1,203 @@
+using System;
+using System.Collections.Generic;
+
+namespace ConsoleApp1
+{
+    class Program
+    {
+        const string CommandAdd = "1";
+        const string CommandStopMotion = "2";
+        const string CommandShowHand = "3";
+
+        static void Main()
+        {
+            Player player = new Player();
+            Game game = new Game();
+
+            while (game.IsWorking)
+            {
+                Console.WriteLine($"{CommandAdd} - добавить карту,{CommandStopMotion} - завершить ход;{CommandShowHand} - показать руку");
+                string inputPlayer = Console.ReadLine();
+
+                switch (inputPlayer)
+                {
+                    case CommandAdd:
+                        player.PullCard(game.GiveCard());
+                        break;
+
+                    case CommandStopMotion:
+                        game.StopMotion(player);
+                        break;
+
+                    case CommandShowHand:
+                        player.ShowPersonalDeck();
+                        break;
+
+                    default:
+                        Console.WriteLine("ошибка ввода");
+                        break;
+                }
+
+                Console.ReadKey();
+                Console.Clear();
+            }
+        }
+    }
+
+    class Card
+    {
+        public Card(string name, int value)
+        {
+            Name = name;
+            Value = value;
+        }
+
+        public string Name { get; private set; }
+        public int Value { get; private set; }
+    }
+
+    class Deck
+    {
+        private List<Card> _cards = new List<Card>();
+        private List<Card> _shuffledCards = new List<Card>();
+
+        public Deck()
+        {
+            CreateCards();
+            Shuffle();
+        }
+
+        public int CountCardsInGame => _shuffledCards.Count;
+
+        public Card GetShuffleCards(int index)
+        {
+            return _shuffledCards[index];
+        }
+
+        private void Shuffle()
+        {
+            Random random = new Random();
+            int indexRandomMax = _cards.Count;
+            int countChecks = 50;
+
+            for (int i = 0; i < countChecks; i++)
+            {
+                int value = random.Next(indexRandomMax);
+
+                if (!_shuffledCards.Contains(_cards[value]))
+                {
+                    _shuffledCards.Add(_cards[value]);
+                }
+            }
+        }
+
+        private void CreateCards()
+        {
+            int countSuit = 4;
+            string[] suit = { "pike_", "cross_", "hearts_", "tambourine_" };
+            Dictionary<string, int> meaning = new Dictionary<string, int>()
+            {
+                { "6", 6 },
+                { "7", 7 },
+                { "8", 8 },
+                { "9", 9 },
+                { "10", 10 },
+                { "J", 2 },
+                { "Q", 3 },
+                { "K", 4 },
+                { "A", 11 },
+            };
+
+            for (int i = 0; i < countSuit; i++)
+            {
+                foreach (var values in meaning)
+                {
+                    _cards.Add(new Card(suit[i] + values.Key, values.Value));
+                }
+            }
+        }
+    }
+
+    class Player
+    {
+        private List<Card> _deckPersonal = new List<Card>();
+
+        public int Score { get; private set; }
+
+        public void PullCard(Card card)
+        {
+            int cursorPositionX = 0;
+            int cursorPositionY = 10;
+            int lastCard = _deckPersonal.Count;
+            Console.SetCursorPosition(cursorPositionX, cursorPositionY);
+            Console.WriteLine($"ваша карта: {card.Name}");
+            _deckPersonal.Add(card);
+            Score += _deckPersonal[lastCard].Value;
+        }
+
+        public void ShowPersonalDeck()
+        {
+            for (int i = 0; i < _deckPersonal.Count; i++)
+            {
+                Console.WriteLine(_deckPersonal[i].Name);
+            }
+
+            Console.WriteLine($"ваш счет: {Score}");
+        }
+    }
+
+    class Game
+    {
+        private Deck _deck = new Deck();
+        private Stack<Card> _cardsMixing = new Stack<Card>();
+        private bool _isWorking = true;
+        
+        public Game()
+        {
+            CreateGeneralDeck();
+        }
+
+        public bool IsWorking => _isWorking;
+
+        public Card GiveCard()
+        {
+            return _cardsMixing.Pop();
+        }
+
+        public void StopMotion(Player player)
+        {
+            _isWorking = false;
+            int scoreWinner = 21;
+            int scoreBot = CalculateScoreBot(scoreWinner);
+            player.ShowPersonalDeck();
+
+            if (player.Score <= scoreWinner && player.Score >= scoreBot)
+            {
+                Console.WriteLine($"противник набрал: {scoreBot}");
+                Console.WriteLine("вы победили");
+            }
+            else
+            {
+                Console.WriteLine($"противник набрал: {scoreBot}");
+                Console.WriteLine("вы проиграли");
+            }
+        }
+
+        private void CreateGeneralDeck()
+        {
+            for (int i = 0; i < _deck.CountCardsInGame; i++)
+            {
+                _cardsMixing.Push(_deck.GetShuffleCards(i));
+            }
+        }
+
+        private int CalculateScoreBot(int scoreWinner)
+        {
+            Random random = new Random();
+            int divider = 2;
+            int randomValueMin = scoreWinner / divider;
+            int randomValueMax = scoreWinner;
+            return random.Next(randomValueMin, randomValueMax);
+        }
+    }
+}
