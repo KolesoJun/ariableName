@@ -1,0 +1,196 @@
+using System;
+using System.Collections.Generic;
+
+namespace ConsoleApp1
+{
+    class Program
+    {
+        static void Main()
+        {
+            Game game = new Game();
+            game.Play();
+        }
+    }
+
+    class Card
+    {
+        public Card(string name, int value)
+        {
+            Name = name;
+            Value = value;
+        }
+
+        public string Name { get; private set; }
+        public int Value { get; private set; }
+    }
+
+    class Deck
+    {
+        private List<Card> _cards = new List<Card>();
+        private Stack<Card> _shuffleCards = new Stack<Card>();
+        
+        public Deck()
+        {
+            CreateBaseCards();
+            Shuffle();
+        }
+
+        public Card GetShuffleCard()
+        {
+            Card card = _shuffleCards.Pop();
+            return card;
+        }
+
+        private void CreateBaseCards()
+        {
+            string[] suit = { "pike_", "cross_", "hearts_", "tambourine_" };
+            Dictionary<string, int> meaning = new Dictionary<string, int>()
+        {
+                { "6", 6 },
+                { "7", 7 },
+                { "8", 8 },
+                { "9", 9 },
+                { "10", 10 },
+                { "J", 2 },
+                { "Q", 3 },
+                { "K", 4 },
+                { "A", 11 },
+        };
+
+            for (int i = 0; i < suit.Length; i++)
+            {
+                foreach (var values in meaning)
+                {
+                    _cards.Add(new Card(suit[i] + values.Key, values.Value));
+                }
+            }
+        }
+
+        private void Shuffle()
+        {
+            Random random = new Random();
+            
+            for (int i = 0; i < _cards.Count; i++)
+            {
+                int index = random.Next(_cards.Count);
+                _shuffleCards.Push(_cards[index]);
+                _cards.RemoveAt(index);
+            }
+        }
+    }
+
+    class Player
+    {
+        private List<Card> _hand = new List<Card>();
+        private bool _pass = false;
+
+        public int Score { get; private set; }
+        public bool Pass => _pass;
+
+        public bool SetPass()
+        {
+            return _pass = true;
+        }
+
+        public void PullCard(Card card)
+        {
+            int cursorPositionX = 0;
+            int cursorPositionY = 10;
+            int lastCard = _hand.Count;
+            Console.SetCursorPosition(cursorPositionX, cursorPositionY);
+            Console.WriteLine($"ваша карта: {card.Name}");
+            _hand.Add(card);
+            Score += _hand[lastCard].Value;
+
+        }
+
+        public void ShowHand()
+        {
+            for (int i = 0; i < _hand.Count; i++)
+            {
+                Console.WriteLine(_hand[i].Name);
+            }
+
+            Console.WriteLine($"ваш счет: {Score}");
+        }
+    }
+
+    class Game
+    {
+        private Deck _deck = new Deck();
+        private Player _player = new Player();
+
+        public Card GiveCard()
+        {
+            Card card = _deck.GetShuffleCard();
+            return card;
+        }
+
+        public void SearchWinner(Player player)
+        {
+            int scoreWinner = 21;
+            int scoreBot = CalculateScoreBot(scoreWinner);
+            player.ShowHand();
+
+            if (player.Score <= scoreWinner && player.Score >= scoreBot)
+            {
+                Console.WriteLine($"противник набрал: {scoreBot}");
+                Console.WriteLine("вы победили");
+            }
+            else
+            {
+                Console.WriteLine($"противник набрал: {scoreBot}");
+                Console.WriteLine("вы проиграли");
+            }
+        }
+
+        public void Play()
+        {
+            const string CommandAdd = "1";
+            const string CommandStopMotion = "2";
+            const string CommandShowHand = "3";
+
+            while (!_player.Pass)
+            {
+                Console.WriteLine($"{CommandAdd} - добавить карту,{CommandStopMotion} - завершить ход;{CommandShowHand} - показать руку");
+                string inputPlayer = Console.ReadLine();
+
+                switch (inputPlayer)
+                {
+                    case CommandAdd:
+                        _player.PullCard(GiveCard());
+                        break;
+
+                    case CommandStopMotion:
+                        _player.SetPass();
+                        break;
+
+                    case CommandShowHand:
+                        _player.ShowHand();
+                        break;
+
+                    default:
+                        Console.WriteLine("ошибка ввода");
+                        break;
+                }
+
+                Console.ReadKey();
+                Console.Clear();
+            }
+
+            if (_player.Pass)
+            {
+                SearchWinner(_player);
+            }
+        }
+
+        private int CalculateScoreBot(int scoreWinner)
+        {
+            Random random = new Random();
+            int divider = 2;
+            int randomValueMin = scoreWinner / divider;
+            int randomValueMax = scoreWinner;
+            return random.Next(randomValueMin, randomValueMax);
+        }
+    }
+}
