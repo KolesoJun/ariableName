@@ -1,0 +1,165 @@
+using System;
+using System.Collections.Generic;
+
+namespace ConsoleApp1
+{
+    class Program
+    {
+        static void Main()
+        {
+            Deck deck = new Deck();
+            Player player = new Player();
+            Card cardWin = deck.SetupWinCard();
+            int startRound = 0;
+            int endRound = 10;
+
+            const string CommandAdd = "1";
+            const string CommandStopMotion = "2";
+            const string CommandShowHand = "3";
+
+            while (player.Pass == false && startRound <= endRound)
+            {
+                Console.WriteLine($"{CommandAdd} - добавить карту,\n{CommandStopMotion} - завершить ход;\n{CommandShowHand} - показать руку.\n{cardWin.Name} - карта, которую нужно найти");
+                string inputPlayer = Console.ReadLine();
+
+                switch (inputPlayer)
+                {
+                    case CommandAdd:
+                        player.TakeCard(deck.GiveCard());
+                        break;
+
+                    case CommandStopMotion:
+                        player.SetPass();
+                        break;
+
+                    case CommandShowHand:
+                        player.ShowHand();
+                        break;
+
+                    default:
+                        Console.WriteLine("ошибка ввода");
+                        break;
+                }
+
+                startRound++;
+                Console.ReadKey();
+                Console.Clear();
+            }
+
+            if (player.Pass || startRound> endRound)
+            {
+                player.CheckWin(cardWin);
+            }
+        }
+    }
+
+    class Card
+    {
+        public Card(string name)
+        {
+            Name = name;
+        }
+
+        public string Name { get; private set; }
+    }
+
+    class Deck
+    {
+        private List<Card> _cards = new List<Card>();
+        private Stack<Card> _shuffleCards = new Stack<Card>();
+        private Random _random = new Random();
+
+        public Deck()
+        {
+            CreateBaseCards();
+            Shuffle();
+        }
+
+        private void CreateBaseCards()
+        {
+            string[] suit = { "pike_", "cross_", "hearts_", "tambourine_" };
+            string[] meaning = { "6", "7", "8", "9", "10", "J", "Q", "K", "A" };
+
+            for (int i = 0; i < suit.Length; i++)
+            {
+                for (int x = 0; x < meaning.Length; x++)
+                {
+                    _cards.Add(new Card(suit[i] + meaning[x]));
+                }
+            }
+        }
+
+        public Card SetupWinCard()
+        {
+            return _cards[_random.Next(_cards.Count - 1)];
+        }
+
+        public Card GiveCard()
+        {
+            Card card = _shuffleCards.Pop();
+            return card;
+        }
+
+        private void Shuffle()
+        {
+            for (int i = 0; i < _cards.Count; i++)
+            {
+                int index = _random.Next(_cards.Count);
+                _shuffleCards.Push(_cards[index]);
+                _cards.RemoveAt(index);
+            }
+        }
+    }
+
+    class Player
+    {
+        private List<Card> _hand = new List<Card>();
+        private bool _pass = false;
+
+        public bool Pass => _pass;
+
+        public bool SetPass()
+        {
+            return _pass = true;
+        }
+
+        public void TakeCard(Card card)
+        {
+            if (card != null)
+            {
+                Console.WriteLine($"ваша карта: {card.Name}");
+                _hand.Add(card);
+            }
+        }
+
+        public void ShowHand()
+        {
+            for (int i = 0; i < _hand.Count; i++)
+            {
+                Console.WriteLine(_hand[i].Name);
+            }
+        }
+
+        public void CheckWin(Card card)
+        {
+            bool isWin = false;
+
+            for (int i = 0; i < _hand.Count; i++)
+            {
+                if (_hand[i].Name == card.Name)
+                {
+                    isWin = true;
+                }
+            }
+
+            if (isWin)
+            {
+                Console.WriteLine("ваша удача");
+            }
+            else
+            {
+                Console.WriteLine("повезет в следующий раз");
+            }
+        }
+    }
+}
