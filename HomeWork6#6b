@@ -1,0 +1,187 @@
+using System;
+using System.Collections.Generic;
+
+namespace ConsoleApp1
+{
+    class Program
+    {
+        static void Main()
+        {
+            const string CommandBuy = "1";
+            const string CommandShowAll = "2";
+            const string CommandShowCart = "3";
+            const string CommandExit = "4";
+
+            Player player = new Player();
+            Seller seller = new Seller();
+            Shop shop = new Shop();
+            bool isWorking = true;
+
+            while (isWorking)
+            {
+                Console.WriteLine($"{CommandBuy} - купить;\n{CommandShowAll} - показать список товаров;\n{CommandShowCart} - посмотреть свои;\n{CommandExit} - выход");
+
+                switch (Console.ReadLine())
+                {
+                    case CommandBuy:
+                        shop.Trade(seller, player);
+                        break;
+
+                    case CommandShowAll:
+                        seller.ShowAllProducts();
+                        break;
+
+                    case CommandShowCart:
+                        player.ShowAllProducts();
+                        break;
+
+                    case CommandExit:
+                        isWorking = false;
+                        break;
+
+                    default:
+                        Console.WriteLine("ошибка ввода");
+                        break;
+                }
+
+                Console.ReadLine();
+                Console.Clear();
+            }
+        }
+    }
+
+    class Product
+    {
+        public Product(string name, int price)
+        {
+            Name = name;
+            Price = price;
+        }
+
+        public string Name { get; private set; }
+        public int Price { get; private set; }
+    }
+
+    class Human
+    {
+        protected List<Product> _products = new List<Product>();
+        protected int _score;
+
+        public int Score => _score;
+
+        public virtual void ShowAllProducts()
+        {
+            foreach (var product in _products)
+            {
+                Console.WriteLine($"{product.Name}");
+            }
+        }
+    }
+
+    class Seller: Human
+    {
+        public Seller()
+        {
+            _products.Add(new Product("макароны", 20));
+            _products.Add(new Product("колбаса", 100));
+            _products.Add(new Product("масло", 25));
+            _products.Add(new Product("хлеб", 15));
+            _products.Add(new Product("бананы", 30));
+            _products.Add(new Product("сок", 47));
+        }
+
+        public override void ShowAllProducts()
+        {
+            foreach (var product in _products)
+            {
+                Console.WriteLine($"{product.Name} {product.Price}, счет продавца: {_score}");
+            }
+
+            Console.WriteLine($"счет продавца: {_score}");
+        }
+
+        public void GetProfit(int money)
+        {
+            _score += money;
+        }
+
+        public Product TryGetProduct(string name)
+        {
+            Product product = null;
+            
+            for (int i = 0; i < _products.Count; i++)
+            {
+                if (_products[i].Name == name)
+                {
+                    product = _products[i];
+                    _products.Remove(product);
+                }
+            }
+
+            return product;
+        }
+
+        public void ReturnProduct(Product product)
+        {
+            _products.Add(product);
+        }
+    }
+
+    class Player : Human
+    {
+        public Player()
+        {
+            Console.WriteLine("сколько денег на старте?");
+            
+            if (int.TryParse(Console.ReadLine(), out int value))
+            {
+                _score = value;
+            }
+            else
+            {
+                Console.WriteLine("довыпендривался");
+                _score = 10;
+            }
+        }
+
+        public override void ShowAllProducts()
+        {
+            base.ShowAllProducts();
+            Console.Write($"счет: {_score}");
+        }
+
+        public void ByuProduct(Product product)
+        {
+            _products.Add(product);
+            _score -= product.Price;
+        }
+    }
+
+    class Shop
+    {
+        public void Trade(Seller seller, Player player)
+        {
+            Console.WriteLine("введите название продукта, который хотите купить:");
+            string nameProduct = Console.ReadLine();
+            Product product = seller.TryGetProduct(nameProduct);
+
+            if (product!=null)
+            {
+                if (player.Score >= product.Price)
+                {
+                    player.ByuProduct(product);
+                    seller.GetProfit(product.Price);
+                    Console.WriteLine($"успешно. Продукт - {product.Name} - добавлен в корзину;{player.Score} - у вас осталось");
+                }
+                else
+                {
+                    seller.ReturnProduct(product);
+                }
+            }
+            else
+            {
+                Console.WriteLine("ошибка ввода");
+            }
+        }
+    }
+}
