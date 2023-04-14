@@ -1,0 +1,208 @@
+using System;
+using System.Collections.Generic;
+
+namespace ConsoleApp1
+{
+    class Program
+    {
+        static void Main()
+        {
+            const string CommandAddBook = "1";
+            const string CommandTakeBook = "2";
+            const string CommandShowAllBooks = "3";
+            const string CommandShowForParametrs = "4";
+            const string CommandExit = "5";
+
+            Shelf shelf = new Shelf();
+            Manager manager = new Manager();
+            bool isWorking = true;
+
+            while (isWorking)
+            {
+                Console.WriteLine($"{CommandAddBook} - добавить книгу на полку;\n{CommandTakeBook} - взять книгу с полки;" +
+                    $"\n{CommandShowAllBooks} - посмотреть все книги на полке;\n{CommandShowForParametrs} - выбрать книгу по параметру;" +
+                    $"\n{CommandExit} - выйти");
+
+                switch (Console.ReadLine())
+                {
+                    case CommandAddBook:
+                        manager.AddNewBook(shelf);
+                        break;
+
+                    case CommandTakeBook:
+                        manager.TakeBook(shelf);
+                        break;
+
+                    case CommandShowAllBooks:
+                        manager.WatchBooksOnShelf(shelf);
+                        break;
+
+                    case CommandShowForParametrs:
+                        manager.ChoiseBook(shelf);
+                        break;
+
+                    case CommandExit:
+                        isWorking = false;
+                        break;
+
+                    default:
+                        Console.WriteLine("ошибка ввода");
+                        break;
+                }
+
+                Console.ReadKey();
+                Console.Clear();
+            }
+        }
+    }
+
+    class Book
+    {
+        public Book(string name, string author, int yearRelease)
+        {
+            Name = name;
+            Author = author;
+            YearRelease = yearRelease;
+        }
+
+        public string Name { get; private set; }
+        public string Author { get; private set; }
+        public int YearRelease { get; private set; }
+    }
+
+    class Shelf
+    {
+        private List<Book> _books = new List<Book>()
+        {
+            new Book("Теплый дом", "Самойлов В.С.", 2008),
+            new Book("Строительство каркасного дома", "Самойлов В.С.", 2009),
+            new Book("Хоббит", "Джон Р.Р. Толкин", 1937),
+            new Book("Сильмариллион", "Джон Р.Р. Толкин", 1977),
+            new Book("Властелин колец", "Джон Р.Р. Толкин", 1950),
+            new Book("С# для чайников", "Джон Пол Мюллер", 2020),
+            new Book("Бестиарий", "Анджей Сапковский", 2018),
+            new Book("Геймдизайн", "Джесси Шелл", 2021),
+            new Book("Изучаем С# через разработку игр на Unity", "Харрисон Ферроне", 2020),
+        };
+
+        public void AcceptBook(Book book)
+        {
+            if (book != null)
+            {
+                _books.Add(book);
+            }
+        }
+
+        public void RemoveBook(int index)
+        {
+            index -= 1;
+
+            if (index < _books.Count && index > 0)
+            {
+                _books.RemoveAt(index);
+                Console.WriteLine("кника убрана");
+            }
+            else
+            {
+                Console.WriteLine("ошибка ввода");
+            }
+        }
+
+        public void ShowBooksByName(string name)
+        {
+            for (int i = 0; i < _books.Count; i++)
+            {
+                if (name != null && name.ToLower() == _books[i].Name.ToLower())
+                {
+                    Console.WriteLine($"{_books[i].Name} {_books[i].Author} {_books[i].YearRelease}");
+                }
+            }
+        }
+
+        public void ShowBooksByAuthor(string author)
+        {
+            for (int i = 0; i < _books.Count; i++)
+            {
+                if (author != null && author.ToLower() == _books[i].Author.ToLower())
+                {
+                    Console.WriteLine($"{_books[i].Author} {_books[i].Name} {_books[i].YearRelease}");
+                }
+            }
+        }
+
+        public void ShowBooksByYearRelease(int year)
+        {
+            for (int i = 0; i < _books.Count; i++)
+            {
+                if (year != 0 && year == _books[i].YearRelease)
+                {
+                    Console.WriteLine($"{_books[i].YearRelease} {_books[i].Author} {_books[i].Name}");
+                }
+            }
+        }
+
+        public void ShowAllBooks()
+        {
+            foreach (Book book in _books)
+            {
+                Console.WriteLine($"{book.Name} {book.Author} {book.YearRelease}");
+            }
+        }
+    }
+
+    class Manager
+    {
+        public void AddNewBook(Shelf shelf)
+        {
+            Console.WriteLine("внесите в регистр следующие данные:");
+            Console.WriteLine("введите название:");
+            string name = Console.ReadLine();
+            Console.WriteLine("введите автора:");
+            string author = Console.ReadLine();
+            Console.WriteLine("введите год издания:");
+            int.TryParse(Console.ReadLine(), out int value);
+            Book book = new Book(name, author, value);
+            shelf.AcceptBook(book);
+        }
+
+        public void TakeBook(Shelf shelf)
+        {
+            Console.WriteLine("какую по счету книгу убрать?");
+            int.TryParse(Console.ReadLine(), out int value);
+            shelf.RemoveBook(value);
+        }
+
+        public void WatchBooksOnShelf(Shelf shelf)
+        {
+            shelf.ShowAllBooks();
+        }
+
+        public void ChoiseBook(Shelf shelf)
+        {
+            const string CommandName = "1";
+            const string CommandAuthor = "2";
+            const string CommandYearRelease = "3";
+            Console.WriteLine($"выберите параметр поиска:\n{CommandName} - по имени;\n{CommandAuthor} - по автору;\n{CommandYearRelease} - по году выпуска");
+
+            switch (Console.ReadLine())
+            {
+                case CommandName:
+                    shelf.ShowBooksByName(Console.ReadLine());
+                    break;
+
+                case CommandAuthor:
+                    shelf.ShowBooksByAuthor(Console.ReadLine());
+                    break;
+
+                case CommandYearRelease:
+                    int.TryParse(Console.ReadLine(), out int value);
+                    shelf.ShowBooksByYearRelease(value);
+                    break;
+
+                default:
+                    Console.WriteLine("ошибка ввода");
+                    break;
+            }
+        }
+    }
+}
