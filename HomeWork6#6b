@@ -64,14 +64,14 @@ namespace ConsoleApp1
 
     class Human
     {
-        protected List<Product> _products = new List<Product>();
-        protected int _score;
+        protected List<Product> Products = new List<Product>();
+        protected int Score;
 
-        public int Score => _score;
+        public int Money => Score;
 
         public virtual void ShowAllProducts()
         {
-            foreach (var product in _products)
+            foreach (Product product in Products)
             {
                 Console.WriteLine($"{product.Name}");
             }
@@ -82,48 +82,52 @@ namespace ConsoleApp1
     {
         public Seller()
         {
-            _products.Add(new Product("макароны", 20));
-            _products.Add(new Product("колбаса", 100));
-            _products.Add(new Product("масло", 25));
-            _products.Add(new Product("хлеб", 15));
-            _products.Add(new Product("бананы", 30));
-            _products.Add(new Product("сок", 47));
+            Products.Add(new Product("макароны", 20));
+            Products.Add(new Product("колбаса", 100));
+            Products.Add(new Product("масло", 25));
+            Products.Add(new Product("хлеб", 15));
+            Products.Add(new Product("бананы", 30));
+            Products.Add(new Product("сок", 47));
         }
 
         public override void ShowAllProducts()
         {
-            foreach (var product in _products)
+            foreach (Product product in Products)
             {
-                Console.WriteLine($"{product.Name} {product.Price}, счет продавца: {_score}");
+                Console.WriteLine($"{product.Name} {product.Price}");
             }
 
-            Console.WriteLine($"счет продавца: {_score}");
+            Console.WriteLine($"счет продавца: {Score}");
         }
 
         public void GetProfit(int money)
         {
-            _score += money;
+            if (money > 0)
+            {
+                Score += money;
+            }
         }
 
         public Product TryGetProduct(string name)
         {
             Product product = null;
             
-            for (int i = 0; i < _products.Count; i++)
+            for (int i = 0; i < Products.Count; i++)
             {
-                if (_products[i].Name == name)
+                if (Products[i].Name == name)
                 {
-                    product = _products[i];
-                    _products.Remove(product);
+                    product = Products[i];
+                    Products.Remove(product);
                 }
             }
 
             return product;
         }
 
-        public void ReturnProduct(Product product)
+        public void BackProduct(Product product)
         {
-            _products.Add(product);
+            Console.WriteLine("no money - no honey");
+            Products.Add(product);
         }
     }
 
@@ -135,25 +139,25 @@ namespace ConsoleApp1
             
             if (int.TryParse(Console.ReadLine(), out int value))
             {
-                _score = value;
+                Score = value;
             }
             else
             {
                 Console.WriteLine("довыпендривался");
-                _score = 10;
+                Score = 10;
             }
         }
 
         public override void ShowAllProducts()
         {
             base.ShowAllProducts();
-            Console.Write($"счет: {_score}");
+            Console.Write($"счет: {Score}");
         }
 
         public void ByuProduct(Product product)
         {
-            _products.Add(product);
-            _score -= product.Price;
+            Products.Add(product);
+            Score -= product.Price;
         }
     }
 
@@ -167,15 +171,15 @@ namespace ConsoleApp1
 
             if (product!=null)
             {
-                if (player.Score >= product.Price)
+                if (player.Money >= product.Price)
                 {
                     player.ByuProduct(product);
                     seller.GetProfit(product.Price);
-                    Console.WriteLine($"успешно. Продукт - {product.Name} - добавлен в корзину;{player.Score} - у вас осталось");
+                    Console.WriteLine($"успешно. Продукт - {product.Name} - добавлен в корзину;{player.Money} - у вас осталось");
                 }
                 else
                 {
-                    seller.ReturnProduct(product);
+                    seller.BackProduct(product);
                 }
             }
             else
