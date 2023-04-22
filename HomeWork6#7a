@@ -1,0 +1,119 @@
+using System;
+using System.Collections.Generic;
+
+namespace ConsoleApp1
+{
+    class Program
+    {
+        static void Main()
+        {
+            User user = new User();
+            user.ExecutePlan();
+        }
+    }
+
+    class User
+    {
+        private List<Train> _trainsOnWay = new List<Train>();
+        private string _pointStart = null;
+        private string _pointEnd = null;
+        private int _countPassengers = 0;
+
+        public void ExecutePlan()
+        {
+            bool isWorking = true;
+
+            while (isWorking)
+            {
+                CreateDirection();
+                BuyTickets();
+                Train train = CreateTrain();
+                Send(train, ref isWorking);
+                UpdateInformation();
+            }
+        }
+
+        private void CreateDirection()
+        {
+            Console.WriteLine("введите стартовый пункт");
+            _pointStart = Console.ReadLine();
+            Console.WriteLine("введите конечный пункт");
+            _pointEnd = Console.ReadLine();
+        }
+
+        private void BuyTickets()
+        {
+            Random random = new Random();
+            int maxCountPassengers = 300;
+            int countPassengers = random.Next(maxCountPassengers);
+            _countPassengers = countPassengers;
+            Console.WriteLine($"{_countPassengers} - количество пассажиров");
+        }
+
+        private Train CreateTrain()
+        {
+            Train train = new Train();
+            train.SendDirection(_pointStart, _pointEnd);
+            train.StuffSeats(_countPassengers);
+            train.ShowInformation();
+            return train;
+        }
+
+        private void Send(Train train, ref bool isWorking)
+        {
+            train.Move();
+            _trainsOnWay.Add(train);
+            string inputTrue = "y";
+            Console.WriteLine("желаете создать новый рейс?");
+
+            if (Console.ReadLine() == inputTrue)
+                isWorking = true;
+            else
+                isWorking = false;
+        }
+
+        private void UpdateInformation()
+        {
+            Console.Clear();
+
+            foreach (Train train in _trainsOnWay)
+            {
+                train.ShowInformation();
+            }
+        }
+    }
+
+    class Train
+    {
+        private string _pointStart;
+        private string _pointEnd;
+        private int _countWagon;
+
+        public void SendDirection(string pointStart, string pointEnd)
+        {
+            _pointStart = pointStart;
+            _pointEnd = pointEnd;
+        }
+
+        public void StuffSeats(int countPassengers)
+        {
+            int wagonCapacity = 25;
+            _countWagon = countPassengers / wagonCapacity;
+
+            if (countPassengers % wagonCapacity != 0)
+            {
+                ++_countWagon;
+            }
+        }
+
+        public void Move()
+        {
+            Console.WriteLine("поезд сформирован и отправлен");
+        }
+
+        public void ShowInformation()
+        {
+            Console.WriteLine($"поезд {_pointStart} - {_pointEnd}; количество вагонов:{_countWagon}");
+        }
+    }
+}
