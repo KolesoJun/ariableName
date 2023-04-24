@@ -1,0 +1,279 @@
+using System;
+using System.Collections.Generic;
+
+namespace ConsoleApp1
+{
+    class Program
+    {
+        static void Main()
+        {
+            Arena arena = new Arena();
+            arena.Fight();
+        }
+    }
+
+    class Warrior
+    {
+        protected Random Random = new Random();
+        protected string ValueName;
+        protected int ValueAttack;
+        protected int ValueArmor;
+        protected int ValueHealth;
+        protected int ValueDamageMin;
+        protected int ValueDamageMax;
+
+        public string Name => ValueName;
+        public int Health => ValueHealth;
+        public int Damage => CalculateDamage();
+
+        public virtual void Attack(Warrior warrior)
+        {
+            if (warrior != null)
+            {
+                warrior.TakeDamage(Damage);
+            }
+        }
+
+        public virtual void TakeDamage(int damage)
+        {
+            int healthDeath = 0;
+            int damageCheck = 0;
+
+            if (Health > healthDeath)
+            {
+                if (damage - ValueArmor > damageCheck)
+                {
+                    ValueHealth -= (damage - ValueArmor);
+                }
+                else
+                {
+                    ValueHealth -= damage;
+                }
+            }
+        }
+
+        public int CalculateDamage()
+        {
+            return Random.Next(ValueDamageMin, ValueDamageMax) + ValueAttack;
+        }
+
+        public void ShowInformation()
+        {
+            Console.WriteLine($"{ValueName}:\n{ValueAttack} - аттака;\n{ValueArmor} - защита;\n{ValueHealth} - здоровье;" +
+                $"\n{ValueDamageMin}-{ValueDamageMax} - урон;");
+        }
+    }
+
+    class Crusader: Warrior
+    {
+        public Crusader()
+        {
+            ValueName = "крестоносец";
+            ValueAttack = 12;
+            ValueArmor = 12;
+            ValueHealth = 35;
+            ValueDamageMin = 7;
+            ValueDamageMax = 11;
+        }
+
+        public override void Attack(Warrior warrior)
+        {
+            base.Attack(warrior);
+            Console.WriteLine("получай!");
+            base.Attack(warrior);
+        }
+    }
+
+    class Demon : Warrior
+    {
+        public Demon()
+        {
+            ValueName = "демон";
+            ValueAttack = 10;
+            ValueArmor = 10;
+            ValueHealth = 40;
+            ValueDamageMin = 7;
+            ValueDamageMax = 10;
+        }
+    }
+
+    class Vampire : Warrior
+    {
+        public Vampire()
+        {
+            ValueName = "вампир";
+            ValueAttack = 10;
+            ValueArmor = 10;
+            ValueHealth = 45;
+            ValueDamageMin = 5;
+            ValueDamageMax = 9;
+        }
+
+        public override void Attack(Warrior warrior)
+        {
+            base.Attack(warrior);
+            ValueHealth += Random.Next(ValueDamageMin);
+            Console.WriteLine("кровь!");
+        }
+    }
+
+    class Basilisk : Warrior
+    {
+        private int _valueLevelSpeed;
+
+        public Basilisk()
+        {
+            ValueName = "василиск";
+            ValueAttack = 12;
+            ValueArmor = 12;
+            ValueHealth = 40;
+            ValueDamageMin = 6;
+            ValueDamageMax = 11;
+            _valueLevelSpeed = 7;
+        }
+
+        public override void TakeDamage(int damage)
+        {
+            int dodge = 10;
+
+            if (_valueLevelSpeed >= Random.Next(dodge))
+            {
+                base.TakeDamage(damage);
+                Console.WriteLine("улизнул!");
+            }
+        }
+    }
+
+    class Ogre : Warrior
+    {
+        public Ogre()
+        {
+            ValueName = "огр";
+            ValueAttack = 13;
+            ValueArmor = 7;
+            ValueHealth = 60;
+            ValueDamageMin = 6;
+            ValueDamageMax = 13;
+        }
+
+        public override void TakeDamage(int damage)
+        {
+            base.TakeDamage(damage);
+            Bloodlust();
+        }
+
+        private void Bloodlust()
+        {
+            ValueAttack += 2;
+            Console.WriteLine("р-р-р!!!");
+        }
+    }
+
+    class Arena
+    {
+        List<Warrior> _warriors = new List<Warrior>();
+        
+        public Arena()
+        {
+            FillListWarriors();
+        }
+
+        public void Fight()
+        {
+            while (IsWorking())
+            {
+                Warrior warriorFirst = ChooseWarrior();
+                Warrior warriorSecond = ChooseWarrior();
+                Console.Clear();
+
+                if (warriorFirst != null && warriorSecond != null)
+                {
+                    while (warriorFirst.Health > 0 && warriorSecond.Health > 0)
+                    {
+                        warriorFirst.Attack(warriorSecond);
+                        warriorSecond.Attack(warriorFirst);
+                        Console.WriteLine($"{warriorFirst.Name} осталось здоровья - {warriorFirst.Health}" +
+                            $"\n{warriorSecond.Name} осталось здоровья - {warriorSecond.Health}");
+                        Console.ReadLine();
+                        Console.Clear();
+                    }
+
+                    ChooseWinner(warriorFirst, warriorSecond);
+                }
+            }
+        }
+
+        private void ChooseWinner(Warrior warriorFirst, Warrior warriorSecond)
+        {
+            if (warriorFirst.Health > warriorSecond.Health)
+            {
+                Console.WriteLine($"победил - {warriorFirst.Name}");
+            }
+            else
+            {
+                Console.WriteLine($"победил - {warriorSecond.Name}");
+            }
+
+            Console.ReadLine();
+            Console.Clear();
+        }
+
+        private bool IsWorking()
+        {
+            string startFight = "1";
+            Console.WriteLine($"нажмите {startFight}, чтобы начать бой.\nнажмите любую другую клавишу, чтобы выйти");
+
+            if (startFight == Console.ReadLine())
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        private void ShowWarriors()
+        {
+            foreach (Warrior warrior in _warriors)
+            {
+                warrior.ShowInformation();
+                Console.WriteLine();
+            }
+        }
+
+        private Warrior ChooseWarrior()
+        {
+            Console.Clear();
+            Console.WriteLine("выберите бойца");
+            ShowWarriors();
+            string name = Console.ReadLine();
+
+            foreach (Warrior warrior in _warriors)
+            {
+                if (warrior.Name == name)
+                {
+                    Console.WriteLine("боец выбран");
+                    Console.ReadLine();
+                    return warrior;
+                }
+            }
+
+            Console.WriteLine("не найден");
+            return null;
+        }
+
+        private void FillListWarriors()
+        {
+            Ogre ogre = new Ogre();
+            Crusader crusader = new Crusader();
+            Basilisk vasya = new Basilisk();
+            Demon demon = new Demon();
+            Vampire vampire = new Vampire();
+
+            _warriors.Add(ogre);
+            _warriors.Add(crusader);
+            _warriors.Add(vasya);
+            _warriors.Add(demon);
+            _warriors.Add(vampire);
+        }
+    }
+}
