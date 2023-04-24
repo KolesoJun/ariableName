@@ -21,14 +21,12 @@ namespace ConsoleApp1
 
         public void ExecutePlan()
         {
-            bool isWorking = true;
-
-            while (isWorking)
+            while (IsReady())
             {
                 CreateDirection();
                 BuyTickets();
                 Train train = CreateTrain();
-                Send(train, ref isWorking);
+                Send(train);
                 UpdateInformation();
             }
         }
@@ -59,17 +57,20 @@ namespace ConsoleApp1
             return train;
         }
 
-        private void Send(Train train, ref bool isWorking)
+        private bool IsReady()
+        {
+            Console.WriteLine("желаете создать рейс?");
+            string inputTrue = "y";
+            if (Console.ReadLine() == inputTrue)
+                return true;
+            else
+                return false;
+        }
+
+        private void Send(Train train)
         {
             train.Move();
             _trainsOnWay.Add(train);
-            string inputTrue = "y";
-            Console.WriteLine("желаете создать новый рейс?");
-
-            if (Console.ReadLine() == inputTrue)
-                isWorking = true;
-            else
-                isWorking = false;
         }
 
         private void UpdateInformation()
