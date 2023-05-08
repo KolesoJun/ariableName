@@ -97,6 +97,8 @@ namespace ConsoleApp1
 
         private int CalculateDamage()
         {
+
+
             if (_damageMin != 0 && _damageMax != 0)
             {
                 return _random.Next(_damageMin, _damageMax + _errorRate) * Group + Attack;
@@ -108,7 +110,7 @@ namespace ConsoleApp1
         }
     }
 
-    class Army
+    abstract class Army
     {
         protected List<Warrior> _warriors = new List<Warrior>();
 
@@ -129,7 +131,7 @@ namespace ConsoleApp1
 
         public bool IsContane(Warrior warrior)
         {
-            if (warrior!=null)
+            if (warrior != null)
             {
                 if (_warriors.Contains(warrior))
                 {
@@ -153,23 +155,15 @@ namespace ConsoleApp1
 
     class Castle : Army
     {
-        private Halberdier _halberdiers = new Halberdier();
-        private Marksmen _marksmen = new Marksmen();
-        private RoyalGriffin _royalGriffin = new RoyalGriffin();
-        private Crusader _crusader = new Crusader();
-        private Zealot _zealot = new Zealot();
-        private Champion _champion = new Champion();
-        private Archangel _archangel = new Archangel();
-
         public Castle()
         {
-            _warriors.Add(_halberdiers);
-            _warriors.Add(_marksmen);
-            _warriors.Add(_royalGriffin);
-            _warriors.Add(_crusader);
-            _warriors.Add(_zealot);
-            _warriors.Add(_champion);
-            _warriors.Add(_archangel);
+            _warriors.Add(new Halberdier());
+            _warriors.Add(new Marksmen());
+            _warriors.Add(new RoyalGriffin());
+            _warriors.Add(new Crusader());
+            _warriors.Add(new Zealot());
+            _warriors.Add(new Champion());
+            _warriors.Add(new Archangel());
         }
 
         public override void ResultWar()
@@ -329,7 +323,7 @@ namespace ConsoleApp1
                 {
                     HealthCurrent -= damage;
 
-                    if (HealthCurrent<=0)
+                    if (HealthCurrent <= 0)
                     {
                         Group--;
                         HealthCurrent += Health;
@@ -347,23 +341,15 @@ namespace ConsoleApp1
 
     class Necropolise : Army
     {
-        private SkeletonWarrior _skeletonWarrior = new SkeletonWarrior();
-        private Zombie _zombie = new Zombie();
-        private Wraith _wraith = new Wraith();
-        private VampireLord _vampireLord = new VampireLord();
-        private PowerLiche _powerLiche = new PowerLiche();
-        private DreadKnight _dreadKnight = new DreadKnight();
-        private GhostDragons _ghostDragons = new GhostDragons();
-
         public Necropolise()
         {
-            _warriors.Add(_skeletonWarrior);
-            _warriors.Add(_zombie);
-            _warriors.Add(_wraith);
-            _warriors.Add(_vampireLord);
-            _warriors.Add(_powerLiche);
-            _warriors.Add(_dreadKnight);
-            _warriors.Add(_ghostDragons);
+            _warriors.Add(new SkeletonWarrior());
+            _warriors.Add(new Zombie());
+            _warriors.Add(new Wraith());
+            _warriors.Add(new VampireLord());
+            _warriors.Add(new PowerLiche());
+            _warriors.Add(new DreadKnight());
+            _warriors.Add(new GhostDragons());
         }
 
         public override void ResultWar()
@@ -524,26 +510,28 @@ namespace ConsoleApp1
 
     class Game
     {
-        private int _countRound;
         private List<Army> _armies = new List<Army>()
         {
             new Castle(),
             new Necropolise()
         };
-        private Random _random = new Random();
 
         public void Play()
         {
+            int countRound = 1;
             ShowInformationAll();
-
+            
             while (CheckWinner() == false)
             {
+                Console.WriteLine($"раунд - {countRound++}");
                 Round();
             }
         }
 
         public Warrior ChooseGoal(Warrior warriorAttack)
         {
+            Random random = new Random();
+
             for (int i = 0; i < _armies.Count; i++)
             {
                 for (int y = 0; y < _armies[i].GetCountArmy(); y++)
@@ -552,7 +540,7 @@ namespace ConsoleApp1
                     {
                         if (_armies[i].IsContane(warriorAttack) == false)
                         {
-                            Warrior warriorGoal = _armies[i].GetWarrior(_random.Next(_armies[i].GetCountArmy()));
+                            Warrior warriorGoal = _armies[i].GetWarrior(random.Next(_armies[i].GetCountArmy()));
                             Console.WriteLine($"враг обнаружен - {warriorGoal.Name}");
                             return warriorGoal;
                         }
@@ -566,7 +554,6 @@ namespace ConsoleApp1
         public void Round()
         {
             RefreshStats();
-            Console.WriteLine($"раунд - {_countRound++}");
             bool isPlaying = true;
 
             while (isPlaying)
@@ -576,7 +563,7 @@ namespace ConsoleApp1
                 if (warriorAttack != null)
                 {
                     Warrior warriorDefense = ChooseGoal(warriorAttack);
-                    
+
                     if (warriorDefense != null)
                     {
                         warriorAttack.AttackGoal(warriorDefense);
