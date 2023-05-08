@@ -5,10 +5,10 @@ namespace ConsoleApp1
 {
     abstract class Warrior
     {
-        protected int _damageMin;
-        protected int _damageMax;
-        protected Random _random = new Random();
-        protected int _errorRate = 1;
+        protected int DamageMin;
+        protected int DamageMax;
+        protected Random Random = new Random();
+        protected int ErrorRate = 1;
 
         public string Name { get; protected set; }
         public int Attack { get; protected set; }
@@ -99,9 +99,9 @@ namespace ConsoleApp1
         {
 
 
-            if (_damageMin != 0 && _damageMax != 0)
+            if (DamageMin != 0 && DamageMax != 0)
             {
-                return _random.Next(_damageMin, _damageMax + _errorRate) * Group + Attack;
+                return Random.Next(DamageMin, DamageMax + ErrorRate) * Group + Attack;
             }
             else
             {
@@ -112,18 +112,18 @@ namespace ConsoleApp1
 
     abstract class Army
     {
-        protected List<Warrior> _warriors = new List<Warrior>();
+        protected List<Warrior> Warriors = new List<Warrior>();
 
         public int GetCountArmy()
         {
-            return _warriors.Count;
+            return Warriors.Count;
         }
 
         public Warrior GetWarrior(int index)
         {
-            if (_warriors.Count > 0)
+            if (Warriors.Count > 0)
             {
-                return _warriors[index];
+                return Warriors[index];
             }
 
             return null;
@@ -133,7 +133,7 @@ namespace ConsoleApp1
         {
             if (warrior != null)
             {
-                if (_warriors.Contains(warrior))
+                if (Warriors.Contains(warrior))
                 {
                     return true;
                 }
@@ -144,7 +144,7 @@ namespace ConsoleApp1
 
         public void RemoveGroup(Warrior warriorSearch)
         {
-            _warriors.Remove(warriorSearch);
+            Warriors.Remove(warriorSearch);
         }
 
         public virtual void ResultWar()
@@ -157,13 +157,13 @@ namespace ConsoleApp1
     {
         public Castle()
         {
-            _warriors.Add(new Halberdier());
-            _warriors.Add(new Marksmen());
-            _warriors.Add(new RoyalGriffin());
-            _warriors.Add(new Crusader());
-            _warriors.Add(new Zealot());
-            _warriors.Add(new Champion());
-            _warriors.Add(new Archangel());
+            Warriors.Add(new Halberdier());
+            Warriors.Add(new Marksmen());
+            Warriors.Add(new RoyalGriffin());
+            Warriors.Add(new Crusader());
+            Warriors.Add(new Zealot());
+            Warriors.Add(new Champion());
+            Warriors.Add(new Archangel());
         }
 
         public override void ResultWar()
@@ -182,8 +182,8 @@ namespace ConsoleApp1
             Group = 42;
             HealthCurrent = 10;
             Health = 10;
-            _damageMin = 2;
-            _damageMax = 3;
+            DamageMin = 2;
+            DamageMax = 3;
             Speed = 5;
         }
     }
@@ -195,8 +195,8 @@ namespace ConsoleApp1
             Name = "стрелки";
             Attack = 6;
             Defense = 3;
-            _damageMin = 2;
-            _damageMax = 3;
+            DamageMin = 2;
+            DamageMax = 3;
             Group = 27;
             HealthCurrent = 10;
             Health = 10;
@@ -217,8 +217,8 @@ namespace ConsoleApp1
             Name = "королевские гриффоны";
             Attack = 9;
             Defense = 9;
-            _damageMin = 3;
-            _damageMax = 6;
+            DamageMin = 3;
+            DamageMax = 6;
             Group = 25;
             HealthCurrent = 25;
             Health = 25;
@@ -239,8 +239,8 @@ namespace ConsoleApp1
             Name = "крестоносцы";
             Attack = 9;
             Defense = 9;
-            _damageMin = 3;
-            _damageMax = 6;
+            DamageMin = 3;
+            DamageMax = 6;
             Group = 12;
             HealthCurrent = 25;
             Health = 25;
@@ -265,8 +265,8 @@ namespace ConsoleApp1
             Name = "фанатики";
             Attack = 12;
             Defense = 10;
-            _damageMin = 10;
-            _damageMax = 12;
+            DamageMin = 10;
+            DamageMax = 12;
             Group = 9;
             HealthCurrent = 30;
             Health = 30;
@@ -288,8 +288,8 @@ namespace ConsoleApp1
             Name = "чемпионы";
             Attack = 16;
             Defense = 16;
-            _damageMin = 20;
-            _damageMax = 25;
+            DamageMin = 20;
+            DamageMax = 25;
             Group = 6;
             HealthCurrent = 100;
             Health = 100;
@@ -315,7 +315,7 @@ namespace ConsoleApp1
         {
             if (HealthCurrent + Defense > damage)
             {
-                HealthCurrent -= _random.Next(damage);
+                HealthCurrent -= Random.Next(damage);
             }
             else
             {
@@ -343,13 +343,13 @@ namespace ConsoleApp1
     {
         public Necropolise()
         {
-            _warriors.Add(new SkeletonWarrior());
-            _warriors.Add(new Zombie());
-            _warriors.Add(new Wraith());
-            _warriors.Add(new VampireLord());
-            _warriors.Add(new PowerLiche());
-            _warriors.Add(new DreadKnight());
-            _warriors.Add(new GhostDragons());
+            Warriors.Add(new SkeletonWarrior());
+            Warriors.Add(new Zombie());
+            Warriors.Add(new Wraith());
+            Warriors.Add(new VampireLord());
+            Warriors.Add(new PowerLiche());
+            Warriors.Add(new DreadKnight());
+            Warriors.Add(new GhostDragons());
         }
 
         public override void ResultWar()
@@ -365,8 +365,8 @@ namespace ConsoleApp1
             Name = "скелеты войны";
             Attack = 6;
             Defense = 6;
-            _damageMin = 1;
-            _damageMax = 3;
+            DamageMin = 1;
+            DamageMax = 3;
             Group = 45;
             HealthCurrent = 6;
             Health = 6;
@@ -381,8 +381,8 @@ namespace ConsoleApp1
             Name = "зомби";
             Attack = 5;
             Defense = 5;
-            _damageMin = 2;
-            _damageMax = 3;
+            DamageMin = 2;
+            DamageMax = 3;
             Group = 24;
             HealthCurrent = 20;
             Health = 20;
@@ -391,7 +391,7 @@ namespace ConsoleApp1
 
         public override void AttackGoal(Warrior warriorDefiens)
         {
-            warriorDefiens.TakeDammage(Attack + _random.Next(_damageMin, _damageMax) + HealthCurrent);
+            warriorDefiens.TakeDammage(Attack + Random.Next(DamageMin, DamageMax) + HealthCurrent);
             IsMove = false;
         }
     }
@@ -403,8 +403,8 @@ namespace ConsoleApp1
             Name = "призраки";
             Attack = 7;
             Defense = 7;
-            _damageMin = 3;
-            _damageMax = 5;
+            DamageMin = 3;
+            DamageMax = 5;
             Group = 21;
             HealthCurrent = 18;
             Health = 18;
@@ -414,7 +414,7 @@ namespace ConsoleApp1
         public override void ResponseAttack(Warrior warrior)
         {
             base.ResponseAttack(warrior);
-            _damageMax += 3;
+            DamageMax += 3;
         }
     }
 
@@ -425,8 +425,8 @@ namespace ConsoleApp1
             Name = "вампиры лорды";
             Attack = 10;
             Defense = 10;
-            _damageMin = 5;
-            _damageMax = 8;
+            DamageMin = 5;
+            DamageMax = 8;
             Group = 12;
             HealthCurrent = 40;
             Health = 40;
@@ -436,7 +436,7 @@ namespace ConsoleApp1
         public override void AttackGoal(Warrior warriorDefiens)
         {
             base.AttackGoal(warriorDefiens);
-            HealthCurrent += _random.Next(_damageMin, _damageMax);
+            HealthCurrent += Random.Next(DamageMin, DamageMax);
         }
     }
 
@@ -447,8 +447,8 @@ namespace ConsoleApp1
             Name = "могущественные личи";
             Attack = 13;
             Defense = 10;
-            _damageMin = 11;
-            _damageMax = 15;
+            DamageMin = 11;
+            DamageMax = 15;
             Group = 9;
             HealthCurrent = 40;
             Health = 40;
@@ -469,8 +469,8 @@ namespace ConsoleApp1
             Name = "рыцари смерти";
             Attack = 18;
             Defense = 18;
-            _damageMin = 15;
-            _damageMax = 30;
+            DamageMin = 15;
+            DamageMax = 30;
             Group = 6;
             HealthCurrent = 120;
             Health = 120;
@@ -479,7 +479,7 @@ namespace ConsoleApp1
 
         public override void AttackGoal(Warrior warriorDefiens)
         {
-            Attack += _random.Next(_damageMin, Attack + _damageMax);
+            Attack += Random.Next(DamageMin, Attack + DamageMax);
             base.AttackGoal(warriorDefiens);
         }
     }
@@ -491,8 +491,8 @@ namespace ConsoleApp1
             Name = "драконы призраки";
             Attack = 19;
             Defense = 17;
-            _damageMin = 25;
-            _damageMax = 50;
+            DamageMin = 25;
+            DamageMax = 50;
             Group = 3;
             HealthCurrent = 200;
             Health = 200;
@@ -502,7 +502,7 @@ namespace ConsoleApp1
         public override void TakeDammage(int damage)
         {
             base.TakeDammage(damage);
-            _damageMin += 1;
+            DamageMin += 1;
             Defense += 5;
             Console.WriteLine($"боец {Name} осталось в отряде {Group},{HealthCurrent} здоровья у последнего в отряде");
         }
