@@ -1,0 +1,194 @@
+using System;
+using System.Collections.Generic;
+
+namespace ConsoleApp1
+{
+    class Fish
+    {
+        private int _ageMax;
+
+        public Fish(int healthMax)
+        {
+            _ageMax = healthMax;
+        }
+
+        public int Age { get; private set; }
+        public bool Death 
+        {
+            get 
+            {
+                if (Age > _ageMax)
+                    return true;
+                else
+                    return false;
+            }
+        }
+
+        public void Life()
+        {
+            if (Death == false)
+                Age++;
+        }
+
+        public void ShowInformation()
+        {
+            Console.WriteLine($"этой рыбке - {Age} лет.{ShowStatus()}");
+        }
+
+        private string ShowStatus()
+        {
+            if (Death)
+                return "мертва";
+            else
+                return "жива";
+        }
+    }
+
+    class Aquarium
+    {
+        private List<Fish> _residents = new List<Fish>();
+        private int _countMax;
+
+        public Aquarium(int countMax, int countFishStart, int healthMax, Random random)
+        {
+            _countMax = countMax;
+
+            if (countFishStart > countMax)
+            {
+                countFishStart = 0;
+                Console.WriteLine("теперь перекладывай в железную банку, умник");
+            }
+
+            for (int i = 0; i < countFishStart; i++)
+            {
+                _residents.Add(new Fish(random.Next(healthMax)));
+            }
+        }
+
+        public void GetFish(int index)
+        {
+            if (index < _residents.Count && index >= 0)
+            {
+                _residents.RemoveAt(index);
+            }
+        }
+
+        public void Accept(Fish fish)
+        {
+            if (fish != null)
+                if (_residents.Count < _countMax)
+                    _residents.Add(fish);
+                else
+                    Console.WriteLine("этот аквариум заполнен");
+        }
+
+        public void ProcessLife(Owner owner)
+        {
+            int add = 1;
+            int remove = 2;
+            int countSumbol = 25;
+            char symbol = '-';
+
+            while (true)
+            {
+                ShowInformation();
+                Console.WriteLine(new string(symbol, countSumbol));
+
+                foreach (Fish fish in _residents)
+                {
+                    fish.Life();
+                }
+
+                if (owner != null)
+                {
+                    int input = owner.Work();
+
+                    if(input == add)
+                        Accept(owner.AddFishInContainer());
+                    else if(input == remove)
+                        GetFish(owner.PullOut());
+                }
+
+                Console.Clear();
+            }
+        }
+
+        private void ShowInformation()
+        {
+            foreach (Fish fish in _residents)
+            {
+                fish.ShowInformation();
+            }
+        }
+    }
+
+    class Owner
+    {
+        private Random _random = new Random();
+
+        public Fish AddFishInContainer()
+        {
+            int healthMax = 10;
+            return new Fish(_random.Next(healthMax));
+        }
+
+        public int PullOut()
+        {
+            Console.WriteLine("введите номер рыбки");
+            return Input();
+        }
+
+        public int Work()
+        {
+            int addFish = 1;
+            int pullOutFish = 2;
+            int pass = 3;
+            Console.WriteLine($"нажмите {addFish}, чтобы добавить рыбу;{pullOutFish}, чтобы убрать рыбу по индексу\nлюбую, чтобы продолжить ");
+            int input = Input();
+
+            if (input == addFish)
+                return addFish;
+            else if (input == pullOutFish)
+                return pullOutFish;
+            else
+                return pass;
+        }
+
+        public int Input()
+        {
+            int emptiness = -1;
+            string input = Console.ReadLine();
+
+            if (int.TryParse(input, out int value))
+            {
+                return value;
+            }
+
+            return emptiness;
+        }
+    }
+
+    class Program
+    {
+        static void Main()
+        {
+            Random random = new Random();
+            Owner owner = new Owner();
+            Aquarium aquarium = null;
+            int lifeExpectancy = 15;
+
+            Console.Write("введите максимальную вместительнось аквариума: ");
+            int capacity = owner.Input();
+            Console.Write("введите начальное кол-во рыб в аквариуме: ");
+            int randomFishStart = owner.Input();
+            
+            if (capacity >= 0 && randomFishStart >= 0 && lifeExpectancy >= 0)
+                aquarium = new Aquarium(capacity, randomFishStart, lifeExpectancy, random);
+
+            if(aquarium != null)
+                aquarium.ProcessLife(owner);
+            else
+                Console.WriteLine("Художественный фильм...");
+        }
+    }
+}
