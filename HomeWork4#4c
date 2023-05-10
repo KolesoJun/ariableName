@@ -1,0 +1,208 @@
+using System;
+
+namespace ConsoleApp1
+{
+    class Program
+    {
+        static void Main()
+        {
+            int positionPlayerX = 0;
+            int positionPlayerY = 0;
+            int errorRate = 1;
+            char emptiness = ' ';
+            char wall = '#';
+            char player = '@';
+            char exit = '&';
+            char bomb = '%';
+            bool isWorking = true;
+
+            char[,] map = GetMap(errorRate, wall, bomb, exit, emptiness, player, ref positionPlayerX, ref positionPlayerY);
+
+            if (map != null)
+            {
+                while (isWorking)
+                {
+                    PaintMap(map);
+                    InputUser(map, wall,bomb, exit, emptiness, player, ref positionPlayerX, ref positionPlayerY, ref isWorking);
+                    Console.Clear();
+                }
+            }
+            else
+            {
+                Console.WriteLine("error");
+            }
+        }
+
+        static void InputUser(char[,] map, char wall, char bomb, char exit, char emptiness, char player, ref int positionPlayerX, ref int positionPlayerY, ref bool isWorking)
+        {
+            int positionX = positionPlayerX;
+            int positionY = positionPlayerY;
+            int directionX = 0;
+            int directionY = 0;
+            ConsoleKeyInfo key = Console.ReadKey(true);
+
+            switch (key.Key)
+            {
+                case ConsoleKey.UpArrow:
+                    directionX--;
+                    break;
+
+                case ConsoleKey.DownArrow:
+                    directionX++;
+                    break;
+
+                case ConsoleKey.LeftArrow:
+                    directionY--;
+                    break;
+
+                case ConsoleKey.RightArrow:
+                    directionY++;
+                    break;
+            }
+
+            if (map[positionX + directionX, positionY+ directionY] != wall)
+            {
+                map[positionX, positionY] = emptiness;
+
+                if (map[positionX + directionX, positionY + directionY] != bomb)
+                {
+                    if (map[positionX + directionX, positionY + directionY] == exit)
+                    {
+                        isWorking = false;
+                        Console.WriteLine("победа");
+                        Console.ReadLine();
+                    }
+                    else
+                    {
+                        positionPlayerX = positionX + directionX;
+                        positionPlayerY = positionY + directionY;
+                        map[positionPlayerX, positionPlayerY] = player;
+                    }
+                }
+                else
+                {
+                    isWorking = false;
+                    Console.WriteLine("booom");
+                    Console.ReadLine();
+                }
+            }
+        }
+
+        static char[,] GetMap(int errorRate, char wall, char bomb, char exit, char emptiness, char player, ref int positionPlayerX,ref int positionPlayerY)
+        {
+            Random random = new Random();
+            char[,] tempMap;
+            Console.WriteLine("введите размеры карты:");
+            Console.Write("x = ");
+            int sizeX = EnterUser();
+            Console.Write("y = ");
+            int sizeY = EnterUser();
+            int countBomb = random.Next(sizeX, sizeY);
+
+            if (sizeX >= 0 && sizeY >= 0)
+            {
+                tempMap = new char[sizeX, sizeY];
+                FillWall(tempMap, wall, emptiness, errorRate);
+                FillStartAndExit(random, tempMap, wall, player, exit, errorRate, ref positionPlayerX, ref positionPlayerY);
+                FillBomb(random, tempMap, emptiness, bomb, countBomb);
+                return tempMap;
+            }
+
+            return null;
+        }
+
+        static void FillStartAndExit(Random random, char[,] map, char wall, char player, char exit, int errorRate, ref int positionPlayerX, ref int positionPlayerY)
+        {
+            int positionMinX = 1;
+            int positionMinY = 1;
+            int positionStartPlayerX = random.Next(positionMinX, map.GetLength(0) - errorRate);
+            int positionStartPlayerY = random.Next(positionMinY, map.GetLength(1) - errorRate);
+            map[positionStartPlayerX, positionStartPlayerY] = player;
+            positionPlayerX = positionStartPlayerX;
+            positionPlayerY = positionStartPlayerY;
+            int positionEndX = random.Next(positionMinX, map.GetLength(0) - errorRate);
+            int positionEndY = random.Next(positionMinY, map.GetLength(1) - errorRate);
+
+            if (map[positionEndX, positionEndY] != wall && map[positionEndX, positionEndY] != player)
+            {
+                map[positionEndX, positionEndY] = exit;
+            }
+            else
+            {
+                Console.WriteLine("sorry");
+                Console.Write($"x - введите число от {errorRate} до {map.GetLength(0)} - ");
+                int positionX = EnterUser();
+                Console.Write($"y - введите число от {errorRate} до {map.GetLength(0)} - ");
+                int positionY = EnterUser();
+
+                if (positionX < map.GetLength(0) && positionY < map.GetLength(1))
+                {
+                    map[positionX, positionY] = exit;
+                }
+                else
+                {
+                    map[random.Next(positionMinX, positionX), random.Next(positionMinY, positionY)] = exit;
+                }
+            }
+        }
+
+        static void FillBomb(Random random, char[,] map, char emptiness, char bomb, int countBomb)
+        {
+            while (countBomb > 0)
+            {
+                int positionX = random.Next(map.GetLength(0));
+                int positionY = random.Next(map.GetLength(1));
+
+                if (map[positionX, positionY] == emptiness)
+                {
+                    map[positionX, positionY] = bomb;
+                    countBomb--;
+                }
+            }
+        }
+
+        static void FillWall(char[,] map, char wall, char emptiness, int errorRate)
+        {
+            for (int x = 0; x < map.GetLength(0); x++)
+            {
+                for (int y = 0; y < map.GetLength(1); y++)
+                {
+                    if (x == 0 || y== 0|| x == map.GetLength(0) - errorRate || y == map.GetLength(1) - errorRate)
+                    {
+                        map[x, y] = wall;
+                    }
+                    else
+                    {
+                        map[x, y] = emptiness;
+                    }
+                }
+            }
+        }
+
+        static void PaintMap(char[,] map)
+        {
+            for (int x = 0; x < map.GetLength(0); x++)
+            {
+                for (int y = 0; y < map.GetLength(1); y++)
+                {
+                    Console.Write(map[x,y]);
+                }
+
+                Console.WriteLine();
+            }
+        }
+
+        static int EnterUser()
+        {
+            string input = Console.ReadLine();
+            int error = -1;
+
+            if (int.TryParse(input, out int value))
+            {
+                return value;
+            }
+
+            return error;
+        }
+    }
+}
