@@ -1,0 +1,622 @@
+using System;
+using System.Collections.Generic;
+
+namespace ConsoleApp1
+{
+    class Program
+    {
+        static void Main()
+        {
+            Game game = new Game();
+            game.Play();
+        }
+    }
+
+    abstract class Warrior
+    {
+        protected Random Random = new Random();
+        protected int Tolerance = 1;
+
+        public string Name { get; protected set; }
+        public int Attack { get; protected set; }
+        public int Defense { get; protected set; }
+        public int Damage { get; protected set; }
+        public int Health { get; protected set; }
+        public int HealthCurrent { get; protected set; }
+        public int Group { get; protected set; }
+        public int Speed { get; protected set; }
+        public bool IsMove { get; protected set; }
+        public bool IsResponseAttack { get; protected set; }
+
+        public void Refresh()
+        {
+            IsMove = true;
+            IsResponseAttack = true;
+        }
+
+        public virtual void TakeDammage(int damage)
+        {
+            if (HealthCurrent < damage)
+            {
+                while (damage > HealthCurrent)
+                {
+                    damage -= HealthCurrent;
+                    Group--;
+                    HealthCurrent = Health;
+                }
+
+                HealthCurrent -= damage;
+
+                if (HealthCurrent == 0)
+                {
+                    Group--;
+                    HealthCurrent = Health;
+                }
+
+                if (Group > 0)
+                {
+                    Console.WriteLine($"боец {Name} осталось в отряде {Group},{HealthCurrent} здоровья у последнего в отряде");
+                }
+            }
+        }
+
+        public virtual void RespondToAttack(Warrior warrior)
+        {
+            if (IsResponseAttack)
+            {
+                int halfDamage = 2;
+                int tempDamage = CalculateDamage() / halfDamage;
+                Console.WriteLine($"боец {Name} наносит ответную атаку {tempDamage}");
+                warrior.TakeDammage(tempDamage);
+                IsResponseAttack = false;
+            }
+        }
+
+        public virtual void AttackGoal(Warrior warriorDefiens)
+        {
+            int tempDamage = CalculateDamage();
+            Console.WriteLine($"боец {Name} наносит {tempDamage} урона");
+            warriorDefiens.TakeDammage(tempDamage);
+            IsMove = false;
+        }
+
+        public void ShowInformation()
+        {
+            Console.WriteLine($"боец {Name},урон {CalculateDamage()}, атака - {Attack}, защита - {Defense}, здоровье - {Health}, численность - {Group} , скорость - {Speed}");
+        }
+
+        private int CalculateDamage()
+        {
+            return Random.Next(Damage - Tolerance, Damage + Tolerance) * Group + Attack;
+        }
+    }
+
+    class Halberdier : Warrior
+    {
+        public Halberdier()
+        {
+            Name = "алебардщики";
+            Attack = 6;
+            Damage = 2;
+            Defense = 5;
+            Group = 42;
+            HealthCurrent = 10;
+            Health = 10;
+            Speed = 5;
+        }
+    }
+
+    class Marksmen : Warrior
+    {
+        public Marksmen()
+        {
+            Name = "стрелки";
+            Attack = 6;
+            Defense = 3;
+            Damage = 4;
+            Group = 27;
+            HealthCurrent = 10;
+            Health = 10;
+            Speed = 6;
+        }
+
+        public override void AttackGoal(Warrior warriorDefiens)
+        {
+            int bonus = 3;
+            base.AttackGoal(warriorDefiens);
+            Defense += bonus;
+        }
+    }
+
+    class RoyalGriffin : Warrior
+    {
+        public RoyalGriffin()
+        {
+            Name = "королевские гриффоны";
+            Attack = 9;
+            Defense = 9;
+            Damage = 6;
+            Group = 25;
+            HealthCurrent = 25;
+            Health = 25;
+            Speed = 9;
+        }
+
+        public override void RespondToAttack(Warrior warrior)
+        {
+            IsResponseAttack = true;
+            base.RespondToAttack(warrior);
+        }
+    }
+
+    class Crusader : Warrior
+    {
+        public Crusader()
+        {
+            Name = "крестоносцы";
+            Attack = 9;
+            Defense = 9;
+            Damage = 10;
+            Group = 12;
+            HealthCurrent = 25;
+            Health = 25;
+            Speed = 9;
+        }
+
+        public override void AttackGoal(Warrior warriorDefiens)
+        {
+            base.AttackGoal(warriorDefiens);
+
+            if (warriorDefiens.HealthCurrent > 0)
+                base.AttackGoal(warriorDefiens);
+        }
+    }
+
+    class Zealot : Warrior
+    {
+        public Zealot()
+        {
+            Name = "фанатики";
+            Attack = 12;
+            Defense = 10;
+            Damage = 13;
+            Group = 9;
+            HealthCurrent = 30;
+            Health = 30;
+            Speed = 7;
+        }
+
+        public override void TakeDammage(int damage)
+        {
+            int bonus = 10;
+            base.TakeDammage(damage);
+            HealthCurrent += bonus;
+        }
+    }
+
+    class Champion : Warrior
+    {
+        public Champion()
+        {
+            Name = "чемпионы";
+            Attack = 16;
+            Defense = 16;
+            Damage = 30;
+            Group = 6;
+            HealthCurrent = 100;
+            Health = 100;
+            Speed = 9;
+        }
+    }
+
+    class Archangel : Warrior
+    {
+        public Archangel()
+        {
+            Name = "архангелы";
+            Attack = 30;
+            Defense = 30;
+            Damage = 50;
+            Group = 3;
+            HealthCurrent = 250;
+            Health = 250;
+            Speed = 18;
+        }
+
+        public override void TakeDammage(int damage)
+        {
+            if (HealthCurrent + Defense > damage)
+            {
+                HealthCurrent -= Random.Next(damage);
+            }
+            else
+            {
+                if (Group > 0)
+                {
+                    HealthCurrent -= damage;
+
+                    if (HealthCurrent <= 0)
+                    {
+                        Group--;
+                        HealthCurrent += Health;
+                    }
+                }
+                else
+                {
+                    Group = 0;
+                }
+            }
+
+            Console.WriteLine($"боец {Name} осталось в отряде {Group},{HealthCurrent} здоровья у последнего в отряде");
+        }
+    }
+
+    class SkeletonWarrior : Warrior
+    {
+        public SkeletonWarrior()
+        {
+            Name = "скелеты войны";
+            Attack = 6;
+            Defense = 6;
+            Damage = 2;
+            Group = 45;
+            HealthCurrent = 6;
+            Health = 6;
+            Speed = 5;
+        }
+    }
+
+    class Zombie : Warrior
+    {
+        public Zombie()
+        {
+            Name = "зомби";
+            Attack = 5;
+            Defense = 5;
+            Group = 24;
+            Damage = 4;
+            HealthCurrent = 20;
+            Health = 20;
+            Speed = 4;
+        }
+
+        public override void AttackGoal(Warrior warriorDefiens)
+        {
+            warriorDefiens.TakeDammage(Attack + Random.Next(Damage) + HealthCurrent);
+            IsMove = false;
+        }
+    }
+
+    class Wraith : Warrior
+    {
+        public Wraith()
+        {
+            Name = "призраки";
+            Attack = 7;
+            Defense = 7;
+            Damage = 4;
+            Group = 21;
+            HealthCurrent = 18;
+            Health = 18;
+            Speed = 7;
+        }
+
+        public override void RespondToAttack(Warrior warrior)
+        {
+            int bonus = 3;
+            base.RespondToAttack(warrior);
+            Damage += bonus;
+        }
+    }
+
+    class VampireLord : Warrior
+    {
+        public VampireLord()
+        {
+            Name = "вампиры лорды";
+            Attack = 10;
+            Defense = 10;
+            Group = 12;
+            Damage = 12;
+            HealthCurrent = 40;
+            Health = 40;
+            Speed = 9;
+        }
+
+        public override void AttackGoal(Warrior warriorDefiens)
+        {
+            base.AttackGoal(warriorDefiens);
+            HealthCurrent += Random.Next(Damage);
+
+            while (HealthCurrent > Health)
+            {
+                Group++;
+                HealthCurrent -= Health;
+            }
+        }
+    }
+
+    class PowerLiche : Warrior
+    {
+        public PowerLiche()
+        {
+            Name = "могущественные личи";
+            Attack = 13;
+            Defense = 10;
+            Group = 9;
+            Damage = 15;
+            HealthCurrent = 40;
+            Health = 40;
+            Speed = 7;
+        }
+
+        public override void AttackGoal(Warrior warriorDefiens)
+        {
+            int bonus = 5;
+            base.AttackGoal(warriorDefiens);
+            Attack += bonus;
+        }
+    }
+
+    class DreadKnight : Warrior
+    {
+        public DreadKnight()
+        {
+            Name = "рыцари смерти";
+            Attack = 18;
+            Defense = 18;
+            Group = 6;
+            Damage = 25;
+            HealthCurrent = 120;
+            Health = 120;
+            Speed = 9;
+        }
+
+        public override void AttackGoal(Warrior warriorDefiens)
+        {
+            int tempAttack = Attack;
+            Attack += Random.Next(Attack + Damage);
+            Attack = tempAttack;
+            base.AttackGoal(warriorDefiens);
+        }
+    }
+
+    class GhostDragons : Warrior
+    {
+        public GhostDragons()
+        {
+            Name = "драконы призраки";
+            Attack = 19;
+            Defense = 17;
+            Damage = 40;
+            Group = 3;
+            HealthCurrent = 200;
+            Health = 200;
+            Speed = 14;
+        }
+
+        public override void TakeDammage(int damage)
+        {
+            if (Group > 0)
+            {
+                if (HealthCurrent > damage)
+                {
+                    HealthCurrent -= damage - Defense;
+                }
+                else
+                {
+                    Group--;
+                    HealthCurrent = Health;
+                }
+
+                Console.WriteLine($"боец {Name} осталось в отряде {Group},{HealthCurrent} здоровья у последнего в отряде");
+            }
+            else
+            {
+                Group = 0;
+                HealthCurrent = 0;
+            }
+        }
+    }
+
+    class Game
+    {
+        private List<Warrior> _castle = new List<Warrior>();
+        private List<Warrior> _necropolise = new List<Warrior>();
+
+        public Game()
+        {
+            FillArmyCastle();
+            FillArmyNecropolis();
+        }
+
+        public void Play()
+        {
+            int countRound = 1;
+            ShowInformation(_castle);
+            Console.WriteLine();
+            ShowInformation(_necropolise);
+            Console.WriteLine("нажмите любую клавишу, чтобы начать сражение");
+            Console.ReadLine();
+            Console.Clear();
+
+            while (CanFinishFight() == false)
+            {
+                Console.WriteLine($"раунд - {countRound++}");
+                Round();
+            }
+        }
+
+        private void Round()
+        {
+            RefreshRound(_castle);
+            RefreshRound(_necropolise);
+            bool isPlaying = true;
+
+            while (isPlaying)
+            {
+                Warrior warriorAttack = SearchFastest();
+                
+                if (warriorAttack != null)
+                {
+                    Console.WriteLine($"ход - {warriorAttack.Name}");
+
+                    if (_castle.Count > 0 && _necropolise.Count > 0)
+                    {
+                        Warrior warriorDefense = ChooseGoal(warriorAttack);
+                        warriorAttack.AttackGoal(warriorDefense);
+
+                        if (warriorDefense.Group > 0)
+                        {
+                            warriorDefense.RespondToAttack(warriorAttack);
+
+                            if (warriorAttack.Group <= 0)
+                            {
+                                DeathGroup(warriorAttack);
+                            }
+                        }
+                        else
+                        {
+                            DeathGroup(warriorDefense);
+                        }
+                    }
+                    else
+                    {
+                        isPlaying = false;
+                    }
+                }
+                else
+                {
+                    isPlaying = false;
+                }
+
+                Console.ReadLine();
+                Console.Clear();
+            }
+        }
+
+        private void DeathGroup(Warrior warriorSearch)
+        {
+            Console.WriteLine($"группа {warriorSearch.Name} погибла");
+
+            if (_castle.Contains(warriorSearch))
+                _castle.Remove(warriorSearch);
+            else
+                _necropolise.Remove(warriorSearch);
+        }
+
+        private void RefreshRound(List<Warrior> warriors)
+        {
+            foreach (Warrior warrior in warriors)
+            {
+                warrior.Refresh();
+            }
+        }
+
+        private Warrior ChooseGoal(Warrior warriorAttack)
+        {
+            Random random = new Random();
+            Warrior warriorGoal;
+
+            if (_castle.Contains(warriorAttack))
+                warriorGoal = _necropolise[random.Next(_necropolise.Count)];
+            else
+                warriorGoal = _castle[random.Next(_castle.Count)];
+
+            Console.WriteLine($"враг обнаружен - {warriorGoal.Name}");
+            return warriorGoal;
+        }
+
+        private Warrior GetFasterWarrior(List<Warrior> warriors)
+        {
+            Warrior tempWarrior = null;
+            int tempMaxSpeed = 0;
+
+            foreach (Warrior warrior in warriors)
+            {
+                if (warrior.IsMove && warrior.Speed > tempMaxSpeed)
+                {
+                    tempWarrior = warrior;
+                    tempMaxSpeed = tempWarrior.Speed;
+                }
+            }
+
+            return tempWarrior;
+        }
+
+        private Warrior SearchFastest()
+        {
+            Warrior warriorFirst = GetFasterWarrior(_castle);
+            Warrior warriorSecond = GetFasterWarrior(_necropolise);
+
+            if (warriorFirst != null)
+            {
+                if (warriorSecond != null)
+                {
+                    if (warriorFirst.Speed > warriorSecond.Speed)
+                        return warriorFirst;
+                    else
+                        return warriorSecond;
+                }
+                else
+                {
+                    return warriorFirst;
+                }
+            }
+            else
+            {
+                return warriorSecond;
+            }
+        }
+
+        private bool CanFinishFight()
+        {
+            Console.WriteLine($"в армии замка осталось: {_castle.Count}"); ;
+            Console.WriteLine($"в армии некрополиса осталось: {_necropolise.Count}");
+
+            if (_castle.Count == 0)
+            {
+                Console.WriteLine("некрополис победил");
+                return true;
+            }
+            else if (_necropolise.Count == 0)
+            {
+                Console.WriteLine("замок победил");
+                return true;
+            }
+
+            return false;
+        }
+
+        private void ShowInformation(List<Warrior> warriors)
+        {
+            foreach (Warrior warrior in warriors)
+            {
+                warrior.ShowInformation();
+            }
+        }
+
+        private void FillArmyCastle()
+        {
+            _castle.Add(new Halberdier());
+            _castle.Add(new Marksmen());
+            _castle.Add(new RoyalGriffin());
+            _castle.Add(new Crusader());
+            _castle.Add(new Zealot());
+            _castle.Add(new Champion());
+            _castle.Add(new Archangel());
+        }
+
+        private void FillArmyNecropolis()
+        {
+            _necropolise.Add(new SkeletonWarrior());
+            _necropolise.Add(new Zombie());
+            _necropolise.Add(new Wraith());
+            _necropolise.Add(new VampireLord());
+            _necropolise.Add(new PowerLiche());
+            _necropolise.Add(new DreadKnight());
+            _necropolise.Add(new GhostDragons());
+        }
+    }
+}
+
