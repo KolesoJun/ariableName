@@ -1,0 +1,229 @@
+using System;
+using System.Collections.Generic;
+
+namespace ConsoleApp1
+{
+    class Program
+    {
+        static void Main()
+        {
+            int countAnimals = 25;
+            int countAviary = 7;
+            ZooPark zooPark = new ZooPark(countAnimals, countAviary);
+            zooPark.Work();
+        }
+    }
+
+    class ZooPark
+    {
+        private int _countAnimals;
+        private int _countAviaries;
+        private List<Aviary> _aviaries = new List<Aviary>();
+
+        public ZooPark(int count, int countAviaries)
+        {
+            if (count > 0 && countAviaries > 0)
+            {
+                _countAnimals = count;
+                _countAviaries = countAviaries;
+            }
+
+            CreateAviaries();
+            FillAnimalsToAviaries();
+        }
+
+        public void Work()
+        {
+            int choseAviarie = 1;
+            int exit = 2;
+            bool isWorking = true;
+
+            while (isWorking)
+            {
+                Console.WriteLine($"введите - {choseAviarie}, чтобы выбрать вольер. {exit}, чтобы выйти");
+                int input = ReadInt();
+
+                if (input == choseAviarie)
+                {
+                    Console.WriteLine($"введите индекс вальера от 0 до {CountAviaries}");
+                    int chose = ReadInt();
+
+                    if (chose >= 0 && chose <= CountAviaries)
+                    {
+                        _aviaries[chose].ShowInformation();
+                    }
+                }
+                else if (input == exit)
+                {
+                    isWorking = false;
+                }
+
+                Console.ReadLine();
+                Console.Clear();
+            }
+        }
+
+        private void CreateAviaries()
+        {
+            for (int i = 0; i < _countAviaries; i++)
+            {
+                _aviaries.Add(new Aviary());
+            }
+        }
+
+        private void FillAnimalsToAviaries()
+        {
+            Random random = new Random();
+
+            for (int i = 0; i < _countAnimals; i++)
+            {
+                Animal animal = new Animal(random);
+
+                foreach (Aviary aviary in _aviaries)
+                {
+                    if (aviary.Name != animal.Name)
+                    {
+                        if (aviary.Name == "пустой")
+                        {
+                            aviary.AddAnimals(animal);
+                            animal = null;
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+
+                if (animal != null)
+                {
+                    foreach (Aviary aviary in _aviaries)
+                    {
+                        if (aviary.Name == animal.Name)
+                        {
+                            aviary.AddAnimals(animal);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        public int ReadInt()
+        {
+            int error = -1;
+            string command = Console.ReadLine();
+
+            if (int.TryParse(command, out int value))
+                return value;
+
+            return error;
+        }
+    }
+
+    class Aviary
+    {
+        private List<Animal> _animals = new List<Animal>();
+
+        public Aviary(string name = "пустой")
+        {
+            Name = name;
+        }
+
+        public string Name { get; private set; }
+        public int CountAnimals { get; private set; }
+
+        public void AddAnimals(Animal animal)
+        {
+            _animals.Add(animal);
+            Name = animal.Name;
+            CountAnimals = _animals.Count;
+        }
+
+        public void ShowInformation()
+        {
+            Console.WriteLine($"этот вольер содержит - {Name}, в нем {_animals.Count} животных");
+
+            foreach (Animal animal in _animals)
+            {
+                if (animal != null)
+                {
+                    animal.ShowInformation();
+                }
+            }
+        }
+    }
+
+    class Animal
+    {
+        private List<string> _genus = new List<string>();
+        private Dictionary<string, string> _animalSound = new Dictionary<string, string>();
+
+        public Animal(Random random)
+        {
+            FillVariatsName();
+            FillVariatsSound();
+            Gender = DeterminadeGender(random);
+            Name = DeterminadeName(random);
+            Sound = DeterminadeSound(Name);
+        }
+
+        public string Name { get; private set; }
+        public char Gender { get; private set; }
+        public string Sound { get; private set; }
+
+        public void ShowInformation()
+        {
+            Console.WriteLine($"я - {Name}, пол - {Gender}, издаю звук -{Sound}");
+        }
+
+        private char DeterminadeGender(Random random)
+        {
+            char[] gender = new char[2] { 'F', 'M' };
+            return gender[random.Next(gender.Length)];
+        }
+
+        private void FillVariatsSound()
+        {
+            _animalSound.Add("лев","р-р-р");
+            _animalSound.Add("свинья", "ну шеф!!!");
+            _animalSound.Add("волк", "если волк молчит, лучше его не перебивать");
+            _animalSound.Add("слон", "свинья, бл@!!!");
+            _animalSound.Add("обезьяна", "у-а-у-а");
+            _animalSound.Add("попугай", "шик-ширик");
+            _animalSound.Add("страус", "цирк");
+        }
+
+        private void FillVariatsName()
+        {
+            _genus.Add("лев");
+            _genus.Add("свинья");
+            _genus.Add("волк");
+            _genus.Add("слон");
+            _genus.Add("обезьяна");
+            _genus.Add("попугай");
+            _genus.Add("страус");
+        }
+
+        private string DeterminadeName(Random random)
+        {
+            return _genus[random.Next(_genus.Count)];
+        }
+
+        private string DeterminadeSound(string name)
+        {
+            string sound = "пыц-пыц";
+
+            foreach (var animal in _animalSound)
+            {
+                if (name == animal.Key)
+                {
+                    sound = animal.Value;
+                }
+            }
+
+            return sound;
+        }
+    }
+}
