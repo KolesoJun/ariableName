@@ -1,0 +1,239 @@
+using System;
+using System.Collections.Generic;
+
+namespace ConsoleApp1
+{
+    class Program
+    {
+        static void Main()
+        {
+            ZooPark zooPark = new ZooPark();
+            zooPark.Work();
+        }
+    }
+
+    class ZooPark
+    {
+        private List<Aviary> _aviaries = new List<Aviary>();
+        private List<Animal> _animals = new List<Animal>();
+
+        public ZooPark()
+        {
+            DeliveryAnimals();
+            CreatePlaneAviaries();
+        }
+
+        public void Work()
+        {
+            int choseAviarie = 1;
+            int exit = 2;
+            bool isWorking = true;
+
+            while (isWorking)
+            {
+                Console.WriteLine($"введите - {choseAviarie}, чтобы выбрать вольер. {exit}, чтобы выйти");
+                int input = ReadInt();
+
+                if (input == choseAviarie)
+                {
+                    Console.WriteLine($"введите индекс вальера от 0 до {_aviaries.Count - 1}");
+                    int chose = ReadInt();
+
+                    if (chose >= 0 && chose <= _aviaries.Count-1)
+                    {
+                        _aviaries[chose].ShowInformation();
+                    }
+                }
+                else if (input == exit)
+                {
+                    isWorking = false;
+                }
+
+                Console.ReadLine();
+                Console.Clear();
+            }
+        }
+
+        private void DeliveryAnimals()
+        {
+            _animals.Add(new Lion());
+            _animals.Add(new Wolf());
+            _animals.Add(new Elephant());
+            _animals.Add(new Parrot());
+            _animals.Add(new Pig());
+            _animals.Add(new Monkey());
+            _animals.Add(new Ostrich());
+        }
+
+        private void CreatePlaneAviaries()
+        {
+            int countAnimals = 5;
+
+            for (int i = 0; i < _animals.Count; i++)
+            {
+                List<Animal> tempAnimals = new List<Animal>();
+                
+                for (int x = 0; x < countAnimals; x++)
+                {
+                    Animal animal = _animals[i].Clone();
+                    tempAnimals.Add(animal);
+                }
+
+                Aviary aviary = new Aviary(tempAnimals);
+                _aviaries.Add(aviary);
+            }
+        }
+
+        private int ReadInt()
+        {
+            int tolerance = -1;
+            string command = Console.ReadLine();
+
+            if (int.TryParse(command, out int value))
+                return value;
+
+            return tolerance;
+        }
+    }
+
+    class Aviary
+    {
+        private List<Animal> _animals = new List<Animal>();
+
+        public Aviary(List<Animal> animals)
+        {
+            _animals = animals;
+        }
+
+        public string Name { get; private set; }
+
+        public void ShowInformation()
+        {
+            Console.WriteLine($"этот вольер содержит - {Name = _animals[0].Name}, в нем {_animals.Count} животных");
+
+            foreach (Animal animal in _animals)
+            {
+                animal.ShowInformation();
+            }
+        }
+    }
+
+    abstract class Animal
+    {
+        public Animal(string name, string sound)
+        {
+            Name = name;
+            Sound = sound;
+            Gender = DeterminadeGender();
+        }
+
+        public string Name { get; protected set; }
+        public char Gender { get; protected set; }
+        public string Sound { get; protected set; }
+
+        public abstract Animal Clone();
+
+        public void ShowInformation()
+        {
+            Console.WriteLine($"я - {Name}, пол - {Gender}, издаю звук -{Sound}");
+        }
+
+        private char DeterminadeGender()
+        {
+            Random random = new Random();
+            char[] gender = new char[2] { 'F', 'M' };
+            return gender[random.Next(gender.Length)];
+        }
+    }
+
+    class Lion : Animal
+    {
+        public Lion(): base("лев", "р-р-р")
+        {
+
+        }
+
+        public override Animal Clone()
+        {
+            return new Lion();
+        }
+    }
+
+    class Elephant : Animal
+    {
+        public Elephant() : base("слон", "свинья, бл@!!!")
+        {
+
+        }
+
+        public override Animal Clone()
+        {
+            return new Elephant();
+        }
+    }
+
+    class Wolf : Animal
+    {
+        public Wolf() : base("волк", "если волк молчит, лучше его не перебивать")
+        {
+            
+        }
+
+        public override Animal Clone()
+        {
+            return new Wolf();
+        }
+    }
+
+    class Monkey : Animal
+    {
+        public Monkey() : base("обезьяна", "у-а-у-а")
+        {
+            
+        }
+
+        public override Animal Clone()
+        {
+            return new Monkey();
+        }
+    }
+
+    class Pig : Animal
+    {
+        public Pig() : base("свинья", "ну шеф!!!")
+        {
+            
+        }
+
+        public override Animal Clone()
+        {
+            return new Pig();
+        }
+    }
+
+    class Ostrich : Animal
+    {
+        public Ostrich() : base("страус", "цирк")
+        {
+            
+        }
+
+        public override Animal Clone()
+        {
+            return new Ostrich();
+        }
+    }
+
+    class Parrot : Animal
+    {
+        public Parrot() : base("попугай", "шик-ширик")
+        {
+            
+        }
+
+        public override Animal Clone()
+        {
+            return new Parrot();
+        }
+    }
+}
