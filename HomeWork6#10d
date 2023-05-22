@@ -400,26 +400,44 @@ namespace ConsoleApp1
         private void Round()
         {
             Random random = new Random();
-            Warrior warriorAttack = _necropolise[random.Next(_necropolise.Count)];
-            Warrior warriorDefense = _castle[random.Next(_castle.Count)];
-            warriorAttack.AttackGoal(warriorDefense);
+            Warrior warriorAttack;
 
-            if (warriorDefense.Group > 0)
+            if (TryGetWarrior(random, out warriorAttack) == true)
             {
-                warriorDefense.AttackGoal(warriorAttack);
+                Warrior warriorDefense = _castle[random.Next(_castle.Count)];
+                warriorAttack.AttackGoal(warriorDefense);
 
-                if (warriorAttack.Group < 0)
+                if (warriorDefense.Group > 0)
                 {
-                    MurderGroup(warriorAttack);
+                    warriorDefense.AttackGoal(warriorAttack);
+
+                    if (warriorAttack.Group < 0)
+                    {
+                        MurderGroup(warriorAttack);
+                    }
                 }
-            }
-            else
-            {
-                MurderGroup(warriorDefense);
+                else
+                {
+                    MurderGroup(warriorDefense);
+                }
             }
 
             Console.ReadLine();
             Console.Clear();
+        }
+
+        private bool TryGetWarrior(Random random, out Warrior warrior)
+        {
+            Warrior tempWarrior = _necropolise[random.Next(_necropolise.Count)];
+
+            if (tempWarrior != null)
+            {
+                warrior = tempWarrior;
+                return true;
+            }
+
+            warrior = null;
+            return false;
         }
 
         private void MurderGroup(Warrior warriorSearch)
