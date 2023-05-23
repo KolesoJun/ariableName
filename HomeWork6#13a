@@ -1,0 +1,421 @@
+using System;
+using System.Collections.Generic;
+
+namespace ConsoleApp1
+{
+    class Program
+    {
+        static void Main()
+        {
+            AutoService autoService = new AutoService();
+            autoService.Work();
+        }
+    }
+
+    class Client
+    {
+        Random _random = new Random(); 
+
+        public Client()
+        {
+            Money = _random.Next(2000, 150000);
+            Car = new Car();
+        }
+
+        public Car Car { get; private set; }
+        public int Money { get; private set; }
+
+        public bool CanPay(int price)
+        {
+            if (Money >= price)
+            {
+                Money -= price;
+                return true;
+            }
+
+            return false;
+        }
+    }
+
+    class Car
+    {
+        public Car()
+        {
+            NameProblem = CreateRandomProblem();
+        }
+
+        public Detail NameProblem { get; private set; }
+
+        public bool IsWorking(Detail detail)
+        {
+            if (detail.Name == NameProblem.Name)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        public void ShowInformation()
+        {
+            Console.WriteLine($"этой машине требуется {NameProblem.Name}");
+        }
+
+        public void RefreshDetail(Detail detail)
+        {
+            if (detail.Name == NameProblem.Name)
+            {
+                Console.WriteLine("оно реально работает!");
+                NameProblem = null;
+                Console.ReadLine();
+            }
+        }
+
+        private Detail CreateRandomProblem()
+        {
+            Random random = new Random();
+            Detail[] details = new Detail[9]
+            {
+                new Oil(),
+                new Engine(),
+                new Filter(),
+                new Grenade(),
+                new Lamp(),
+                new Bumper(),
+                new Belt(),
+                new Pump(),
+                new Seal()
+            };
+
+            return details[random.Next(details.Length)];
+        }
+    }
+
+    class AutoService
+    {
+        private static int _privilegeOnJoint;
+        private Random _random = new Random();
+        private Queue<Client> _clients = new Queue<Client>();
+        private Habar _habar;
+
+        public AutoService()
+        {
+            int countClientsMin = 3;
+            int countClientsMax = 10;
+            _privilegeOnJoint = 3;
+            CreateQueue(countClientsMin, countClientsMax);
+            _habar = new Habar();
+        }
+
+        public int Cash { get; private set; }
+
+        public void Work()
+        {
+            while (IsWorking())
+            {
+                _habar.ShowInformation();
+                Console.WriteLine(new string('_', 25));
+                Console.WriteLine("клиент с такой проблемой");
+                Client clientProcessing = _clients.Dequeue();
+                clientProcessing.Car.ShowInformation();
+                Detail detailNeed;
+
+                if (TryGetDetail(out detailNeed))
+                {
+                    int price = CalculatePrice(detailNeed);
+                    Console.WriteLine($"цена ремонта - {price}");
+
+                    if (clientProcessing.Car.IsWorking(detailNeed))
+                    {
+                        if (clientProcessing.CanPay(price))
+                        {
+                            clientProcessing.Car.RefreshDetail(detailNeed);
+                            Cash += price;
+                            Console.WriteLine($"вы заработали + {price}, Ваш баланс: {Cash}");
+                        }
+                        else
+                        {
+                            Console.WriteLine("иди заработай денег");
+                            _habar.Refund(detailNeed);
+                        }
+
+                    }
+                    else
+                    {
+                        Console.WriteLine("вы чего наделали?!");
+                        PayError(detailNeed, clientProcessing);
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("вы совершили ошибку. придется заплатить");
+                    PayError(detailNeed, clientProcessing);
+                }
+
+                Console.ReadLine();
+                Console.Clear();
+            }
+        }
+
+        private void PayError(Detail detailNeed, Client client)
+        {
+            if (_habar.Take(detailNeed) != null)
+            {
+                client.Car.RefreshDetail(detailNeed);
+                Cash -= CalculatePrice(detailNeed);
+            }
+            else
+            {
+                Console.WriteLine("жди следующую поставку");
+                Cash -= 50;
+            }
+        }
+
+        private bool IsWorking()
+        {
+            if (_clients.Count > 0)
+            {
+                if (Cash < 0)
+                {
+                    _privilegeOnJoint--;
+                    Console.WriteLine($"у вас осталось - {_privilegeOnJoint} попыток");
+                }
+
+                if (_privilegeOnJoint == 0)
+                {
+                    Console.WriteLine("вы раздалбай");
+                    return false;
+                }
+
+                return true;
+            }
+
+            Console.WriteLine($"вы заработали {Cash}");
+            return false;
+        }
+
+        private int CalculatePrice(Detail detail)
+        {
+            int easy = 500;
+            int medium = 1000;
+            int hard = 2500;
+            int imposible = 10000;
+            int priceJob = 0;
+
+            if (detail.Price <= easy)
+            {
+                priceJob = _random.Next(easy);
+            }
+            else if (detail.Price >= easy && detail.Price < medium)
+            {
+                priceJob = _random.Next(easy, medium);
+            }
+            else if (detail.Price >= medium && detail.Price < hard)
+            {
+                priceJob = _random.Next(medium, hard);
+            }
+            else if (detail.Price >= hard)
+            {
+                Console.WriteLine("проще было бы выбросить");
+                priceJob = _random.Next(hard, imposible);
+            }
+
+            Console.WriteLine($"стоимость детали - {detail.Price}, стоимость работы - {priceJob}");
+            return priceJob + detail.Price;
+        }
+
+        private bool TryGetDetail(out Detail detail)
+        {
+            Console.WriteLine("введите номер детали в базе");
+            string input = Console.ReadLine();
+
+            if (int.TryParse(input, out int value))
+            {
+                if (value < _habar.CountDetails)
+                {
+                    detail = _habar.Take(value);
+                    return true;
+                }
+            }
+
+            detail = null;
+            return false;
+        }
+
+        private void CreateQueue(int countClientsMin, int countClientsMax)
+        {
+            int countRandom = _random.Next(countClientsMin, countClientsMax);
+
+            for (int i = 0; i < countRandom; i++)
+            {
+                _clients.Enqueue(new Client());
+            }
+        }
+    }
+
+    class Habar
+    {
+        private List<Detail> _details = new List<Detail>();
+        private Random _random = new Random();
+
+        public Habar()
+        {
+            int countRandom = SelectedCountDetails();
+            FillCount(countRandom);
+            CountDetails = _details.Count;
+        }
+
+        public int CountDetails { get; private set; }
+
+        public void ShowInformation()
+        {
+            for (int i = 0; i < _details.Count; i++)
+            {
+                Console.Write($"{i})");
+                _details[i].ShowInformation();
+            }
+        }
+
+        public void Refund(Detail detail)
+        {
+            _details.Add(detail);
+        }
+
+        public Detail Take(int index)
+        {
+            Detail detail = _details[index];
+            _details.RemoveAt(index);
+            return detail;
+        }
+
+        public Detail Take(Detail detail)
+        {
+            _details.Remove(detail);
+            return detail;
+        }
+
+        private void FillCount(int countRandom)
+        {
+            Detail[] details = new Detail[9]
+            {
+                new Oil(),
+                new Engine(),
+                new Filter(),
+                new Grenade(),
+                new Lamp(),
+                new Bumper(),
+                new Belt(),
+                new Pump(),
+                new Seal()
+            };
+
+            for (int i = 0; i < countRandom; i++)
+            {
+                _details.Add(details[_random.Next(details.Length)]);
+            }
+        }
+
+        private int SelectedCountDetails()
+        {
+            int countMin = 10;
+            int countMax = 30;
+            return _random.Next(countMin, countMax);
+        }
+    }
+
+    class Detail
+    {
+        private Random _random = new Random((int)DateTime.Now.Ticks);
+
+        public Detail(string name, int priceMin, int priceMax)
+        {
+            Name = name;
+            Price = SelectedPrice(priceMin, priceMax);
+        }
+
+        public string Name { get; private set; }
+        public int Price { get; private set; }
+
+        public void ShowInformation()
+        {
+            Console.WriteLine($"деталь - {Name}, цена - {Price}");
+        }
+
+        private int SelectedPrice(int priceMin, int priceMax)
+        {
+            return _random.Next(priceMin, priceMax);
+        }
+    }
+
+    class Oil : Detail
+    {
+        public Oil() : base("масло", 500, 750)
+        {
+
+        }
+    }
+
+    class Engine : Detail
+    {
+        public Engine() : base("ГБЦ", 45000, 100000)
+        {
+
+        }
+    }
+
+    class Filter : Detail
+    {
+        public Filter() : base("маслянный фильтр", 200, 500)
+        {
+
+        }
+    }
+
+    class Grenade : Detail
+    {
+        public Grenade() : base("внутренний шрус", 1500, 3000)
+        {
+
+        }
+    }
+
+    class Lamp : Detail
+    {
+        public Lamp() : base("лампочка", 50, 150)
+        {
+
+        }
+    }
+
+    class Bumper : Detail
+    {
+        public Bumper() : base("бампер", 3500, 5000)
+        {
+
+        }
+    }
+
+    class Belt : Detail
+    {
+        public Belt() : base("ремень ГРМ", 2500, 5000)
+        {
+
+        }
+    }
+
+    class Pump : Detail
+    {
+        public Pump() : base("помпа", 2000, 4000)
+        {
+
+        }
+    }
+
+    class Seal : Detail
+    {
+        public Seal() : base("сальник", 500, 1000)
+        {
+
+        }
+    }
+}
