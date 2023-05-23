@@ -143,13 +143,13 @@ namespace ConsoleApp1
                     else
                     {
                         Console.WriteLine("вы чего наделали?!");
-                        PayError(detailNeed, clientProcessing);
+                        PayError(detailNeed, clientProcessing, price);
                     }
                 }
                 else
                 {
                     Console.WriteLine("вы совершили ошибку. придется заплатить");
-                    PayError(detailNeed, clientProcessing);
+                    PayError(clientProcessing.Car.NameProblem, clientProcessing, CalculatePrice(clientProcessing.Car.NameProblem));
                 }
 
                 Console.ReadLine();
@@ -157,12 +157,13 @@ namespace ConsoleApp1
             }
         }
 
-        private void PayError(Detail detailNeed, Client client)
+        private void PayError(Detail detailNeed, Client client, int price)
         {
             if (_habar.Take(detailNeed) != null)
             {
                 client.Car.RefreshDetail(detailNeed);
-                Cash -= CalculatePrice(detailNeed);
+                Cash -= price;
+                Console.WriteLine($"Ваш баланс: {Cash}");
             }
             else
             {
