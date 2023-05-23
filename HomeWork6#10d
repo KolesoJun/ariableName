@@ -371,6 +371,7 @@ namespace ConsoleApp1
 
     class Game
     {
+        private static Random _random = new Random();
         private List<Warrior> _castle = new List<Warrior>();
         private List<Warrior> _necropolise = new List<Warrior>();
 
@@ -399,11 +400,11 @@ namespace ConsoleApp1
 
         private void Round()
         {
-            Random random = new Random();
+            
             Warrior warriorAttack;
             Warrior warriorDefense;
 
-            if (TryGetWarrior(random, _necropolise, out warriorAttack) == true && TryGetWarrior(random, _castle, out warriorDefense) == true)
+            if (TryGetWarrior(_necropolise, out warriorAttack) == true && TryGetWarrior(_castle, out warriorDefense) == true)
             {
                 warriorAttack.AttackGoal(warriorDefense);
 
@@ -426,9 +427,9 @@ namespace ConsoleApp1
             Console.Clear();
         }
 
-        private bool TryGetWarrior(Random random, List<Warrior> warriors, out Warrior warrior)
+        private bool TryGetWarrior(List<Warrior> warriors, out Warrior warrior)
         {
-            Warrior tempWarrior = warriors[random.Next(warriors.Count)];
+            Warrior tempWarrior = warriors[_random.Next(warriors.Count)];
 
             if (tempWarrior != null)
             {
