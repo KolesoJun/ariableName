@@ -1,0 +1,148 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace ConsoleApp1
+{
+    class Program
+    {
+        static void Main()
+        {
+            Detective detective = new Detective();
+            detective.SearchCriminal();
+        }
+    }
+
+    class Criminal
+    {
+        private Random _random = new Random();
+
+        public Criminal()
+        {
+            int heightMin = 170;
+            int heightMax = 200;
+            int weightMin = 50;
+            int weightMax = 70;
+            Name = DetermineRandomName();
+            Height = DetermineRandomParameter(heightMin, heightMax);
+            Weight = DetermineRandomParameter(weightMin, weightMax);
+            Nationality = DetermineRandomNationality();
+            IsInCustody = DetermineBeingInCustody();
+        }
+
+        public string Name { get; private set; }
+        public bool IsInCustody { get; private set; }
+        public int Height { get; private set; }
+        public int Weight { get; private set; }
+        public string Nationality { get; private set; }
+
+        public void ShowInformation()
+        {
+            Console.WriteLine($"преступник - {Name}, заключен под стражу - {IsInCustody}, рост - {Height}, вес - {Weight}, национальность - {Nationality}");
+        }
+
+        private bool DetermineBeingInCustody()
+        {
+            int randomMin = 1;
+            int randomMax = 100;
+            int half = 2;
+
+            if (_random.Next(randomMin, randomMax) >= (randomMax / half))
+                return true;
+            else
+                return false;
+        }
+
+        private string DetermineRandomName()
+        {
+            string[] names =
+            {
+                "Борис",
+                "Маша",
+                "Слава",
+                "Тигран",
+                "Владимир",
+                "Михаил",
+                "Сергей"
+            };
+
+            return names[_random.Next(names.Length)];
+        }
+
+        private string DetermineRandomNationality()
+        {
+            string[] nationalities =
+            {
+                "русский",
+                "татарин",
+                "немец",
+                "эквадорец",
+                "поляк",
+                "турок"
+            };
+
+            return nationalities[_random.Next(nationalities.Length)];
+        }
+
+        private int DetermineRandomParameter(int randomMin, int randomMax)
+        {
+            return _random.Next(randomMin, randomMax);
+        }
+    }
+
+    class Detective
+    {
+        private Random _random = new Random();
+        private List<Criminal> _criminals = new List<Criminal>();
+
+        public Detective()
+        {
+            GenerateRandomCountCriminal();
+            ShowCriminalsAll();
+        }
+
+        public void ShowCriminalsAll()
+        {
+            foreach (Criminal criminal in _criminals)
+            {
+                criminal.ShowInformation();
+            }
+        }
+
+        public void SearchCriminal()
+        {
+            Console.WriteLine("введите нацилнальность");
+            string nationality = Console.ReadLine();
+            Console.WriteLine("введите рост");
+            int height = InputInformation();
+            Console.WriteLine("введите вес");
+            int weight = InputInformation();
+            var searchCriminal = from Criminal criminal in _criminals where (nationality.ToLower() == criminal.Nationality.ToLower() && height == criminal.Height && weight == criminal.Weight && criminal.IsInCustody == false) select criminal;
+
+            foreach (var criminal in searchCriminal)
+            {
+                criminal.ShowInformation();
+            }
+        }
+
+        private void GenerateRandomCountCriminal()
+        {
+            int countRandomMin = 10;
+            int countRandomMax = 20;
+            int countCriminal = _random.Next(countRandomMin, countRandomMax);
+
+            for (int i = 0; i < countCriminal; i++)
+            {
+                _criminals.Add(new Criminal());
+            }
+        }
+
+        private int InputInformation()
+        {
+            if (int.TryParse(Console.ReadLine(), out int value))
+                return value;
+            else
+                return 0;
+        }
+    }
+}
