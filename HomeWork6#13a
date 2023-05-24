@@ -8,17 +8,19 @@ namespace ConsoleApp1
         static void Main()
         {
             AutoService autoService = new AutoService();
-            autoService.Work();
+            autoService.StartWork();
         }
     }
 
     class Client
     {
-        Random _random = new Random(); 
+        private Random _random = new Random();
 
         public Client()
         {
-            Money = _random.Next(2000, 150000);
+            int moneyRandomMin = 2000;
+            int moneyRandomMax = 150000;
+            Money = _random.Next(moneyRandomMin, moneyRandomMax);
             Car = new Car();
         }
 
@@ -41,14 +43,14 @@ namespace ConsoleApp1
     {
         public Car()
         {
-            NameProblem = CreateRandomProblem();
+            DetailProblem = CreateRandomProblem();
         }
 
-        public Detail NameProblem { get; private set; }
+        public Detail DetailProblem { get; private set; }
 
-        public bool IsWorking(Detail detail)
+        public bool DoesPartFit(Detail detail)
         {
-            if (detail.Name == NameProblem.Name)
+            if (detail.Name == DetailProblem.Name)
             {
                 return true;
             }
@@ -58,17 +60,14 @@ namespace ConsoleApp1
 
         public void ShowInformation()
         {
-            Console.WriteLine($"этой машине требуется {NameProblem.Name}");
+            Console.WriteLine($"этой машине требуется {DetailProblem.Name}");
         }
 
-        public void RefreshDetail(Detail detail)
+        public void RefreshDetail(Detail detailFresh)
         {
-            if (detail.Name == NameProblem.Name)
-            {
-                Console.WriteLine("оно реально работает!");
-                NameProblem = null;
-                Console.ReadLine();
-            }
+            Console.WriteLine("проблема решена");
+            DetailProblem = detailFresh;
+            Console.ReadLine();
         }
 
         private Detail CreateRandomProblem()
@@ -93,28 +92,31 @@ namespace ConsoleApp1
 
     class AutoService
     {
-        private static int _privilegeOnJoint;
+        private static int _MarginForError;
         private Random _random = new Random();
         private Queue<Client> _clients = new Queue<Client>();
-        private Habar _habar;
+        private Warehouse _warehouse;
 
         public AutoService()
         {
             int countClientsMin = 3;
             int countClientsMax = 10;
-            _privilegeOnJoint = 3;
+            _MarginForError = 3;
             CreateQueue(countClientsMin, countClientsMax);
-            _habar = new Habar();
+            _warehouse = new Warehouse();
         }
 
         public int Cash { get; private set; }
 
-        public void Work()
+        public void StartWork()
         {
-            while (IsWorking())
+            char symbolMenu = '_';
+            int countSymbolMenu = 25;
+
+            while (CanContinueWorking())
             {
-                _habar.ShowInformation();
-                Console.WriteLine(new string('_', 25));
+                _warehouse.ShowInformation();
+                Console.WriteLine(new string(symbolMenu, countSymbolMenu));
                 Console.WriteLine("клиент с такой проблемой");
                 Client clientProcessing = _clients.Dequeue();
                 clientProcessing.Car.ShowInformation();
@@ -125,7 +127,7 @@ namespace ConsoleApp1
                     int price = CalculatePrice(detailNeed);
                     Console.WriteLine($"цена ремонта - {price}");
 
-                    if (clientProcessing.Car.IsWorking(detailNeed))
+                    if (clientProcessing.Car.DoesPartFit(detailNeed))
                     {
                         if (clientProcessing.CanPay(price))
                         {
@@ -136,20 +138,20 @@ namespace ConsoleApp1
                         else
                         {
                             Console.WriteLine("иди заработай денег");
-                            _habar.Refund(detailNeed);
+                            _warehouse.RefundUnpaidDetail(detailNeed);
                         }
 
                     }
                     else
                     {
                         Console.WriteLine("вы чего наделали?!");
-                        PayError(detailNeed, clientProcessing, price);
+                        PayForMistake(detailNeed, clientProcessing, price);
                     }
                 }
                 else
                 {
                     Console.WriteLine("вы совершили ошибку. придется заплатить");
-                    PayError(clientProcessing.Car.NameProblem, clientProcessing, CalculatePrice(clientProcessing.Car.NameProblem));
+                    PayForMistake(clientProcessing.Car.DetailProblem, clientProcessing, CalculatePrice(clientProcessing.Car.DetailProblem));
                 }
 
                 Console.ReadLine();
@@ -157,9 +159,9 @@ namespace ConsoleApp1
             }
         }
 
-        private void PayError(Detail detailNeed, Client client, int price)
+        private void PayForMistake(Detail detailNeed, Client client, int price)
         {
-            if (_habar.Take(detailNeed) != null)
+            if (_warehouse.TakeBySample(detailNeed) != null)
             {
                 client.Car.RefreshDetail(detailNeed);
                 Cash -= price;
@@ -167,22 +169,23 @@ namespace ConsoleApp1
             }
             else
             {
+                int lossFormal = 50;
                 Console.WriteLine("жди следующую поставку");
-                Cash -= 50;
+                Cash -= lossFormal;
             }
         }
 
-        private bool IsWorking()
+        private bool CanContinueWorking()
         {
             if (_clients.Count > 0)
             {
                 if (Cash < 0)
                 {
-                    _privilegeOnJoint--;
-                    Console.WriteLine($"у вас осталось - {_privilegeOnJoint} попыток");
+                    _MarginForError--;
+                    Console.WriteLine($"у вас осталось - {_MarginForError} попыток");
                 }
 
-                if (_privilegeOnJoint == 0)
+                if (_MarginForError == 0)
                 {
                     Console.WriteLine("вы раздалбай");
                     return false;
@@ -232,9 +235,9 @@ namespace ConsoleApp1
 
             if (int.TryParse(input, out int value))
             {
-                if (value < _habar.CountDetails)
+                if (value < _warehouse.CountDetails)
                 {
-                    detail = _habar.Take(value);
+                    detail = _warehouse.TakeByIndex(value);
                     return true;
                 }
             }
@@ -254,15 +257,15 @@ namespace ConsoleApp1
         }
     }
 
-    class Habar
+    class Warehouse
     {
         private List<Detail> _details = new List<Detail>();
         private Random _random = new Random();
 
-        public Habar()
+        public Warehouse()
         {
             int countRandom = SelectedCountDetails();
-            FillCount(countRandom);
+            DeliverGoods(countRandom);
             CountDetails = _details.Count;
         }
 
@@ -277,27 +280,38 @@ namespace ConsoleApp1
             }
         }
 
-        public void Refund(Detail detail)
+        public void RefundUnpaidDetail(Detail detail)
         {
             _details.Add(detail);
+            CountDetails++;
         }
 
-        public Detail Take(int index)
+        public Detail TakeByIndex(int index)
         {
             Detail detail = _details[index];
             _details.RemoveAt(index);
+            CountDetails--;
             return detail;
         }
 
-        public Detail Take(Detail detail)
+        public Detail TakeBySample(Detail detailSearch)
         {
-            _details.Remove(detail);
-            return detail;
+            if (_details.Contains(detailSearch))
+            {
+                _details.Remove(detailSearch);
+                CountDetails--;
+                return detailSearch;
+            }
+            else
+            {
+                return null;
+            }
+            
         }
 
-        private void FillCount(int countRandom)
+        private void DeliverGoods(int countRandom)
         {
-            Detail[] details = new Detail[9]
+            Detail[] details =
             {
                 new Oil(),
                 new Engine(),
@@ -328,13 +342,7 @@ namespace ConsoleApp1
     {
         private Random _random = new Random((int)DateTime.Now.Ticks);
 
-        public Detail(string name, int priceMin, int priceMax)
-        {
-            Name = name;
-            Price = SelectedPrice(priceMin, priceMax);
-        }
-
-        public string Name { get; private set; }
+        public string Name { get; protected set; }
         public int Price { get; private set; }
 
         public void ShowInformation()
@@ -342,81 +350,108 @@ namespace ConsoleApp1
             Console.WriteLine($"деталь - {Name}, цена - {Price}");
         }
 
-        private int SelectedPrice(int priceMin, int priceMax)
+        protected void SelectedPrice(int priceMin, int priceMax)
         {
-            return _random.Next(priceMin, priceMax);
+            Price = _random.Next(priceMin, priceMax);
         }
     }
 
     class Oil : Detail
     {
-        public Oil() : base("масло", 500, 750)
+        public Oil()
         {
-
+            int priceMin = 250;
+            int priceMax = 750;
+            Name = "масло";
+            SelectedPrice(priceMin, priceMax);
         }
     }
 
     class Engine : Detail
     {
-        public Engine() : base("ГБЦ", 45000, 100000)
+        public Engine()
         {
-
+            int priceMin = 45000;
+            int priceMax = 100000;
+            Name = "ГБЦ";
+            SelectedPrice(priceMin, priceMax);
         }
     }
 
     class Filter : Detail
     {
-        public Filter() : base("маслянный фильтр", 200, 500)
+        public Filter()
         {
-
+            int priceMin = 200;
+            int priceMax = 500;
+            Name = "маслянный фильтр";
+            SelectedPrice(priceMin, priceMax);
         }
     }
 
     class Grenade : Detail
     {
-        public Grenade() : base("внутренний шрус", 1500, 3000)
+        public Grenade()
         {
-
+            int priceMin = 1500;
+            int priceMax = 3000;
+            Name = "внутренний шрус";
+            SelectedPrice(priceMin, priceMax);
         }
     }
 
     class Lamp : Detail
     {
-        public Lamp() : base("лампочка", 50, 150)
+        public Lamp()
         {
-
+            int priceMin = 50;
+            int priceMax = 150;
+            Name = "лампочка";
+            SelectedPrice(priceMin, priceMax);
         }
     }
 
     class Bumper : Detail
     {
-        public Bumper() : base("бампер", 3500, 5000)
+        public Bumper()
         {
-
+            int priceMin = 3500;
+            int priceMax = 5000;
+            Name = "бампер";
+            SelectedPrice(priceMin, priceMax);
         }
     }
 
     class Belt : Detail
     {
-        public Belt() : base("ремень ГРМ", 2500, 5000)
+        public Belt()
         {
-
+            int priceMin = 2500;
+            int priceMax = 5000;
+            Name = "ремень ГРМ";
+            SelectedPrice(priceMin, priceMax);
         }
     }
 
     class Pump : Detail
     {
-        public Pump() : base("помпа", 2000, 4000)
+        public Pump()
         {
-
+            int priceMin = 2000;
+            int priceMax = 4000;
+            Name = "помпа";
+            SelectedPrice(priceMin, priceMax);
         }
     }
 
     class Seal : Detail
     {
-        public Seal() : base("сальник", 500, 1000)
+        public Seal()
         {
-
+            int priceMin = 500;
+            int priceMax = 1000;
+            Name = "сальник";
+            SelectedPrice(priceMin, priceMax);
         }
     }
 }
