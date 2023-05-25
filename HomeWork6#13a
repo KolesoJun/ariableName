@@ -8,7 +8,7 @@ namespace ConsoleApp1
         static void Main()
         {
             AutoService autoService = new AutoService();
-            autoService.StartWork();
+            autoService.Work();
         }
     }
 
@@ -48,14 +48,9 @@ namespace ConsoleApp1
 
         public Detail DetailProblem { get; private set; }
 
-        public bool DoesPartFit(Detail detail)
+        public bool IsEquals(Detail detail)
         {
-            if (detail.Name == DetailProblem.Name)
-            {
-                return true;
-            }
-
-            return false;
+            return detail.Name == DetailProblem.Name;
         }
 
         public void ShowInformation()
@@ -92,7 +87,7 @@ namespace ConsoleApp1
 
     class AutoService
     {
-        private static int _MarginForError;
+        private static int _marginForError;
         private Random _random = new Random();
         private Queue<Client> _clients = new Queue<Client>();
         private Warehouse _warehouse;
@@ -101,14 +96,14 @@ namespace ConsoleApp1
         {
             int countClientsMin = 3;
             int countClientsMax = 10;
-            _MarginForError = 3;
+            _marginForError = 3;
             CreateQueue(countClientsMin, countClientsMax);
             _warehouse = new Warehouse();
         }
 
         public int Cash { get; private set; }
 
-        public void StartWork()
+        public void Work()
         {
             char symbolMenu = '_';
             int countSymbolMenu = 25;
@@ -127,7 +122,7 @@ namespace ConsoleApp1
                     int price = CalculatePrice(detailNeed);
                     Console.WriteLine($"цена ремонта - {price}");
 
-                    if (clientProcessing.Car.DoesPartFit(detailNeed))
+                    if (clientProcessing.Car.IsEquals(detailNeed))
                     {
                         if (clientProcessing.CanPay(price))
                         {
@@ -181,11 +176,11 @@ namespace ConsoleApp1
             {
                 if (Cash < 0)
                 {
-                    _MarginForError--;
-                    Console.WriteLine($"у вас осталось - {_MarginForError} попыток");
+                    _marginForError--;
+                    Console.WriteLine($"у вас осталось - {_marginForError} попыток");
                 }
 
-                if (_MarginForError == 0)
+                if (_marginForError == 0)
                 {
                     Console.WriteLine("вы раздалбай");
                     return false;
@@ -306,7 +301,7 @@ namespace ConsoleApp1
             {
                 return null;
             }
-            
+
         }
 
         private void DeliverGoods(int countRandom)
