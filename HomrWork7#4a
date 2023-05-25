@@ -1,0 +1,168 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace ConsoleApp1
+{
+    class Program
+    {
+        static void Main()
+        {
+            TableLider tableLider = new TableLider();
+            tableLider.Work();
+        }
+    }
+
+    class Gamer
+    {
+        private Random _random = new Random();
+
+        public Gamer()
+        {
+            int numberMin = 1;
+            int numberMax = 100;
+            Name = DetermineRandomName();
+            Level = DetermineRandomParameter(numberMin, numberMax);
+            Power = DetermineRandomParameter(numberMin, numberMax);
+        }
+
+        public string Name { get; private set; }
+        public int Level { get; private set; }
+        public int Power { get; private set; }
+
+        public void ShowInformation()
+        {
+            Console.WriteLine($"игрок - {Name}, уровень - {Level}, сила - {Power}");
+        }
+
+        private int DetermineRandomParameter(int randomMin, int randomMax)
+        {
+            return _random.Next(randomMin, randomMax);
+        }
+
+        private string DetermineRandomName()
+        {
+            string[] names =
+            {
+                "Борис",
+                "Маша",
+                "Слава",
+                "Тигран",
+                "Владимир",
+                "Михаил",
+                "Сергей"
+            };
+
+            return names[_random.Next(names.Length)];
+        }
+    }
+
+    enum CommandMenu
+    {
+        CommandForLevel = 1,
+        CommandForPower = 2
+    }
+
+    class TableLider
+    {
+        private int _countTop = 3;
+        private List<Gamer> _gamers = new List<Gamer>();
+        private Random _random = new Random();
+
+        public TableLider()
+        {
+            int countMin = 10;
+            int countMax = 20;
+            CreateRandomCountGamers(countMin, countMax);
+            ShowInformation();
+            Console.WriteLine("нажми любую клавишу, чтобы продолжить");
+            Console.ReadLine();
+            Console.WriteLine();
+        }
+
+        public void Work()
+        {
+            Console.WriteLine("нажми любую клавишу для определения топ 3 игроков по уровню");
+            Console.ReadLine();
+            FindTreeHigtLevel();
+            Console.WriteLine();
+            Console.WriteLine($"нажми любую клавишу для определения топ 3 игроков по силе");
+            Console.ReadLine();
+            FindTreePowered();
+        }
+
+        private void ShowInformation()
+        {
+            foreach (Gamer gamer in _gamers)
+            {
+                gamer.ShowInformation();
+            }
+        }
+
+        private void FindTreeHigtLevel()
+        {
+            int count = _countTop;
+
+            for (int i = 0; i < count; i++)
+            {
+                List<Gamer> gamersHightLevel = new List<Gamer>();
+                int levelMax = _gamers.Max(gamer => gamer.Level);
+                var gamersFiltres = _gamers.Where(gamer => gamer.Level == levelMax);
+
+                foreach (var gamer in gamersFiltres)
+                {
+                    gamer.ShowInformation();
+                    gamersHightLevel.Add(gamer);
+                }
+
+                for (int x = 0; x < gamersHightLevel.Count; x++)
+                {
+                    _gamers.Remove(gamersHightLevel[x]);
+                }
+            }
+        }
+
+        private void FindTreePowered()
+        {
+            int count = _countTop;
+
+            for (int i = 0; i < count; i++)
+            {
+                List<Gamer> gamersHightPower = new List<Gamer>();
+                int powerMax = _gamers.Max(gamer => gamer.Power);
+                var gamersFiltres = _gamers.Where(gamer => gamer.Power == powerMax);
+
+                foreach (var gamer in gamersFiltres)
+                {
+                    gamer.ShowInformation();
+                    gamersHightPower.Add(gamer);
+                }
+
+                for (int x = 0; x < gamersHightPower.Count; x++)
+                {
+                    _gamers.Remove(gamersHightPower[x]);
+                }
+            }
+        }
+
+        private CommandMenu Input()
+        {
+            string input = Console.ReadLine();
+
+            if (int.TryParse(input, out int value))
+                return (CommandMenu)value;
+            else
+                return 0;
+        }
+
+        private void CreateRandomCountGamers(int countMin, int countMax)
+        {
+            int count = _random.Next(countMin, countMax);
+
+            for (int i = 0; i < count; i++)
+            {
+                _gamers.Add(new Gamer());
+            }
+        }
+    }
+}
