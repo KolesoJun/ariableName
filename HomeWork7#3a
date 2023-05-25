@@ -1,0 +1,181 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace ConsoleApp1
+{
+    class Program
+    {
+        static void Main()
+        {
+            Doctor doctor = new Doctor();
+            doctor.Work();
+        }
+    }
+
+    class Patient
+    {
+        private Random _random = new Random();
+
+        public Patient()
+        {
+            int ageMin = 18;
+            int ageMax = 80;
+            Name = DetermineRandomName();
+            Age = DetermineRandomAge(ageMin, ageMax);
+            Disease = DetermineRandomDisease();
+        }
+
+        public string Name { get; private set; }
+        public int Age { get; private set; }
+        public string Disease { get; private set; }
+
+        public void ShowInformation()
+        {
+            Console.WriteLine($"пациент - {Name}, возраст - {Age}, заболевание - {Disease}");
+        }
+
+        public int DetermineRandomAge(int randomMin, int randomMax)
+        {
+            return _random.Next(randomMin, randomMax);
+        }
+
+        private string DetermineRandomName()
+        {
+            string[] names =
+            {
+                "Борис",
+                "Маша",
+                "Слава",
+                "Тигран",
+                "Владимир",
+                "Михаил",
+                "Сергей"
+            };
+
+            return names[_random.Next(names.Length)];
+        }
+
+        private string DetermineRandomDisease()
+        {
+            string[] diseases =
+            {
+                "ОРВИ",
+                "остеохондроз поп",
+                "гипертогическая болезнь",
+                "сахарный диабет",
+                "гастрит",
+                "бронхит",
+                "дисциркуляторная энцефалопатия"
+            };
+
+            return diseases[_random.Next(diseases.Length)];
+        }
+    }
+
+    enum CommandMenu
+    {
+        CommandForName = 1,
+        CommandForAge = 2,
+        CommandForDisease = 3
+    }
+
+    class Doctor
+    {
+        private List<Patient> _patients = new List<Patient>();
+        private Random _random = new Random();
+
+        public Doctor()
+        {
+            int countMin = 10;
+            int countMax = 20;
+            CreateRandomCountPatients(countMin, countMax);
+            ShowInformation();
+            Console.WriteLine("нажми любую клавишу, чтобы продолжить");
+            Console.ReadLine();
+            Console.Clear();
+        }
+
+        public void Work()
+        {
+            Console.WriteLine($"введите:\n{(int)CommandMenu.CommandForName} - Отсортировать всех больных по фио" +
+                $"\n{(int)CommandMenu.CommandForAge} - Отсортировать всех больных по возрасту " +
+                $"\n{(int)CommandMenu.CommandForDisease} - Вывести больных с определенным заболеванием");
+            
+            switch (Input())
+            {
+                case CommandMenu.CommandForName:
+                    SortByName();
+                    break;
+
+                case CommandMenu.CommandForAge:
+                    SortByAge();
+                    break;
+
+                case CommandMenu.CommandForDisease:
+                    SortByDisease();
+                    break;
+            }
+        }
+
+        private void ShowInformation()
+        {
+            foreach (Patient patient in _patients)
+            {
+                patient.ShowInformation();
+            }
+        }
+
+        private void SortByName()
+        {
+            var patientsSort = _patients.OrderBy(patient => patient.Name);
+
+            foreach (var patient in patientsSort)
+            {
+                patient.ShowInformation();
+            }
+        }
+
+        private void SortByAge()
+        {
+            var patientsSort = _patients.OrderBy(patient => patient.Age);
+
+            foreach (var patient in patientsSort)
+            {
+                patient.ShowInformation();
+            }
+        }
+
+        private void SortByDisease()
+        {
+            Console.WriteLine("введите заболевание:");
+            string input = Console.ReadLine();
+            var patientsSort = _patients.Where(patient => patient.Disease.ToLower() == input.ToLower());
+
+            foreach (var patient in patientsSort)
+            {
+                patient.ShowInformation();
+            }
+        }
+
+        private CommandMenu Input()
+        {
+            string input = Console.ReadLine();
+
+            if (int.TryParse(input, out int value))
+                return (CommandMenu)value;
+            else
+                return 0;
+        }
+
+        private void CreateRandomCountPatients(int countMin, int countMax)
+        {
+            int count = _random.Next(countMin, countMax);
+
+            for (int i = 0; i < count; i++)
+            {
+                _patients.Add(new Patient());
+            }
+        }
+    }
+}
