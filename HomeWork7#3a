@@ -35,7 +35,7 @@ namespace ConsoleApp1
             Console.WriteLine($"пациент - {Name}, возраст - {Age}, заболевание - {Disease}");
         }
 
-        public int DetermineRandomAge(int randomMin, int randomMax)
+        private int DetermineRandomAge(int randomMin, int randomMax)
         {
             return _random.Next(randomMin, randomMax);
         }
