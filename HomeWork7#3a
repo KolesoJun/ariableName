@@ -113,7 +113,7 @@ namespace ConsoleApp1
                     break;
 
                 case CommandMenu.CommandForDisease:
-                    FilterByDisease();
+                    SelectionByDisease();
                     break;
             }
         }
@@ -138,7 +138,7 @@ namespace ConsoleApp1
             ShowInformation(patientsSort);
         }
 
-        private void FilterByDisease()
+        private void SelectionByDisease()
         {
             Console.WriteLine("введите заболевание:");
             string input = Console.ReadLine();
