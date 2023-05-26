@@ -24,20 +24,11 @@ namespace ConsoleApp1
         }
 
         public string Name { get; private set; }
-        public bool IsInCustody { get; private set; }
         public string Crime { get; private set; }
 
         public void ShowInformation()
         {
-            Console.WriteLine($"преступник - {Name}, заключен под стражу - {IsInCustody}, преступление - {Crime}");
-        }
-
-        public void PerformRelease(string nameCrime)
-        {
-            if (nameCrime == Crime)
-            {
-                IsInCustody = true;
-            }
+            Console.WriteLine($"преступник - {Name}, преступление - {Crime}");
         }
 
         private string DetermineRandomName()
@@ -97,12 +88,11 @@ namespace ConsoleApp1
             string crimeAmnesty = "антиправительственное";
             char symbolMenu = '_';
             int countSymbols = 25;
-            var criminalAmnesty = _criminals.Where(criminal => criminal.Crime.ToLower() == crimeAmnesty.ToLower());
+            var criminalAmnesty = _criminals.Where(criminal => criminal.Crime.ToLower() != crimeAmnesty.ToLower());
             Console.WriteLine(new string(symbolMenu, countSymbols));
 
             foreach (var criminal in criminalAmnesty)
             {
-                criminal.PerformRelease(crimeAmnesty);
                 criminal.ShowInformation();
             }
         }
