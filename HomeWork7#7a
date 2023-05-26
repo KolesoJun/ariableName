@@ -1,0 +1,95 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace ConsoleApp1
+{
+    class Program
+    {
+        static void Main()
+        {
+            Army army = new Army();
+        }
+    }
+
+    class Warrior
+    {
+        public Warrior()
+        {
+            Name = CreateRandomName();
+        }
+
+        public string Name { get; private set; }
+
+        private string CreateRandomName()
+        {
+            int tolerance = 1;
+            Random random = new Random();
+            string[] names =
+            {
+                "Балабанов",
+                "Колесников",
+                "Волгиянин",
+                "Давидян",
+                "Борисов",
+                "Бортиков",
+                "Спижова",
+                "Гусев"
+            };
+
+            return names[random.Next(names.Length - tolerance)];
+        }
+    }
+
+    class Army
+    {
+        private List<Warrior> _squadFirst = new List<Warrior>();
+        private List<Warrior> _squadSecond = new List<Warrior>();
+
+        public Army()
+        {
+            FillSquad(_squadFirst);
+            FillSquad(_squadSecond);
+            ShowInformation(_squadFirst);
+            Console.WriteLine();
+            ShowInformation(_squadSecond);
+            Console.WriteLine();
+            SelectionWarriors();
+        }
+
+        private void SelectionWarriors()
+        {
+            char letter = 'б';
+            var warriorsSort = _squadFirst.Where(warrior => warrior.Name.ToLower().StartsWith(letter));
+            var squadSecond = warriorsSort.Union(_squadSecond);
+
+            foreach (var warrior in squadSecond)
+            {
+                Console.WriteLine(warrior.Name);
+            }
+        }
+
+        private void ShowInformation(List<Warrior> warriors)
+        {
+            Console.WriteLine("отряд:");
+
+            foreach (var warrior in warriors)
+            {
+                Console.WriteLine(warrior.Name);
+            }
+        }
+
+        private void FillSquad(List<Warrior> warriors)
+        {
+            int countWarriorsMin = 5;
+            int countWarriorsMax = 10;
+            Random random = new Random();
+            int countWarriors = random.Next(countWarriorsMin, countWarriorsMax);
+
+            for (int i = 0; i < countWarriors; i++)
+            {
+                warriors.Add(new Warrior());
+            }
+        }
+    }
+}
