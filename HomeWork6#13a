@@ -80,7 +80,6 @@ namespace ConsoleApp1
                 new Pump(),
                 new Seal()
             };
-
             return details[random.Next(details.Length)];
         }
     }
@@ -260,7 +259,7 @@ namespace ConsoleApp1
         public Warehouse()
         {
             int countRandom = SelectedCountDetails();
-            DeliverGoods(countRandom);
+            FillList(countRandom);
             CountDetails = _details.Count;
         }
 
@@ -304,7 +303,7 @@ namespace ConsoleApp1
 
         }
 
-        private void DeliverGoods(int countRandom)
+        private void FillList(int countRandom)
         {
             Detail[] details =
             {
