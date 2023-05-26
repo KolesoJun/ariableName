@@ -258,7 +258,7 @@ namespace ConsoleApp1
 
         public Warehouse()
         {
-            int countRandom = SelectedCountDetails();
+            int countRandom = SelectCountDetails();
             FillList(countRandom);
             CountDetails = _details.Count;
         }
@@ -324,7 +324,7 @@ namespace ConsoleApp1
             }
         }
 
-        private int SelectedCountDetails()
+        private int SelectCountDetails()
         {
             int countMin = 10;
             int countMax = 30;
@@ -344,7 +344,7 @@ namespace ConsoleApp1
             Console.WriteLine($"деталь - {Name}, цена - {Price}");
         }
 
-        protected void SelectedPrice(int priceMin, int priceMax)
+        protected void SelectPrice(int priceMin, int priceMax)
         {
             Price = _random.Next(priceMin, priceMax);
         }
@@ -357,7 +357,7 @@ namespace ConsoleApp1
             int priceMin = 250;
             int priceMax = 750;
             Name = "масло";
-            SelectedPrice(priceMin, priceMax);
+            SelectPrice(priceMin, priceMax);
         }
     }
 
@@ -368,7 +368,7 @@ namespace ConsoleApp1
             int priceMin = 45000;
             int priceMax = 100000;
             Name = "ГБЦ";
-            SelectedPrice(priceMin, priceMax);
+            SelectPrice(priceMin, priceMax);
         }
     }
 
@@ -379,7 +379,7 @@ namespace ConsoleApp1
             int priceMin = 200;
             int priceMax = 500;
             Name = "маслянный фильтр";
-            SelectedPrice(priceMin, priceMax);
+            SelectPrice(priceMin, priceMax);
         }
     }
 
@@ -390,7 +390,7 @@ namespace ConsoleApp1
             int priceMin = 1500;
             int priceMax = 3000;
             Name = "внутренний шрус";
-            SelectedPrice(priceMin, priceMax);
+            SelectPrice(priceMin, priceMax);
         }
     }
 
@@ -401,7 +401,7 @@ namespace ConsoleApp1
             int priceMin = 50;
             int priceMax = 150;
             Name = "лампочка";
-            SelectedPrice(priceMin, priceMax);
+            SelectPrice(priceMin, priceMax);
         }
     }
 
@@ -412,7 +412,7 @@ namespace ConsoleApp1
             int priceMin = 3500;
             int priceMax = 5000;
             Name = "бампер";
-            SelectedPrice(priceMin, priceMax);
+            SelectPrice(priceMin, priceMax);
         }
     }
 
@@ -423,7 +423,7 @@ namespace ConsoleApp1
             int priceMin = 2500;
             int priceMax = 5000;
             Name = "ремень ГРМ";
-            SelectedPrice(priceMin, priceMax);
+            SelectPrice(priceMin, priceMax);
         }
     }
 
@@ -434,7 +434,7 @@ namespace ConsoleApp1
             int priceMin = 2000;
             int priceMax = 4000;
             Name = "помпа";
-            SelectedPrice(priceMin, priceMax);
+            SelectPrice(priceMin, priceMax);
         }
     }
 
@@ -445,7 +445,7 @@ namespace ConsoleApp1
             int priceMin = 500;
             int priceMax = 1000;
             Name = "сальник";
-            SelectedPrice(priceMin, priceMax);
+            SelectPrice(priceMin, priceMax);
         }
     }
 }
