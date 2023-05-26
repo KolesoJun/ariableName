@@ -101,19 +101,19 @@ namespace ConsoleApp1
             Console.WriteLine($"введите:\n{(int)CommandMenu.CommandForName} - Отсортировать всех больных по фио" +
                 $"\n{(int)CommandMenu.CommandForAge} - Отсортировать всех больных по возрасту " +
                 $"\n{(int)CommandMenu.CommandForDisease} - Вывести больных с определенным заболеванием");
-            
+
             switch (Input())
             {
                 case CommandMenu.CommandForName:
-                    SortByName();
+                    FilterByName();
                     break;
 
                 case CommandMenu.CommandForAge:
-                    SortByAge();
+                    FilterByAge();
                     break;
 
                 case CommandMenu.CommandForDisease:
-                    SortByDisease();
+                    FilterByDisease();
                     break;
             }
         }
@@ -126,33 +126,29 @@ namespace ConsoleApp1
             }
         }
 
-        private void SortByName()
+        private void FilterByName()
         {
             var patientsSort = _patients.OrderBy(patient => patient.Name);
-
-            foreach (var patient in patientsSort)
-            {
-                patient.ShowInformation();
-            }
+            ShowInformation(patientsSort);
         }
 
-        private void SortByAge()
+        private void FilterByAge()
         {
             var patientsSort = _patients.OrderBy(patient => patient.Age);
-
-            foreach (var patient in patientsSort)
-            {
-                patient.ShowInformation();
-            }
+            ShowInformation(patientsSort);
         }
 
-        private void SortByDisease()
+        private void FilterByDisease()
         {
             Console.WriteLine("введите заболевание:");
             string input = Console.ReadLine();
             var patientsSort = _patients.Where(patient => patient.Disease.ToLower() == input.ToLower());
+            ShowInformation(patientsSort);
+        }
 
-            foreach (var patient in patientsSort)
+        private void ShowInformation(IEnumerable<Patient> patients)
+        {
+            foreach (var patient in patients)
             {
                 patient.ShowInformation();
             }
