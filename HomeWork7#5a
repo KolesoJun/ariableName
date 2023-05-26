@@ -1,0 +1,103 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace ConsoleApp1
+{
+    class Program
+    {
+        static void Main()
+        {
+            Inspector inspector = new Inspector();
+        }
+    }
+
+    class Stew
+    {
+        private Random _random = new Random();
+
+        public Stew()
+        {
+            int dateManufacture = 2010;
+            int dataActual = 2023;
+            int shelfLifeMin = 2;
+            int shelfLifeMax = 5;
+            Name = DefineRandomName();
+            DateManufacture = DefineRandomDate(dateManufacture, dataActual);
+            DateExpiration = DefineRandomDate(shelfLifeMin, shelfLifeMax);
+        }
+
+        public string Name { get; private set; }
+        public int DateManufacture { get; private set; }
+        public int DateExpiration { get; private set; }
+
+        public void ShowInformation()
+        {
+            Console.WriteLine($"банка - {Name}, дата изготовления - {DateManufacture}, срок годности - {DateExpiration}");
+        }
+
+        private string DefineRandomName()
+        {
+            string[] names =
+            {
+                "говяжья",
+                "свиная",
+                "куриная",
+                "гусиная",
+                "рыбная"
+            };
+
+            return names[names.Length-1];
+        }
+
+        private int DefineRandomDate(int randomMin, int randomMax)
+        {
+            return _random.Next(randomMin, randomMax);
+        }
+    }
+
+    class Inspector
+    {
+        private List<Stew> _stews = new List<Stew>();
+
+        public Inspector()
+        {
+            GenerateRandomCountStews();
+            ShowInformation();
+            Console.WriteLine();
+            Work();
+        }
+
+        private void Work()
+        {
+            int dataActual = 2023;
+            var stewsFilter = _stews.Where(stew => stew.DateExpiration + stew.DateManufacture < dataActual);
+
+            foreach (var stew in stewsFilter)
+            {
+                stew.ShowInformation();
+            }
+        }
+
+        private void ShowInformation()
+        {
+            foreach (var stew in _stews)
+            {
+                stew.ShowInformation();
+            }
+        }
+
+        private void GenerateRandomCountStews()
+        {
+            int countMin = 5;
+            int countMax = 20;
+            Random random = new Random();
+            int count = random.Next(countMin, countMax);
+
+            for (int i = 0; i < count; i++)
+            {
+                _stews.Add(new Stew());
+            }
+        }
+    }
+}
