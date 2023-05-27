@@ -9,7 +9,6 @@ namespace ConsoleApp1
         static void Main()
         {
             Judge judge = new Judge();
-            judge.PerformAnAmnesty();
         }
     }
 
@@ -72,10 +71,13 @@ namespace ConsoleApp1
         public Judge()
         {
             GenerateRandomCountCriminal();
-            ShowCriminalsAll();
+            ShowInformation();
+            PerformAnAmnesty();
+            Console.WriteLine();
+            ShowInformation();
         }
 
-        public void ShowCriminalsAll()
+        private void ShowInformation()
         {
             foreach (Criminal criminal in _criminals)
             {
@@ -83,18 +85,11 @@ namespace ConsoleApp1
             }
         }
 
-        public void PerformAnAmnesty()
+        private void PerformAnAmnesty()
         {
             string crimeAmnesty = "антиправительственное";
-            char symbolMenu = '_';
-            int countSymbols = 25;
-            var criminalAmnesty = _criminals.Where(criminal => criminal.Crime.ToLower() != crimeAmnesty.ToLower());
-            Console.WriteLine(new string(symbolMenu, countSymbols));
-
-            foreach (var criminal in criminalAmnesty)
-            {
-                criminal.ShowInformation();
-            }
+            var criminalAmnesty = _criminals.Where(criminal => criminal.Crime.ToLower() != crimeAmnesty.ToLower()).ToList();
+            _criminals = criminalAmnesty;
         }
 
         private void GenerateRandomCountCriminal()
