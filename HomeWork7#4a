@@ -67,7 +67,7 @@ namespace ConsoleApp1
             int countMin = 10;
             int countMax = 20;
             CreateRandomCountGamers(countMin, countMax);
-            ShowInformation();
+            ShowInformation(_gamers);
             Console.WriteLine("нажми любую клавишу, чтобы продолжить");
             Console.ReadLine();
             Console.WriteLine();
@@ -77,22 +77,14 @@ namespace ConsoleApp1
         {
             Console.WriteLine("нажми любую клавишу для определения топ 3 игроков по уровню");
             Console.ReadLine();
-            FindTreeHigtLevel();
+            FindHightLevel();
             Console.WriteLine();
             Console.WriteLine($"нажми любую клавишу для определения топ 3 игроков по силе");
             Console.ReadLine();
-            FindTreePowered();
+            FindHightPower();
         }
 
-        private void ShowInformation()
-        {
-            foreach (Gamer gamer in _gamers)
-            {
-                gamer.ShowInformation();
-            }
-        }
-
-        private void ShowInformation(IEnumerable<Gamer> gamers)
+        private void ShowInformation(List<Gamer> gamers)
         {
             foreach (Gamer gamer in gamers)
             {
@@ -100,17 +92,17 @@ namespace ConsoleApp1
             }
         }
 
-        private void FindTreeHigtLevel()
+        private void FindHightLevel()
         {
             int countTop = 3;
-            var gamersFiltres = _gamers.OrderByDescending(gamers => gamers.Level).Take(countTop);
+            var gamersFiltres = _gamers.OrderByDescending(gamers => gamers.Level).Take(countTop).ToList();
             ShowInformation(gamersFiltres);
         }
 
-        private void FindTreePowered()
+        private void FindHightPower()
         {
             int countTop = 3;
-            var gamersFiltres = _gamers.OrderByDescending(gamers => gamers.Power).Take(countTop);
+            var gamersFiltres = _gamers.OrderByDescending(gamers => gamers.Power).Take(countTop).ToList();
             ShowInformation(gamersFiltres);
         }
 
