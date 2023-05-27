@@ -1,0 +1,131 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace ConsoleApp1
+{
+    class Program
+    {
+        static void Main()
+        {
+            General general = new General();
+            general.CallUp();
+        }
+    }
+
+    class Soldier
+    {
+        private Random _random = new Random();
+
+        public Soldier()
+        {
+            Name = SelectRandomName();
+            Armament = SelectRandomArmament();
+            Title = SelectRandomTitle();
+            Tour = SelectRandomTour();
+        }
+
+        public string Name { get; private set; }
+        public string Armament { get; private set; }
+        public string Title { get; private set; }
+        public int Tour { get; private set; }
+
+        public void ShowInformation()
+        {
+            Console.WriteLine($"позывной: {Name}; звание: {Title}; вооружен: {Armament}; выслуга: {Tour} мес.");
+        }
+
+        private string SelectRandomName()
+        {
+            string[] names =
+            {
+                "Бобр",
+                "Дятел",
+                "Маркиса",
+                "Енот",
+                "Ёж",
+                "Сова"
+            };
+            return names[_random.Next(names.Length)];
+        }
+
+        private string SelectRandomArmament()
+        {
+            string[] armament =
+            {
+                "кольт1911",
+                "М249",
+                "М16",
+                "АК103",
+                "ПП2000",
+                "МП5"
+            };
+            return armament[_random.Next(armament.Length)];
+        }
+
+        private string SelectRandomTitle()
+        {
+            string[] titles =
+            {
+                "майор",
+                "лейтенант",
+                "старшина",
+                "прапорщик",
+                "рядовой",
+                "сержант"
+            };
+            return titles[_random.Next(titles.Length)];
+        }
+
+        private int SelectRandomTour()
+        {
+            int countMin = 6;
+            int countMax = 36;
+            return _random.Next(countMin, countMax);
+        }
+    }
+
+    class General
+    {
+        private List<Soldier> _soldiers = new List<Soldier>();
+        private Random _random = new Random();
+
+        public General()
+        {
+            FillList();
+            ShowInformation(_soldiers);
+        }
+
+        public void CallUp()
+        {
+            var soldiersSelectionName = _soldiers.Select(soldier => soldier.Name);
+            var soldiersSelectionTitle = _soldiers.Select(soldier => soldier.Title);
+            var soldiersSelection = soldiersSelectionName.Union(soldiersSelectionTitle);
+
+            foreach (var soldier in soldiersSelection)
+            {
+                Console.WriteLine(soldier);
+            }
+        }
+
+        private void ShowInformation(List<Soldier> soldiers)
+        {
+            foreach (var soldier in soldiers)
+            {
+                soldier.ShowInformation();
+            }
+        }
+
+        private void FillList()
+        {
+            int countMin = 5;
+            int countMax = 10;
+            int count = _random.Next(countMin, countMax);
+
+            for (int i = 0; i < count; i++)
+            {
+                _soldiers.Add(new Soldier());
+            }
+        }
+    }
+}
