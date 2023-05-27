@@ -9,6 +9,7 @@ namespace ConsoleApp1
         static void Main()
         {
             Army army = new Army();
+            army.TransferWarriors();
         }
     }
 
@@ -54,19 +55,17 @@ namespace ConsoleApp1
             Console.WriteLine();
             ShowInformation(_squadSecond);
             Console.WriteLine();
-            SelectionWarriors();
         }
 
-        private void SelectionWarriors()
+        public void TransferWarriors()
         {
             char letter = 'б';
             var warriorsSort = _squadFirst.Where(warrior => warrior.Name.ToLower().StartsWith(letter));
-            var squadSecond = warriorsSort.Union(_squadSecond);
-
-            foreach (var warrior in squadSecond)
-            {
-                Console.WriteLine(warrior.Name);
-            }
+            var squadSecond = warriorsSort.Union(_squadSecond).ToList();
+            var tempSquad = _squadFirst.Where(warrior => warrior.Name.ToLower().StartsWith(letter) == false).ToList();
+            _squadFirst = tempSquad;
+            _squadSecond = squadSecond;
+            ShowInformation(_squadSecond);
         }
 
         private void ShowInformation(List<Warrior> warriors)
