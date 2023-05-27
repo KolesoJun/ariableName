@@ -102,18 +102,18 @@ namespace ConsoleApp1
                 $"\n{(int)CommandMenu.CommandForAge} - Отсортировать всех больных по возрасту " +
                 $"\n{(int)CommandMenu.CommandForDisease} - Вывести больных с определенным заболеванием");
 
-            switch (Input())
+            switch (InputCommand())
             {
                 case CommandMenu.CommandForName:
-                    FilterByName();
+                    FilterName();
                     break;
 
                 case CommandMenu.CommandForAge:
-                    FilterByAge();
+                    FilterAge();
                     break;
 
                 case CommandMenu.CommandForDisease:
-                    SelectionByDisease();
+                    SelectDisease();
                     break;
             }
         }
@@ -126,19 +126,19 @@ namespace ConsoleApp1
             }
         }
 
-        private void FilterByName()
+        private void FilterName()
         {
             var patientsSort = _patients.OrderBy(patient => patient.Name);
             ShowInformation(patientsSort);
         }
 
-        private void FilterByAge()
+        private void FilterAge()
         {
             var patientsSort = _patients.OrderBy(patient => patient.Age);
             ShowInformation(patientsSort);
         }
 
-        private void SelectionByDisease()
+        private void SelectDisease()
         {
             Console.WriteLine("введите заболевание:");
             string input = Console.ReadLine();
@@ -154,7 +154,7 @@ namespace ConsoleApp1
             }
         }
 
-        private CommandMenu Input()
+        private CommandMenu InputCommand()
         {
             string input = Console.ReadLine();
 
