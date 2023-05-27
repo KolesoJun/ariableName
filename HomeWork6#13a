@@ -107,7 +107,7 @@ namespace ConsoleApp1
             char symbolMenu = '_';
             int countSymbolMenu = 25;
 
-            while (CanContinueWorking())
+            while (CanContinueWork())
             {
                 _warehouse.ShowInformation();
                 Console.WriteLine(new string(symbolMenu, countSymbolMenu));
@@ -139,13 +139,13 @@ namespace ConsoleApp1
                     else
                     {
                         Console.WriteLine("вы чего наделали?!");
-                        PayForMistake(detailNeed, clientProcessing, price);
+                        PayMistake(detailNeed, clientProcessing, price);
                     }
                 }
                 else
                 {
                     Console.WriteLine("вы совершили ошибку. придется заплатить");
-                    PayForMistake(clientProcessing.Car.DetailProblem, clientProcessing, CalculatePrice(clientProcessing.Car.DetailProblem));
+                    PayMistake(clientProcessing.Car.DetailProblem, clientProcessing, CalculatePrice(clientProcessing.Car.DetailProblem));
                 }
 
                 Console.ReadLine();
@@ -153,9 +153,9 @@ namespace ConsoleApp1
             }
         }
 
-        private void PayForMistake(Detail detailNeed, Client client, int price)
+        private void PayMistake(Detail detailNeed, Client client, int price)
         {
-            if (_warehouse.TakeBySample(detailNeed) != null)
+            if (_warehouse.TakeSample(detailNeed) != null)
             {
                 client.Car.RefreshDetail(detailNeed);
                 Cash -= price;
@@ -169,7 +169,7 @@ namespace ConsoleApp1
             }
         }
 
-        private bool CanContinueWorking()
+        private bool CanContinueWork()
         {
             if (_clients.Count > 0)
             {
@@ -231,7 +231,7 @@ namespace ConsoleApp1
             {
                 if (value < _warehouse.CountDetails)
                 {
-                    detail = _warehouse.TakeByIndex(value);
+                    detail = _warehouse.TakeIndex(value);
                     return true;
                 }
             }
@@ -280,7 +280,7 @@ namespace ConsoleApp1
             CountDetails++;
         }
 
-        public Detail TakeByIndex(int index)
+        public Detail TakeIndex(int index)
         {
             Detail detail = _details[index];
             _details.RemoveAt(index);
@@ -288,7 +288,7 @@ namespace ConsoleApp1
             return detail;
         }
 
-        public Detail TakeBySample(Detail detailSearch)
+        public Detail TakeSample(Detail detailSearch)
         {
             if (_details.Contains(detailSearch))
             {
