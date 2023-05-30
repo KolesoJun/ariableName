@@ -149,7 +149,8 @@ namespace ConsoleApp1
                 else
                 {
                     Console.WriteLine("вы совершили ошибку. придется заплатить");
-                    Cash -= 100;
+                    int mulct = 100;
+                    Cash -= mulct;
                 }
 
                 Console.ReadLine();
