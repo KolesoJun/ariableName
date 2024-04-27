@@ -1,25 +1,28 @@
+using System;
+using System.Collections.Generic;
+
 namespace ConsoleApp1
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
             string name;
-            string symbol;
-            string space = " ";
+            char symbol;
             string middleLine;
             string shortLine = null;
 
             Console.WriteLine("введите имя");
             name = Console.ReadLine();
             Console.WriteLine("введите символ");
-            symbol = Console.ReadLine();
-            middleLine = symbol + space + name + space + symbol;
+            symbol = Console.ReadKey(true).KeyChar;
+            middleLine = symbol + name + symbol;
 
             for (int i = 1; i <= middleLine.Length; i++)
             {
                 shortLine += symbol;
             }
+
             Console.WriteLine($"{shortLine}\n{middleLine}\n{shortLine}");
         }
     }
